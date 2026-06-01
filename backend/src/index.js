@@ -1,0 +1,58 @@
+import express from 'express'
+import cors from 'cors'
+import helmet from 'helmet'
+import morgan from 'morgan'
+import dotenv from 'dotenv'
+import rateLimit from 'express-rate-limit'
+
+dotenv.config()
+
+const app = express()
+const PORT = process.env.PORT || 3000
+
+// Seguridad - cabeceras HTTP
+app.use(helmet())
+
+// Logs de peticiones
+app.use(morgan('dev'))
+
+// Parsear JSON en el body de las peticiones
+app.use(express.json())
+
+// Configuracion de CORS
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true
+}))
+
+// Rate limiting global - max 100 peticiones cada 15 minutos por IP
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { error: 'Demasiadas peticiones, intenta mas tarde' }
+})
+app.use(limiter)
+
+// Ruta de salud - para verificar que el servidor funciona
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'TrailBlaze API funcionando',
+    timestamp: new Date().toISOString()
+  })
+})
+
+// Manejo de rutas no encontradas
+app.use((req, res) => {
+  res.status(404).json({ error: 'Ruta no encontrada' })
+})
+
+// Manejo global de errores
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).json({ error: 'Error interno del servidor' })
+})
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`)
+})
