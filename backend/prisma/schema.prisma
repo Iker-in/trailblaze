@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  username     String   @unique
+  passwordHash String
+  bio          String?
+  avatarUrl    String?
+  points       Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  routes       Route[]
+  completions  RouteCompletion[]
+  following    Follow[] @relation("follower")
+  followers    Follow[] @relation("following")
+  achievements UserAchievement[]
+
+  @@map("users")
+}
+
+model Route {
+  id             String   @id @default(uuid())
+  title          String
+  description    String
+  difficulty     String
+  distanceKm     Float
+  elevationM     Int?
+  estimatedTime  Int?
+  latitudeStart  Float?
+  longitudeStart Float?
+  status         String   @default("published")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  userId      String
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos      RoutePhoto[]
+  completions RouteCompletion[]
+
+  @@map("routes")
+}
+
+model RoutePhoto {
+  id        String   @id @default(uuid())
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  routeId String
+  route   Route  @relation(fields: [routeId], references: [id], onDelete: Cascade)
+
+  @@map("route_photos")
+}
+
+model RouteCompletion {
+  id        String   @id @default(uuid())
+  notes     String?
+  realTime  Int?
+  createdAt DateTime @default(now())
+
+  userId  String
+  routeId String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  route   Route  @relation(fields: [routeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, routeId])
+  @@map("route_completions")
+}
+
+model Follow {
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+
+  followerId  String
+  followingId String
+  follower    User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  iconUrl     String?
+  points      Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  users UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id        String   @id @default(uuid())
+  gainedAt  DateTime @default(now())
+
+  userId        String
+  achievementId String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
