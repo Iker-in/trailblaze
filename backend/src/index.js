@@ -5,7 +5,7 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
 import authRoutes from './routes/auth.routes.js'
-
+import routeRoutes from './routes/routes.routes.js'
 
 dotenv.config()
 
@@ -35,6 +35,7 @@ const limiter = rateLimit({
 })
 app.use(limiter)
 app.use('/api/auth', authRoutes)
+app.use('/api/routes', routeRoutes)
 
 // Ruta de salud - para verificar que el servidor funciona
 app.get('/api/health', (req, res) => {
