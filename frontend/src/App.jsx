@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import RoutesList from './pages/Routes'
 import CreateRoute from './pages/CreateRoute'
 import RouteDetail from './pages/RouteDetail'
+import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/routes" element={<RoutesList />} />
         <Route path="/routes/create" element={<CreateRoute />} />
         <Route path="/routes/:id" element={<RouteDetail />} />
+        <Route path="/profile/:username" element={<Profile />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

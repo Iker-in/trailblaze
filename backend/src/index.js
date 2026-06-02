@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
 import authRoutes from './routes/auth.routes.js'
 import routeRoutes from './routes/routes.routes.js'
+import userRoutes from './routes/users.routes.js'
 
 dotenv.config()
 
@@ -36,6 +37,8 @@ const limiter = rateLimit({
 app.use(limiter)
 app.use('/api/auth', authRoutes)
 app.use('/api/routes', routeRoutes)
+app.use('/api/users', userRoutes)
+
 
 // Ruta de salud - para verificar que el servidor funciona
 app.get('/api/health', (req, res) => {

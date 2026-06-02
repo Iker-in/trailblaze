@@ -18,7 +18,9 @@ if (isAuthenticated) {
           <div className="flex items-center gap-4">
             <a href="/routes" className="text-green-700 font-medium hover:underline text-sm">Ver rutas</a>
             <a href="/routes/create" className="bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-800">Publicar ruta</a>
-            <span className="text-gray-600 text-sm">Hola, {user.username}</span>
+            <a href={`/profile/${user.username}`} className="text-gray-600 text-sm hover:text-green-700">
+  Hola, {user.username}
+</a>
             <button onClick={handleLogout} className="text-red-600 hover:underline text-sm">
               Cerrar sesion
             </button>
