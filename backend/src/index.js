@@ -4,6 +4,8 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
+import authRoutes from './routes/auth.routes.js'
+
 
 dotenv.config()
 
@@ -32,6 +34,7 @@ const limiter = rateLimit({
   message: { error: 'Demasiadas peticiones, intenta mas tarde' }
 })
 app.use(limiter)
+app.use('/api/auth', authRoutes)
 
 // Ruta de salud - para verificar que el servidor funciona
 app.get('/api/health', (req, res) => {
