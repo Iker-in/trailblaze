@@ -1,18 +1,43 @@
+import { useNavigate } from 'react-router-dom'
+import useAuthStore from '../store/authStore.js'
+
 function Home() {
+  const navigate = useNavigate()
+  const { isAuthenticated, user, logout } = useAuthStore()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
+  if (isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-green-50">
+        <nav className="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
+          <h1 className="text-xl font-bold text-green-800">TrailBlaze</h1>
+          <div className="flex items-center gap-4">
+            <span className="text-gray-600">Hola, {user.username}</span>
+            <button onClick={handleLogout} className="text-red-600 hover:underline text-sm">
+              Cerrar sesion
+            </button>
+          </div>
+        </nav>
+        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+          <h2 className="text-3xl font-bold text-green-800 mb-4">Bienvenido de vuelta</h2>
+          <p className="text-green-600">Pronto podras ver y publicar rutas aqui.</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-green-50">
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
         <h1 className="text-5xl font-bold text-green-800 mb-4">TrailBlaze</h1>
-        <p className="text-xl text-green-600 mb-8">
-          Descubre, comparte y conquista rutas de senderismo
-        </p>
+        <p className="text-xl text-green-600 mb-8">Descubre, comparte y conquista rutas de senderismo</p>
         <div className="flex gap-4 justify-center">
-          <a href="/register" className="bg-green-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-800">
-            Crear cuenta
-          </a>
-          <a href="/login" className="border border-green-700 text-green-700 px-6 py-3 rounded-lg font-semibold hover:bg-green-50">
-            Iniciar sesion
-          </a>
+          <a href="/register" className="bg-green-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-800">Crear cuenta</a>
+          <a href="/login" className="border border-green-700 text-green-700 px-6 py-3 rounded-lg font-semibold hover:bg-green-100">Iniciar sesion</a>
         </div>
       </div>
     </div>
