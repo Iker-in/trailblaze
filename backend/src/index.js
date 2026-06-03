@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes.js'
 import routeRoutes from './routes/routes.routes.js'
 import userRoutes from './routes/users.routes.js'
 import followRoutes from './routes/follows.routes.js'
+import rankingRoutes from './routes/ranking.routes.js'
 
 dotenv.config()
 
@@ -40,6 +41,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/routes', routeRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/users', followRoutes)
+app.use('/api/ranking', rankingRoutes)
 
 
 // Ruta de salud - para verificar que el servidor funciona
