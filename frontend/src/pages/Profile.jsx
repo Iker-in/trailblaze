@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { getProfile, getUserRoutes, getUserCompletions } from '../services/users.service.js'
+import { getProfile, getUserRoutes, getUserCompletions, followUser, unfollowUser, getFollowStatus } from '../services/users.service.js'
 import useAuthStore from '../store/authStore.js'
 
 const DIFFICULTY_COLORS = {
@@ -20,12 +20,20 @@ function Profile() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [tab, setTab] = useState('routes')
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [followLoading, setFollowLoading] = useState(false)
 
   const isOwnProfile = currentUser?.username === username
 
   useEffect(() => {
     loadProfile()
   }, [username])
+
+  useEffect(() => {
+    if (currentUser && profile && !isOwnProfile) {
+      getFollowStatus(username).then((data) => setIsFollowing(data.isFollowing)).catch(() => {})
+    }
+  }, [profile])
 
   const loadProfile = async () => {
     setLoading(true)
@@ -42,6 +50,31 @@ function Profile() {
       setError('Usuario no encontrado')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleFollow = async () => {
+    setFollowLoading(true)
+    try {
+      if (isFollowing) {
+        await unfollowUser(username)
+        setIsFollowing(false)
+        setProfile((prev) => ({
+          ...prev,
+          _count: { ...prev._count, followers: prev._count.followers - 1 }
+        }))
+      } else {
+        await followUser(username)
+        setIsFollowing(true)
+        setProfile((prev) => ({
+          ...prev,
+          _count: { ...prev._count, followers: prev._count.followers + 1 }
+        }))
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setFollowLoading(false)
     }
   }
 
@@ -72,19 +105,33 @@ function Profile() {
       </nav>
 
       <div className="max-w-3xl mx-auto px-4 py-8">
-
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-green-200 rounded-full flex items-center justify-center text-2xl font-bold text-green-800">
-              {profile.username[0].toUpperCase()}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-green-200 rounded-full flex items-center justify-center text-2xl font-bold text-green-800">
+                {profile.username[0].toUpperCase()}
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800">{profile.username}</h1>
+                {profile.bio && <p className="text-gray-500 mt-1">{profile.bio}</p>}
+                {!profile.bio && isOwnProfile && (
+                  <p className="text-gray-400 text-sm mt-1">Agrega una bio a tu perfil</p>
+                )}
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">{profile.username}</h1>
-              {profile.bio && <p className="text-gray-500 mt-1">{profile.bio}</p>}
-              {!profile.bio && isOwnProfile && (
-                <p className="text-gray-400 text-sm mt-1">Agrega una bio a tu perfil</p>
-              )}
-            </div>
+            {currentUser && !isOwnProfile && (
+              <button
+                onClick={handleFollow}
+                disabled={followLoading}
+                className={`px-5 py-2 rounded-lg font-semibold text-sm disabled:opacity-50 ${
+                  isFollowing
+                    ? 'border border-gray-300 text-gray-600 hover:bg-red-50 hover:text-red-600 hover:border-red-300'
+                    : 'bg-green-700 text-white hover:bg-green-800'
+                }`}
+              >
+                {followLoading ? '...' : isFollowing ? 'Siguiendo' : 'Seguir'}
+              </button>
+            )}
           </div>
 
           <div className="grid grid-cols-4 gap-4 bg-green-50 rounded-lg p-4">
