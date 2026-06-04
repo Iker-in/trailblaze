@@ -4,6 +4,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
 import rateLimit from 'express-rate-limit'
+import cookieParser from 'cookie-parser'
 import authRoutes from './routes/auth.routes.js'
 import routeRoutes from './routes/routes.routes.js'
 import userRoutes from './routes/users.routes.js'
@@ -23,6 +24,7 @@ app.use(morgan('dev'))
 
 // Parsear JSON en el body de las peticiones
 app.use(express.json())
+app.use(cookieParser())
 
 // Configuracion de CORS
 app.use(cors({

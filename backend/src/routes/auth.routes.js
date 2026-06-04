@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
 import rateLimit from 'express-rate-limit'
-import { register, login, getMe } from '../controllers/auth.controller.js'
+import { register, login, refresh, logout, getMe } from '../controllers/auth.controller.js'
 import { authenticate } from '../middleware/auth.middleware.js'
 
 const router = Router()
@@ -36,6 +36,8 @@ const loginValidation = [
 
 router.post('/register', registerValidation, register)
 router.post('/login', loginLimiter, loginValidation, login)
+router.post('/refresh', refresh)
+router.post('/logout', logout)
 router.get('/me', authenticate, getMe)
 
 export default router
