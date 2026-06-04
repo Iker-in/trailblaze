@@ -1,3 +1,4 @@
+import xss from 'xss'
 import prisma from '../config/prisma.js'
 import { validationResult } from 'express-validator'
 
@@ -9,11 +10,13 @@ export const createRoute = async (req, res) => {
     }
 
     const { title, description, difficulty, distanceKm, elevationM, estimatedTime } = req.body
+    const safeTitle = xss(title)
+const safeDescription = xss(description)
 
     const route = await prisma.route.create({
       data: {
-        title,
-        description,
+         title: safeTitle,
+    description: safeDescription,
         difficulty,
         distanceKm: parseFloat(distanceKm),
         elevationM: elevationM ? parseInt(elevationM) : null,

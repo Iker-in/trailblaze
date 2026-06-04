@@ -8,6 +8,7 @@ import RouteDetail from './pages/RouteDetail'
 import Profile from './pages/Profile'
 import Ranking from './pages/Ranking'
 import NotFound from './pages/NotFound'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/routes" element={<RoutesList />} />
-        <Route path="/routes/create" element={<CreateRoute />} />
+        <Route path="/routes/create" element={<ProtectedRoute><CreateRoute /></ProtectedRoute>} />
         <Route path="/routes/:id" element={<RouteDetail />} />
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/ranking" element={<Ranking />} />

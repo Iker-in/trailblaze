@@ -12,6 +12,12 @@ const loginLimiter = rateLimit({
   message: { error: 'Demasiados intentos, espera 15 minutos' }
 })
 
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  message: { error: 'Demasiados registros desde esta IP, intenta en 1 hora' }
+})
+
 const registerValidation = [
   body('username')
     .trim()
@@ -39,5 +45,6 @@ router.post('/login', loginLimiter, loginValidation, login)
 router.post('/refresh', refresh)
 router.post('/logout', logout)
 router.get('/me', authenticate, getMe)
+router.post('/register', registerLimiter, registerValidation, register)
 
 export default router

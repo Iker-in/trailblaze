@@ -85,9 +85,10 @@ export const login = async (req, res) => {
 
     const validPassword = await bcrypt.compare(password, user.passwordHash)
 
-    if (!validPassword) {
-      return res.status(401).json({ error: 'Credenciales incorrectas' })
-    }
+   if (!validPassword) {
+  console.warn(`Login fallido para email: ${email} desde IP: ${req.ip}`)
+  return res.status(401).json({ error: 'Credenciales incorrectas' })
+}
 
     const { accessToken, refreshToken } = generateTokens(user.id)
     setRefreshCookie(res, refreshToken)
