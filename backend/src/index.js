@@ -12,6 +12,7 @@ import followRoutes from './routes/follows.routes.js'
 import rankingRoutes from './routes/ranking.routes.js'
 
 dotenv.config()
+const isProduction = process.env.NODE_ENV === 'production'
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -68,7 +69,7 @@ app.use((err, req, res, next) => {
     error: 'Error interno del servidor',
     ...(isDev && { details: err.message })
   })
-  
+
 })
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`)
