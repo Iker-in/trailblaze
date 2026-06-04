@@ -68,4 +68,8 @@ app.use((err, req, res, next) => {
     error: 'Error interno del servidor',
     ...(isDev && { details: err.message })
   })
+  
+})
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`)
 })

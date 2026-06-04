@@ -45,6 +45,6 @@ router.post('/login', loginLimiter, loginValidation, login)
 router.post('/refresh', refresh)
 router.post('/logout', logout)
 router.get('/me', authenticate, getMe)
-router.post('/register', registerLimiter, registerValidation, register)
+
 
 export default router
