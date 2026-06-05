@@ -10,6 +10,7 @@ import routeRoutes from './routes/routes.routes.js'
 import userRoutes from './routes/users.routes.js'
 import followRoutes from './routes/follows.routes.js'
 import rankingRoutes from './routes/ranking.routes.js'
+import photoRoutes from './routes/photos.routes.js'
 
 dotenv.config()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -45,6 +46,7 @@ app.use('/api/routes', routeRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/users', followRoutes)
 app.use('/api/ranking', rankingRoutes)
+app.use('/api/routes', photoRoutes)
 
 
 // Ruta de salud - para verificar que el servidor funciona
