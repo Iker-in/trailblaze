@@ -1,5 +1,5 @@
 import prisma from '../config/prisma.js'
-import cloudinary from '../config/cloudinary.js'
+import cloudinary, { uploadToCloudinary } from '../config/cloudinary.js'
 
 export const uploadPhoto = async (req, res) => {
   try {
@@ -25,9 +25,11 @@ export const uploadPhoto = async (req, res) => {
       return res.status(400).json({ error: 'Maximo 5 fotos por ruta' })
     }
 
-    const photo = await prisma.routePhoto.create({
-      data: {
-        url: req.file.path,
+   const result = await uploadToCloudinary(req.file.buffer)
+
+const photo = await prisma.routePhoto.create({
+  data: {
+    url: result.secure_url,
         routeId: id,
         order: photoCount
       }

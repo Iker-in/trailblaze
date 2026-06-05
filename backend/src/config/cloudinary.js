@@ -1,11 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary'
-import pkg from 'multer-storage-cloudinary'
 import multer from 'multer'
 import dotenv from 'dotenv'
 
 dotenv.config()
-
-const { CloudinaryStorage } = pkg
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,18 +10,24 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: 'trailblaze/routes',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
-    transformation: [{ width: 1200, height: 800, crop: 'limit', quality: 'auto' }]
-  }
-})
-
 export const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }
 })
+
+export const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream(
+      {
+        folder: 'trailblaze/routes',
+        transformation: [{ width: 1200, height: 800, crop: 'limit', quality: 'auto' }]
+      },
+      (error, result) => {
+        if (error) reject(error)
+        else resolve(result)
+      }
+    ).end(buffer)
+  })
+}
 
 export default cloudinary
