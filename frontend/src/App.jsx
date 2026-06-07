@@ -9,6 +9,7 @@ import Profile from './pages/Profile'
 import Ranking from './pages/Ranking'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
+import Achievements from './pages/Achievements'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/ranking" element={<Ranking />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/achievements" element={<Achievements />} />
       </Routes>
     </BrowserRouter>
   )

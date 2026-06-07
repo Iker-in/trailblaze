@@ -92,10 +92,11 @@ model Follow {
 
 model Achievement {
   id          String   @id @default(uuid())
-  name        String
+  name        String   @unique
   description String
   iconUrl     String?
   points      Int      @default(0)
+   criterio    String   @default("")
   createdAt   DateTime @default(now())
 
   users UserAchievement[]

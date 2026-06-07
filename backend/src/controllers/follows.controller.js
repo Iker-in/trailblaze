@@ -1,4 +1,5 @@
 import prisma from '../config/prisma.js'
+import { checkAndGrantAchievements } from '../services/achievements.service.js'
 
 export const followUser = async (req, res) => {
   try {
@@ -33,6 +34,7 @@ export const followUser = async (req, res) => {
       }
     })
 
+    await checkAndGrantAchievements(userToFollow.id)
     res.status(201).json({ message: `Ahora sigues a ${username}` })
 
   } catch (error) {

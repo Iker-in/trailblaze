@@ -1,6 +1,7 @@
 import xss from 'xss'
 import prisma from '../config/prisma.js'
 import { validationResult } from 'express-validator'
+import { checkAndGrantAchievements } from '../services/achievements.service.js'
 
 export const createRoute = async (req, res) => {
   try {
@@ -32,6 +33,7 @@ const safeDescription = xss(description)
       }
     })
 
+    await checkAndGrantAchievements(req.userId)
     res.status(201).json({ message: 'Ruta creada exitosamente', route })
 
   } catch (error) {
@@ -149,6 +151,7 @@ export const completeRoute = async (req, res) => {
       data: { points: { increment: 10 } }
     })
 
+    await checkAndGrantAchievements(req.userId)
     res.status(201).json({
       message: 'Ruta marcada como completada. +10 puntos',
       completion

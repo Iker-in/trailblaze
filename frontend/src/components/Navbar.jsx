@@ -17,6 +17,7 @@ function Navbar() {
       <div className="flex items-center gap-4">
         <a href="/routes" className="text-gray-600 hover:text-green-700 text-sm">Rutas</a>
         <a href="/ranking" className="text-gray-600 hover:text-green-700 text-sm">Ranking</a>
+        <a href="/achievements" className="text-gray-600 hover:text-green-700 text-sm">Logros</a>
 
         {isAuthenticated ? (
           <>
