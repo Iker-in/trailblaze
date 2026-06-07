@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { getRoute, completeRoute } from '../services/routes.service.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
+import RouteMap from '../components/RouteMap.jsx'
 
 const DIFFICULTY_COLORS = {
   facil: 'bg-green-100 text-green-800',
@@ -86,6 +87,7 @@ function RouteDetail() {
               <h1 className="text-3xl font-bold text-gray-800">{route.title}</h1>
               <span className={"text-sm font-semibold px-3 py-1 rounded-full " + DIFFICULTY_COLORS[route.difficulty]}>{route.difficulty}</span>
             </div>
+            <RouteMap latitude={route.latitudeStart} longitude={route.longitudeStart} title={route.title} />
             <p className="text-gray-500 text-sm mb-6">Publicada por <a href={"/profile/" + route.user.username} className="font-medium text-green-700 hover:underline">{route.user.username}</a></p>
             <div className="grid grid-cols-3 gap-4 bg-green-50 rounded-lg p-4 mb-6">
               <div className="text-center">

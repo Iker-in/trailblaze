@@ -9,20 +9,22 @@ export const createRoute = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { title, description, difficulty, distanceKm, elevationM, estimatedTime } = req.body
+    const { title, description, difficulty, distanceKm, elevationM, estimatedTime, latitudeStart, longitudeStart } = req.body
     const safeTitle = xss(title)
 const safeDescription = xss(description)
 
-    const route = await prisma.route.create({
-      data: {
-         title: safeTitle,
+   const route = await prisma.route.create({
+  data: {
+    title: safeTitle,
     description: safeDescription,
-        difficulty,
-        distanceKm: parseFloat(distanceKm),
-        elevationM: elevationM ? parseInt(elevationM) : null,
-        estimatedTime: estimatedTime ? parseInt(estimatedTime) : null,
-        userId: req.userId
-      },
+    difficulty,
+    distanceKm: parseFloat(distanceKm),
+    elevationM: elevationM && elevationM > 0 ? parseInt(elevationM) : null,
+    estimatedTime: estimatedTime && estimatedTime > 0 ? parseInt(estimatedTime) : null,
+    latitudeStart: latitudeStart ? parseFloat(latitudeStart) : null,
+    longitudeStart: longitudeStart ? parseFloat(longitudeStart) : null,
+    userId: req.userId
+  },
       include: {
         user: {
           select: { id: true, username: true, avatarUrl: true }

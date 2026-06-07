@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { writeFileSync } from 'fs'
+
+writeFileSync('frontend/src/pages/CreateRoute.jsx', `import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createRoute, uploadPhoto } from '../services/routes.service.js'
 import Navbar from '../components/Navbar.jsx'
@@ -127,3 +129,6 @@ function CreateRoute() {
 }
 
 export default CreateRoute
+`)
+
+console.log('listo')
