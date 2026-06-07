@@ -9,9 +9,7 @@ function Achievements() {
   const [userAchievements, setUserAchievements] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadAchievements()
-  }, [])
+  useEffect(() => { loadAchievements() }, [])
 
   const loadAchievements = async () => {
     try {
@@ -31,29 +29,27 @@ function Achievements() {
   const earnedIds = new Set(userAchievements.map((ua) => ua.achievementId))
 
   return (
-    <div className="min-h-screen bg-green-50">
+    <div style={{minHeight: '100vh', background: '#0f172a'}}>
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold text-green-800 mb-2">Logros</h1>
-        <p className="text-gray-500 mb-6">{earnedIds.size} de {achievements.length} logros obtenidos</p>
-
-        {loading && <div className="text-center py-16 text-green-600">Cargando logros...</div>}
-
-        <div className="grid grid-cols-1 gap-4">
+        <h1 style={{color: 'white'}} className="text-2xl font-bold mb-2">Logros</h1>
+        <p style={{color: '#64748b', fontSize: '14px', marginBottom: '24px'}}>{earnedIds.size} de {achievements.length} logros obtenidos</p>
+        {loading && <div style={{color: '#94a3b8'}} className="text-center py-16">Cargando logros...</div>}
+        <div className="flex flex-col gap-3">
           {achievements.map((achievement) => {
             const earned = earnedIds.has(achievement.id)
             return (
-              <div key={achievement.id} className={"bg-white rounded-xl shadow-sm p-5 flex items-center gap-4 " + (earned ? 'border-l-4 border-green-500' : 'opacity-60')}>
-                <div className={"w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold " + (earned ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400')}>
+              <div key={achievement.id} style={{background: earned ? '#1e293b' : '#0f172a', border: earned ? '1px solid #334155' : '1px solid #1e293b', borderLeft: earned ? '3px solid #ec4899' : '3px solid #1e293b', borderRadius: '14px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px', opacity: earned ? 1 : 0.5}}>
+                <div style={{width: '42px', height: '42px', borderRadius: '10px', background: earned ? '#4c1d95' : '#1e293b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '500', color: earned ? '#c4b5fd' : '#475569'}}>
                   {earned ? 'ok' : '?'}
                 </div>
-                <div className="flex-1">
-                  <p className={"font-bold " + (earned ? 'text-gray-800' : 'text-gray-400')}>{achievement.name}</p>
-                  <p className="text-sm text-gray-500">{achievement.description}</p>
+                <div style={{flex: 1}}>
+                  <p style={{color: earned ? 'white' : '#475569', fontWeight: '500', margin: 0, fontSize: '15px'}}>{achievement.name}</p>
+                  <p style={{color: '#64748b', fontSize: '13px', margin: 0}}>{achievement.description}</p>
                 </div>
-                <div className="text-right">
-                  <p className={"font-bold " + (earned ? 'text-green-700' : 'text-gray-400')}>+{achievement.points}</p>
-                  <p className="text-xs text-gray-400">puntos</p>
+                <div style={{textAlign: 'right'}}>
+                  <p style={{color: earned ? '#ec4899' : '#475569', fontWeight: '500', margin: 0}}>+{achievement.points}</p>
+                  <p style={{color: '#475569', fontSize: '12px', margin: 0}}>puntos</p>
                 </div>
               </div>
             )

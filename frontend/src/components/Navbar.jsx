@@ -5,36 +5,34 @@ function Navbar() {
   const navigate = useNavigate()
   const { isAuthenticated, user, logout } = useAuthStore()
 
-  const handleLogout = async () => {
+  const handleLogout = () => {
     logout()
     navigate('/')
   }
 
   return (
-    <nav className="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
-      <a href="/" className="text-xl font-bold text-green-800">TrailBlaze</a>
-
-      <div className="flex items-center gap-4">
-        <a href="/routes" className="text-gray-600 hover:text-green-700 text-sm">Rutas</a>
-        <a href="/ranking" className="text-gray-600 hover:text-green-700 text-sm">Ranking</a>
-        <a href="/achievements" className="text-gray-600 hover:text-green-700 text-sm">Logros</a>
-
+    <nav style={{background: '#0f172a', borderBottom: '1px solid #ec4899', padding: '0 24px', height: '60px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+      <a href="/" style={{color: '#eab308', fontSize: '20px', fontWeight: 'bold', textDecoration: 'none'}}>TrailBlaze</a>
+      <div style={{display: 'flex', alignItems: 'center', gap: '24px'}}>
+        <a href="/routes" style={{color: '#eab308', fontSize: '14px', textDecoration: 'none', fontWeight: '500'}}>Rutas</a>
+        <a href="/ranking" style={{color: '#eab308', fontSize: '14px', textDecoration: 'none', fontWeight: '500'}}>Ranking</a>
+        <a href="/achievements" style={{color: '#eab308', fontSize: '14px', textDecoration: 'none', fontWeight: '500'}}>Logros</a>
         {isAuthenticated ? (
           <>
-            <a href="/routes/create" className="bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-800">
+            <a href="/routes/create" style={{background: '#7c3aed', color: 'white', padding: '7px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: '500', textDecoration: 'none', border: '1px solid #ec4899'}}>
               Publicar ruta
             </a>
-            <a href={"/profile/" + user.username} className="text-gray-600 hover:text-green-700 text-sm font-medium">
+            <a href={"/profile/" + user.username} style={{color: '#ec4899', fontSize: '14px', textDecoration: 'none', fontWeight: '500'}}>
               {user.username}
             </a>
-            <button onClick={handleLogout} className="text-red-500 hover:text-red-700 text-sm">
+            <button onClick={handleLogout} style={{color: '#64748b', fontSize: '13px', background: 'none', border: 'none', cursor: 'pointer'}}>
               Salir
             </button>
           </>
         ) : (
           <>
-            <a href="/login" className="text-gray-600 hover:text-green-700 text-sm">Iniciar sesion</a>
-            <a href="/register" className="bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-800">
+            <a href="/login" style={{color: '#eab308', fontSize: '14px', textDecoration: 'none', fontWeight: '500'}}>Iniciar sesion</a>
+            <a href="/register" style={{background: '#eab308', color: '#0f172a', padding: '7px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 'bold', textDecoration: 'none'}}>
               Registrarse
             </a>
           </>

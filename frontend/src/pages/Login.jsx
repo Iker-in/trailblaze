@@ -10,9 +10,7 @@ function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -30,30 +28,27 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-green-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-xl shadow-sm w-full max-w-md">
-        <h2 className="text-2xl font-bold text-green-800 mb-6">Iniciar sesion</h2>
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
-            {error}
-          </div>
-        )}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '40px', width: '100%', maxWidth: '400px'}}>
+        <a href="/" style={{color: '#eab308', fontWeight: 'bold', fontSize: '20px', display: 'block', marginBottom: '28px'}}>TrailBlaze</a>
+        <h2 style={{color: 'white', fontSize: '22px', fontWeight: '500', marginBottom: '24px'}}>Iniciar sesion</h2>
+        {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
+        <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="tu@email.com" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" required />
+            <label style={{color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px'}}>Email</label>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="tu@email.com" style={{width: '100%', background: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box'}} required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Contrasena</label>
-            <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="tu contrasena" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" required />
+            <label style={{color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px'}}>Contrasena</label>
+            <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="tu contrasena" style={{width: '100%', background: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box'}} required />
           </div>
-          <button type="submit" disabled={loading} className="bg-green-700 text-white py-2 rounded-lg font-semibold hover:bg-green-800 mt-2 disabled:opacity-50">
+          <button type="submit" disabled={loading} style={{background: '#7c3aed', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: loading ? 0.6 : 1}}>
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
-        <p className="text-center text-sm text-gray-600 mt-4">
-          No tienes cuenta?
-          <a href="/register" className="text-green-700 font-medium hover:underline"> Registrate</a>
+        <p style={{color: '#64748b', fontSize: '13px', textAlign: 'center', marginTop: '20px'}}>
+          No tienes cuenta?{' '}
+          <a href="/register" style={{color: '#7c3aed'}}>Registrate</a>
         </p>
       </div>
     </div>

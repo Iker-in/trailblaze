@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getRanking } from '../services/ranking.service.js'
 import useAuthStore from '../store/authStore.js'
+import Navbar from '../components/Navbar.jsx'
 
 function Ranking() {
   const { user: currentUser } = useAuthStore()
@@ -15,30 +16,28 @@ function Ranking() {
   }, [])
 
   return (
-    <div className='min-h-screen bg-green-50'>
-      <nav className='bg-white shadow-sm px-6 py-4 flex justify-between items-center'>
-        <a href='/' className='text-xl font-bold text-green-800'>TrailBlaze</a>
-        <a href='/routes' className='text-green-700 hover:underline text-sm'>Explorar rutas</a>
-      </nav>
+    <div style={{minHeight: '100vh', background: '#0f172a'}}>
+      <Navbar />
       <div className='max-w-2xl mx-auto px-4 py-8'>
-        <h1 className='text-2xl font-bold text-green-800 mb-6'>Ranking de senderistas</h1>
-        {loading && <div className='text-center py-16 text-green-600'>Cargando ranking...</div>}
+        <h1 style={{color: 'white'}} className='text-2xl font-bold mb-2'>Ranking de senderistas</h1>
+        <p style={{color: '#64748b', fontSize: '14px', marginBottom: '24px'}}>Los mejores aventureros de TrailBlaze</p>
+        {loading && <div style={{color: '#94a3b8'}} className='text-center py-16'>Cargando ranking...</div>}
         <div className='flex flex-col gap-3'>
           {ranking.map((entry) => (
-            <a key={entry.id} href={'/profile/' + entry.username} className='bg-white rounded-xl shadow-sm p-4 flex items-center gap-4 hover:shadow-md transition-shadow'>
-              <div className='w-12 text-center'>
-                <span className='text-lg font-bold text-gray-500'>#{entry.position}</span>
+            <a key={entry.id} href={'/profile/' + entry.username} style={{background: currentUser && currentUser.id === entry.id ? '#2e1065' : '#1e293b', border: currentUser && currentUser.id === entry.id ? '1px solid #7c3aed' : '1px solid #334155', borderRadius: '14px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px', textDecoration: 'none'}}>
+              <div style={{width: '36px', textAlign: 'center'}}>
+                <span style={{color: entry.position === 1 ? '#eab308' : entry.position === 2 ? '#94a3b8' : entry.position === 3 ? '#b45309' : '#475569', fontWeight: '500', fontSize: '15px'}}>#{entry.position}</span>
               </div>
-              <div className='w-10 h-10 bg-green-200 rounded-full flex items-center justify-center font-bold text-green-800'>
+              <div style={{width: '38px', height: '38px', borderRadius: '50%', background: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '500', color: 'white', fontSize: '15px'}}>
                 {entry.username[0].toUpperCase()}
               </div>
-              <div className='flex-1'>
-                <p className='font-semibold text-gray-800'>{entry.username}</p>
-                <p className='text-xs text-gray-400'>{entry._count.routes} rutas · {entry._count.completions} completadas</p>
+              <div style={{flex: 1}}>
+                <p style={{color: 'white', fontWeight: '500', margin: 0, fontSize: '15px'}}>{entry.username}</p>
+                <p style={{color: '#64748b', fontSize: '12px', margin: 0}}>{entry._count.routes} rutas · {entry._count.completions} completadas</p>
               </div>
-              <div className='text-right'>
-                <p className='text-xl font-bold text-green-700'>{entry.points}</p>
-                <p className='text-xs text-gray-400'>puntos</p>
+              <div style={{textAlign: 'right'}}>
+                <p style={{color: '#eab308', fontWeight: '500', margin: 0, fontSize: '18px'}}>{entry.points}</p>
+                <p style={{color: '#64748b', fontSize: '12px', margin: 0}}>puntos</p>
               </div>
             </a>
           ))}

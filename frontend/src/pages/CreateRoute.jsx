@@ -24,17 +24,10 @@ function CreateRoute() {
     setLocating(true)
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setFormData((prev) => ({
-          ...prev,
-          latitudeStart: pos.coords.latitude.toFixed(6),
-          longitudeStart: pos.coords.longitude.toFixed(6)
-        }))
+        setFormData((prev) => ({ ...prev, latitudeStart: pos.coords.latitude.toFixed(6), longitudeStart: pos.coords.longitude.toFixed(6) }))
         setLocating(false)
       },
-      () => {
-        setError('No se pudo obtener la ubicacion')
-        setLocating(false)
-      }
+      () => { setError('No se pudo obtener la ubicacion'); setLocating(false) }
     )
   }
 
@@ -45,9 +38,7 @@ function CreateRoute() {
     try {
       const data = await createRoute(formData)
       const routeId = data.route.id
-      for (const photo of photos) {
-        await uploadPhoto(routeId, photo)
-      }
+      for (const photo of photos) { await uploadPhoto(routeId, photo) }
       navigate('/routes/' + routeId)
     } catch (err) {
       const errors = err.response?.data?.errors
@@ -57,67 +48,70 @@ function CreateRoute() {
     }
   }
 
+  const inputStyle = { width: '100%', background: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }
+  const labelStyle = { color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px' }
+
   return (
-    <div className="min-h-screen bg-green-50">
+    <div style={{minHeight: '100vh', background: '#0f172a'}}>
       <Navbar />
       <div className="max-w-2xl mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold text-green-800 mb-6">Publicar nueva ruta</h1>
-        {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">{error}</div>}
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm p-6 flex flex-col gap-4">
+        <h1 style={{color: 'white', marginBottom: '24px'}} className="text-2xl font-bold">Publicar nueva ruta</h1>
+        {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
+        <form onSubmit={handleSubmit} style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px'}}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Titulo</label>
-            <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Ej: Ruta al Cerro Verde" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" required />
+            <label style={labelStyle}>Titulo</label>
+            <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Ej: Ruta al Cerro Verde" style={inputStyle} required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Descripcion</label>
-            <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Describe la ruta..." rows={4} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" required />
+            <label style={labelStyle}>Descripcion</label>
+            <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Describe la ruta..." rows={4} style={{...inputStyle, resize: 'vertical'}} required />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Dificultad</label>
-            <select name="difficulty" value={formData.difficulty} onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+            <label style={labelStyle}>Dificultad</label>
+            <select name="difficulty" value={formData.difficulty} onChange={handleChange} style={{...inputStyle, cursor: 'pointer'}}>
               <option value="facil">Facil</option>
               <option value="moderado">Moderado</option>
               <option value="dificil">Dificil</option>
               <option value="experto">Experto</option>
             </select>
           </div>
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Distancia (km)</label>
-              <input type="number" name="distanceKm" value={formData.distanceKm} onChange={handleChange} placeholder="5.2" step="0.1" min="0.1" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" required />
+          <div style={{display: 'flex', gap: '12px'}}>
+            <div style={{flex: 1}}>
+              <label style={labelStyle}>Distancia (km)</label>
+              <input type="number" name="distanceKm" value={formData.distanceKm} onChange={handleChange} placeholder="5.2" step="0.1" min="0.1" style={inputStyle} required />
             </div>
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Elevacion (m)</label>
-              <input type="number" name="elevationM" value={formData.elevationM} onChange={handleChange} placeholder="320" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <div style={{flex: 1}}>
+              <label style={labelStyle}>Elevacion (m)</label>
+              <input type="number" name="elevationM" value={formData.elevationM} onChange={handleChange} placeholder="320" style={inputStyle} />
             </div>
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tiempo (min)</label>
-              <input type="number" name="estimatedTime" value={formData.estimatedTime} onChange={handleChange} placeholder="120" className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <div style={{flex: 1}}>
+              <label style={labelStyle}>Tiempo (min)</label>
+              <input type="number" name="estimatedTime" value={formData.estimatedTime} onChange={handleChange} placeholder="120" style={inputStyle} />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Ubicacion de inicio</label>
-            <div className="flex gap-2">
-              <input type="number" name="latitudeStart" value={formData.latitudeStart} onChange={handleChange} placeholder="Latitud" step="0.000001" className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
-              <input type="number" name="longitudeStart" value={formData.longitudeStart} onChange={handleChange} placeholder="Longitud" step="0.000001" className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
-              <button type="button" onClick={handleGetLocation} disabled={locating} className="bg-green-100 text-green-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-200 disabled:opacity-50 whitespace-nowrap">
+            <label style={labelStyle}>Ubicacion de inicio</label>
+            <div style={{display: 'flex', gap: '8px'}}>
+              <input type="number" name="latitudeStart" value={formData.latitudeStart} onChange={handleChange} placeholder="Latitud" step="0.000001" style={{...inputStyle, flex: 1}} />
+              <input type="number" name="longitudeStart" value={formData.longitudeStart} onChange={handleChange} placeholder="Longitud" step="0.000001" style={{...inputStyle, flex: 1}} />
+              <button type="button" onClick={handleGetLocation} disabled={locating} style={{background: '#1e3a5f', color: '#93c5fd', border: '1px solid #1e40af', borderRadius: '10px', padding: '10px 14px', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap', opacity: locating ? 0.6 : 1}}>
                 {locating ? 'Obteniendo...' : 'Mi ubicacion'}
               </button>
             </div>
-            <p className="text-xs text-gray-400 mt-1">Opcional. Usa el boton para obtener tu ubicacion actual.</p>
+            <p style={{color: '#475569', fontSize: '12px', marginTop: '6px'}}>Opcional. Usa el boton para obtener tu ubicacion actual.</p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Fotos (maximo 5)</label>
-            <input type="file" accept="image/*" multiple onChange={handlePhotos} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <label style={labelStyle}>Fotos (maximo 5)</label>
+            <input type="file" accept="image/*" multiple onChange={handlePhotos} style={{...inputStyle, cursor: 'pointer'}} />
             {previews.length > 0 && (
-              <div className="flex gap-2 mt-3 flex-wrap">
+              <div style={{display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap'}}>
                 {previews.map((src, i) => (
-                  <img key={i} src={src} className="w-20 h-20 object-cover rounded-lg border border-gray-200" />
+                  <img key={i} src={src} style={{width: '72px', height: '72px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #334155'}} />
                 ))}
               </div>
             )}
           </div>
-          <button type="submit" disabled={loading} className="bg-green-700 text-white py-3 rounded-lg font-semibold hover:bg-green-800 mt-2 disabled:opacity-50">
+          <button type="submit" disabled={loading} style={{background: '#7c3aed', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: loading ? 0.6 : 1}}>
             {loading ? 'Publicando...' : 'Publicar ruta'}
           </button>
         </form>
