@@ -72,7 +72,7 @@ function RouteDetail() {
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {route.photos && route.photos.length > 0 && (
             <div className="relative">
-              <img src={route.photos[currentPhoto].url} alt={route.title} className="w-full h-64 object-cover" />
+              <img src={route.photos[currentPhoto].url} alt={route.title} className="w-full h-64 object-contain bg-gray-100" />
               {route.photos.length > 1 && (
                 <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2">
                   {route.photos.map((_, i) => (
