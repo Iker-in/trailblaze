@@ -12,6 +12,8 @@ import followRoutes from './routes/follows.routes.js'
 import rankingRoutes from './routes/ranking.routes.js'
 import photoRoutes from './routes/photos.routes.js'
 import achievementRoutes from './routes/achievements.routes.js'
+import notificationRoutes from './routes/notifications.routes.js'
+import commentRoutes from './routes/comments.routes.js'
 
 dotenv.config()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -49,6 +51,8 @@ app.use('/api/users', followRoutes)
 app.use('/api/ranking', rankingRoutes)
 app.use('/api/routes', photoRoutes)
 app.use('/api/achievements', achievementRoutes)
+app.use('/api/notifications', notificationRoutes)
+app.use('/api/routes', commentRoutes)
 
 
 // Ruta de salud - para verificar que el servidor funciona

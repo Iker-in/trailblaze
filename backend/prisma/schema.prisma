@@ -24,6 +24,8 @@ model User {
   following    Follow[] @relation("follower")
   followers    Follow[] @relation("following")
   achievements UserAchievement[]
+  notifications Notification[]
+  comments Comment[]
 
   @@map("users")
 }
@@ -46,6 +48,7 @@ model Route {
   user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   photos      RoutePhoto[]
   completions RouteCompletion[]
+  comments Comment[]
 
   @@map("routes")
 }
@@ -115,4 +118,31 @@ model UserAchievement {
 
   @@unique([userId, achievementId])
   @@map("user_achievements")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId  String
+  routeId String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  route   Route  @relation(fields: [routeId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
 }

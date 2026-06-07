@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/authStore.js'
+import NotificationBell from './NotificationBell.jsx'
 
 function Navbar() {
   const navigate = useNavigate()
@@ -22,6 +23,7 @@ function Navbar() {
             <a href="/routes/create" style={{background: '#7c3aed', color: 'white', padding: '7px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: '500', textDecoration: 'none', border: '1px solid #ec4899'}}>
               Publicar ruta
             </a>
+            <NotificationBell />
             <a href={"/profile/" + user.username} style={{color: '#ec4899', fontSize: '14px', textDecoration: 'none', fontWeight: '500'}}>
               {user.username}
             </a>

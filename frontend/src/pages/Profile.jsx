@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { getProfile, getUserRoutes, getUserCompletions, followUser, unfollowUser, getFollowStatus } from '../services/users.service.js'
+import { getProfile, getUserRoutes, getUserCompletions, followUser, unfollowUser, getFollowStatus, updateProfile } from '../services/users.service.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
 
@@ -13,7 +13,7 @@ const DIFFICULTY_STYLES = {
 
 function Profile() {
   const { username } = useParams()
-  const { user: currentUser } = useAuthStore()
+  const { user: currentUser, login } = useAuthStore()
   const [profile, setProfile] = useState(null)
   const [routes, setRoutes] = useState([])
   const [completions, setCompletions] = useState([])
@@ -22,6 +22,9 @@ function Profile() {
   const [tab, setTab] = useState('routes')
   const [isFollowing, setIsFollowing] = useState(false)
   const [followLoading, setFollowLoading] = useState(false)
+  const [editingBio, setEditingBio] = useState(false)
+  const [bioValue, setBioValue] = useState('')
+  const [savingBio, setSavingBio] = useState(false)
 
   const isOwnProfile = currentUser?.username === username
 
@@ -42,6 +45,7 @@ function Profile() {
         getUserCompletions(username)
       ])
       setProfile(profileData.user)
+      setBioValue(profileData.user.bio || '')
       setRoutes(routesData.routes)
       setCompletions(completionsData.completions)
     } catch (err) {
@@ -70,6 +74,19 @@ function Profile() {
     }
   }
 
+  const handleSaveBio = async () => {
+    setSavingBio(true)
+    try {
+      const data = await updateProfile({ bio: bioValue })
+      setProfile((prev) => ({ ...prev, bio: data.user.bio }))
+      setEditingBio(false)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSavingBio(false)
+    }
+  }
+
   if (loading) return <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#94a3b8'}}>Cargando perfil...</p></div>
   if (error) return <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#fca5a5'}}>{error}</p></div>
 
@@ -78,15 +95,46 @@ function Profile() {
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 py-8">
         <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '24px', marginBottom: '20px'}}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
               <div style={{width: '56px', height: '56px', borderRadius: '50%', background: '#7c3aed', border: '2px solid #ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: '500', color: 'white'}}>
                 {profile.username[0].toUpperCase()}
               </div>
               <div>
                 <h1 style={{color: 'white', fontSize: '20px', fontWeight: '500', margin: 0}}>{profile.username}</h1>
-                {profile.bio && <p style={{color: '#94a3b8', fontSize: '14px', margin: '4px 0 0'}}>{profile.bio}</p>}
-                {!profile.bio && isOwnProfile && <p style={{color: '#475569', fontSize: '13px', margin: '4px 0 0'}}>Agrega una bio a tu perfil</p>}
+                {!editingBio && (
+                  <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px'}}>
+                    {profile.bio
+                      ? <p style={{color: '#94a3b8', fontSize: '14px', margin: 0}}>{profile.bio}</p>
+                      : <p style={{color: '#475569', fontSize: '13px', margin: 0}}>Sin bio todavia</p>
+                    }
+                    {isOwnProfile && (
+                      <button onClick={() => setEditingBio(true)} style={{color: '#7c3aed', fontSize: '12px', background: 'none', border: 'none', cursor: 'pointer', padding: '0'}}>
+                        Editar
+                      </button>
+                    )}
+                  </div>
+                )}
+                {editingBio && (
+                  <div style={{marginTop: '8px', display: 'flex', gap: '8px', alignItems: 'flex-start'}}>
+                    <textarea
+                      value={bioValue}
+                      onChange={(e) => setBioValue(e.target.value)}
+                      maxLength={300}
+                      rows={2}
+                      placeholder="Escribe algo sobre ti..."
+                      style={{background: '#0f172a', border: '1px solid #ec4899', borderRadius: '8px', padding: '8px 12px', color: 'white', fontSize: '13px', outline: 'none', resize: 'none', width: '220px'}}
+                    />
+                    <div style={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
+                      <button onClick={handleSaveBio} disabled={savingBio} style={{background: '#7c3aed', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', opacity: savingBio ? 0.6 : 1}}>
+                        {savingBio ? '...' : 'Guardar'}
+                      </button>
+                      <button onClick={() => setEditingBio(false)} style={{background: 'transparent', color: '#64748b', border: '1px solid #334155', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer'}}>
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             {currentUser && !isOwnProfile && (
@@ -95,6 +143,7 @@ function Profile() {
               </button>
             )}
           </div>
+
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px'}}>
             {[
               { value: profile.points, label: 'puntos', color: '#eab308' },

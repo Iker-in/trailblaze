@@ -2,6 +2,7 @@ import xss from 'xss'
 import prisma from '../config/prisma.js'
 import { validationResult } from 'express-validator'
 import { checkAndGrantAchievements } from '../services/achievements.service.js'
+import { createNotification } from '../services/notifications.service.js'
 
 export const createRoute = async (req, res) => {
   try {
@@ -152,6 +153,13 @@ export const completeRoute = async (req, res) => {
     })
 
     await checkAndGrantAchievements(req.userId)
+    if (route.userId !== req.userId) {
+  await createNotification(
+    route.userId,
+    'completion',
+    req.username + ' completo tu ruta: ' + route.title
+  )
+}
     res.status(201).json({
       message: 'Ruta marcada como completada. +10 puntos',
       completion

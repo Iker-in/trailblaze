@@ -1,5 +1,6 @@
 import prisma from '../config/prisma.js'
 import { checkAndGrantAchievements } from '../services/achievements.service.js'
+import { createNotification } from '../services/notifications.service.js'
 
 export const followUser = async (req, res) => {
   try {
@@ -35,6 +36,11 @@ export const followUser = async (req, res) => {
     })
 
     await checkAndGrantAchievements(userToFollow.id)
+    await createNotification(
+  userToFollow.id,
+  'follow',
+  req.username + ' empezo a seguirte'
+)
     res.status(201).json({ message: `Ahora sigues a ${username}` })
 
   } catch (error) {

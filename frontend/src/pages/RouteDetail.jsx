@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getRoute, completeRoute } from '../services/routes.service.js'
+import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
 import RouteMap from '../components/RouteMap.jsx'
@@ -23,8 +24,12 @@ function RouteDetail() {
   const [completed, setCompleted] = useState(false)
   const [successMsg, setSuccessMsg] = useState('')
   const [currentPhoto, setCurrentPhoto] = useState(0)
+  const [comments, setComments] = useState([])
+  const [commentText, setCommentText] = useState('')
+  const [sendingComment, setSendingComment] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
-  useEffect(() => { loadRoute() }, [id])
+  useEffect(() => { loadRoute(); loadComments() }, [id])
 
   const loadRoute = async () => {
     try {
@@ -35,6 +40,13 @@ function RouteDetail() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const loadComments = async () => {
+    try {
+      const res = await api.get('/routes/' + id + '/comments')
+      setComments(res.data.comments)
+    } catch (err) {}
   }
 
   const handleComplete = async () => {
@@ -49,6 +61,40 @@ function RouteDetail() {
       setError(err.response?.data?.error || 'Error al completar la ruta')
     } finally {
       setCompleting(false)
+    }
+  }
+
+  const handleComment = async (e) => {
+    e.preventDefault()
+    if (!commentText.trim()) return
+    setSendingComment(true)
+    try {
+      const res = await api.post('/routes/' + id + '/comments', { content: commentText })
+      setComments((prev) => [...prev, res.data.comment])
+      setCommentText('')
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSendingComment(false)
+    }
+  }
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      await api.delete('/routes/' + id + '/comments/' + commentId)
+      setComments((prev) => prev.filter((c) => c.id !== commentId))
+    } catch (err) {}
+  }
+
+  const handleDeleteRoute = async () => {
+    if (!window.confirm('Estas seguro de que quieres eliminar esta ruta?')) return
+    setDeleting(true)
+    try {
+      await api.delete('/routes/' + id)
+      navigate('/routes')
+    } catch (err) {
+      setError(err.response?.data?.error || 'Error al eliminar la ruta')
+      setDeleting(false)
     }
   }
 
@@ -70,7 +116,7 @@ function RouteDetail() {
         {successMsg && <div style={{background: '#14532d', border: '1px solid #16a34a', color: '#86efac', borderRadius: '12px', padding: '14px', marginBottom: '20px', fontWeight: '500'}}>{successMsg}</div>}
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '12px', padding: '14px', marginBottom: '20px'}}>{error}</div>}
 
-        <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', overflow: 'hidden'}}>
+        <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px'}}>
           {route.photos && route.photos.length > 0 && (
             <div style={{position: 'relative'}}>
               <img src={route.photos[currentPhoto].url} alt={route.title} style={{width: '100%', height: '280px', objectFit: 'contain', background: '#0f172a'}} />
@@ -87,7 +133,14 @@ function RouteDetail() {
           <div style={{padding: '28px'}}>
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px'}}>
               <h1 style={{color: 'white', fontSize: '26px', fontWeight: '500', margin: 0}}>{route.title}</h1>
-              <span style={{...DIFFICULTY_STYLES[route.difficulty], fontSize: '12px', padding: '4px 12px', borderRadius: '20px', fontWeight: '500', whiteSpace: 'nowrap', marginLeft: '12px'}}>{route.difficulty}</span>
+              <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                <span style={{...DIFFICULTY_STYLES[route.difficulty], fontSize: '12px', padding: '4px 12px', borderRadius: '20px', fontWeight: '500', whiteSpace: 'nowrap'}}>{route.difficulty}</span>
+                {isAuthenticated && user?.id === route.userId && (
+                  <button onClick={handleDeleteRoute} disabled={deleting} style={{background: '#450a0a', color: '#fca5a5', border: '1px solid #991b1b', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', cursor: 'pointer', opacity: deleting ? 0.6 : 1}}>
+                    {deleting ? '...' : 'Eliminar'}
+                  </button>
+                )}
+              </div>
             </div>
 
             <p style={{color: '#64748b', fontSize: '14px', marginBottom: '20px'}}>
@@ -121,6 +174,55 @@ function RouteDetail() {
               )}
               {!isAuthenticated && <a href="/login" style={{background: '#7c3aed', color: 'white', padding: '10px 24px', borderRadius: '10px', fontWeight: '500', fontSize: '14px', textDecoration: 'none'}}>Inicia sesion para completar</a>}
             </div>
+          </div>
+        </div>
+
+        <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '24px'}}>
+          <h3 style={{color: 'white', fontWeight: '500', margin: '0 0 20px', fontSize: '16px'}}>Comentarios ({comments.length})</h3>
+
+          {isAuthenticated && (
+            <form onSubmit={handleComment} style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+              <input
+                type="text"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Escribe un comentario..."
+                maxLength={500}
+                style={{flex: 1, background: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none'}}
+              />
+              <button type="submit" disabled={sendingComment || !commentText.trim()} style={{background: '#7c3aed', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 18px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: sendingComment ? 0.6 : 1}}>
+                {sendingComment ? '...' : 'Enviar'}
+              </button>
+            </form>
+          )}
+
+          {!isAuthenticated && (
+            <p style={{color: '#475569', fontSize: '13px', marginBottom: '20px'}}>
+              <a href="/login" style={{color: '#7c3aed'}}>Inicia sesion</a> para comentar
+            </p>
+          )}
+
+          <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+            {comments.length === 0 && <p style={{color: '#475569', fontSize: '14px', textAlign: 'center', padding: '16px'}}>Sin comentarios todavia. Se el primero.</p>}
+            {comments.map((comment) => (
+              <div key={comment.id} style={{display: 'flex', gap: '10px', alignItems: 'flex-start'}}>
+                <div style={{width: '32px', height: '32px', borderRadius: '50%', background: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '500', color: 'white', flexShrink: 0}}>
+                  {comment.user.username[0].toUpperCase()}
+                </div>
+                <div style={{flex: 1, background: '#0f172a', borderRadius: '10px', padding: '10px 14px'}}>
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
+                    <a href={"/profile/" + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</a>
+                    <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                      <span style={{color: '#475569', fontSize: '11px'}}>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                      {user?.id === comment.user.id && (
+                        <button onClick={() => handleDeleteComment(comment.id)} style={{color: '#475569', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
+                      )}
+                    </div>
+                  </div>
+                  <p style={{color: '#94a3b8', fontSize: '14px', margin: 0}}>{comment.content}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
