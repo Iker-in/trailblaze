@@ -14,6 +14,7 @@ import photoRoutes from './routes/photos.routes.js'
 import achievementRoutes from './routes/achievements.routes.js'
 import notificationRoutes from './routes/notifications.routes.js'
 import commentRoutes from './routes/comments.routes.js'
+import prisma from './config/prisma.js'
 
 dotenv.config()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -62,6 +63,19 @@ app.get('/api/health', (req, res) => {
     message: 'TrailBlaze API funcionando',
     timestamp: new Date().toISOString()
   })
+})
+
+app.get('/api/stats', async (req, res) => {
+  try {
+    const [users, routes, completions] = await Promise.all([
+      prisma.user.count(),
+      prisma.route.count({ where: { status: 'published' } }),
+      prisma.routeCompletion.count()
+    ])
+    res.json({ users, routes, completions })
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
 })
 
 // Manejo de rutas no encontradas
