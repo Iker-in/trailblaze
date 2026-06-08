@@ -1,13 +1,9 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
 import { authenticate } from '../middleware/auth.middleware.js'
-import {
-  getProfile,
-  getUserRoutes,
-  getUserCompletions,
-  updateProfile
-} from '../controllers/users.controller.js'
 import prisma from '../config/prisma.js'
+import { getProfile, getUserRoutes, getUserCompletions, updateProfile, searchUsers } from '../controllers/users.controller.js'
+
 
 const router = Router()
 
@@ -33,5 +29,8 @@ router.get('/:username/achievements', async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 })
+
+router.get('/search', searchUsers)
+
 
 export default router

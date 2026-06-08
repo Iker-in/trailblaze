@@ -193,3 +193,21 @@ export const deleteRoute = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 }
+
+export const getPopularRoutes = async (req, res) => {
+  try {
+    const routes = await prisma.route.findMany({
+      where: { status: 'published' },
+      take: 6,
+      orderBy: { completions: { _count: 'desc' } },
+      include: {
+        user: { select: { id: true, username: true } },
+        photos: { take: 1, orderBy: { order: 'asc' } },
+        _count: { select: { completions: true, comments: true } }
+      }
+    })
+    res.json({ routes })
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+}

@@ -1,13 +1,7 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
 import { authenticate } from '../middleware/auth.middleware.js'
-import {
-  createRoute,
-  getRoutes,
-  getRoute,
-  completeRoute,
-  deleteRoute
-} from '../controllers/routes.controller.js'
+import { createRoute, getRoutes, getRoute, completeRoute, deleteRoute, getPopularRoutes } from '../controllers/routes.controller.js'
 
 const router = Router()
 
@@ -33,5 +27,6 @@ router.get('/:id', getRoute)
 router.post('/', authenticate, routeValidation, createRoute)
 router.post('/:id/complete', authenticate, completeRoute)
 router.delete('/:id', authenticate, deleteRoute)
+router.get('/popular', getPopularRoutes)
 
 export default router

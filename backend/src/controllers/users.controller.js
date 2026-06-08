@@ -123,3 +123,30 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 }
+
+export const searchUsers = async (req, res) => {
+  try {
+    const { q } = req.query
+    if (!q) return res.json({ users: [] })
+
+    const users = await prisma.user.findMany({
+      where: {
+        username: { contains: q, mode: 'insensitive' }
+      },
+      take: 10,
+      select: {
+        id: true,
+        username: true,
+        avatarUrl: true,
+        points: true,
+        _count: {
+          select: { routes: true, followers: true }
+        }
+      }
+    })
+
+    res.json({ users })
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+}
