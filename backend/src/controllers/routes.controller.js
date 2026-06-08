@@ -45,11 +45,17 @@ const safeDescription = xss(description)
 
 export const getRoutes = async (req, res) => {
   try {
-    const { difficulty, page = 1, limit = 10 } = req.query
+    const { difficulty, page = 1, limit = 10, search, minDistance, maxDistance } = req.query
     const skip = (parseInt(page) - 1) * parseInt(limit)
 
     const where = { status: 'published' }
     if (difficulty) where.difficulty = difficulty
+    if (search) where.title = { contains: search, mode: 'insensitive' }
+    if (minDistance || maxDistance) {
+      where.distanceKm = {}
+      if (minDistance) where.distanceKm.gte = parseFloat(minDistance)
+      if (maxDistance) where.distanceKm.lte = parseFloat(maxDistance)
+    }
 
     const [routes, total] = await Promise.all([
       prisma.route.findMany({
@@ -58,16 +64,9 @@ export const getRoutes = async (req, res) => {
         take: parseInt(limit),
         orderBy: { createdAt: 'desc' },
         include: {
-          user: {
-            select: { id: true, username: true, avatarUrl: true }
-          },
-          photos: {
-            take: 1,
-            orderBy: { order: 'asc' }
-          },
-          _count: {
-            select: { completions: true }
-          }
+          user: { select: { id: true, username: true, avatarUrl: true } },
+          photos: { take: 1, orderBy: { order: 'asc' } },
+          _count: { select: { completions: true, comments: true } }
         }
       }),
       prisma.route.count({ where })
