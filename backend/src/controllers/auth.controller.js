@@ -26,6 +26,28 @@ const setRefreshCookie = (res, token) => {
   })
 }
 
+const revokeToken = async (token) => {
+  try {
+    const decoded = jwt.decode(token)
+    if (!decoded || !decoded.exp) return
+    const expiresAt = new Date(decoded.exp * 1000)
+    await prisma.revokedToken.create({ data: { token, expiresAt } })
+  } catch (error) {
+    console.error('Error revocando token:', error)
+  }
+}
+
+const isTokenRevoked = async (token) => {
+  const revoked = await prisma.revokedToken.findUnique({ where: { token } })
+  return !!revoked
+}
+
+const cleanExpiredTokens = async () => {
+  await prisma.revokedToken.deleteMany({
+    where: { expiresAt: { lt: new Date() } }
+  })
+}
+
 export const register = async (req, res) => {
   try {
     const errors = validationResult(req)
@@ -85,10 +107,10 @@ export const login = async (req, res) => {
 
     const validPassword = await bcrypt.compare(password, user.passwordHash)
 
-   if (!validPassword) {
-  console.warn(`Login fallido para email: ${email} desde IP: ${req.ip}`)
-  return res.status(401).json({ error: 'Credenciales incorrectas' })
-}
+    if (!validPassword) {
+      console.warn(`Login fallido para email: ${email} desde IP: ${req.ip}`)
+      return res.status(401).json({ error: 'Credenciales incorrectas' })
+    }
 
     const { accessToken, refreshToken } = generateTokens(user.id)
     setRefreshCookie(res, refreshToken)
@@ -113,6 +135,11 @@ export const refresh = async (req, res) => {
       return res.status(401).json({ error: 'No hay refresh token' })
     }
 
+    const revoked = await isTokenRevoked(token)
+    if (revoked) {
+      return res.status(401).json({ error: 'Token revocado' })
+    }
+
     const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
 
     const user = await prisma.user.findUnique({
@@ -123,6 +150,8 @@ export const refresh = async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: 'Usuario no encontrado' })
     }
+
+    await revokeToken(token)
 
     const { accessToken, refreshToken } = generateTokens(user.id)
     setRefreshCookie(res, refreshToken)
@@ -135,8 +164,19 @@ export const refresh = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-  res.clearCookie('refreshToken')
-  res.json({ message: 'Sesion cerrada' })
+  try {
+    const token = req.cookies.refreshToken
+    if (token) {
+      await revokeToken(token)
+      await cleanExpiredTokens()
+    }
+    res.clearCookie('refreshToken')
+    res.json({ message: 'Sesion cerrada' })
+  } catch (error) {
+    console.error('Error en logout:', error)
+    res.clearCookie('refreshToken')
+    res.json({ message: 'Sesion cerrada' })
+  }
 }
 
 export const getMe = async (req, res) => {
