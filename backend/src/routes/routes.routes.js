@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
 import { authenticate } from '../middleware/auth.middleware.js'
-import { createRoute, getRoutes, getRoute, completeRoute, deleteRoute, getPopularRoutes } from '../controllers/routes.controller.js'
+import { createRoute, getRoutes, getRoute, completeRoute, deleteRoute, getPopularRoutes, getFeed } from '../controllers/routes.controller.js'
 
 const router = Router()
 
@@ -22,11 +22,12 @@ const routeValidation = [
     .withMessage('La distancia debe ser entre 0.1 y 500 km')
 ]
 
+router.get('/popular', getPopularRoutes)
+router.get('/feed', authenticate, getFeed)
 router.get('/', getRoutes)
 router.get('/:id', getRoute)
 router.post('/', authenticate, routeValidation, createRoute)
 router.post('/:id/complete', authenticate, completeRoute)
 router.delete('/:id', authenticate, deleteRoute)
-router.get('/popular', getPopularRoutes)
 
 export default router

@@ -211,3 +211,54 @@ export const getPopularRoutes = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 }
+export const getFeed = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query
+    const skip = (parseInt(page) - 1) * parseInt(limit)
+
+    const following = await prisma.follow.findMany({
+      where: { followerId: req.userId },
+      select: { followingId: true }
+    })
+
+    if (following.length === 0) {
+      return res.json({
+        routes: [],
+        pagination: { total: 0, page: 1, limit: parseInt(limit), totalPages: 0 }
+      })
+    }
+
+    const followingIds = following.map(f => f.followingId)
+
+    const [routes, total] = await Promise.all([
+      prisma.route.findMany({
+        where: { userId: { in: followingIds }, status: 'published' },
+        skip,
+        take: parseInt(limit),
+        orderBy: { createdAt: 'desc' },
+        include: {
+          user: { select: { id: true, username: true, avatarUrl: true } },
+          photos: { take: 1, orderBy: { order: 'asc' } },
+          _count: { select: { completions: true, comments: true } }
+        }
+      }),
+      prisma.route.count({
+        where: { userId: { in: followingIds }, status: 'published' }
+      })
+    ])
+
+    res.json({
+      routes,
+      pagination: {
+        total,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        totalPages: Math.ceil(total / parseInt(limit))
+      }
+    })
+
+  } catch (error) {
+    console.error('Error al obtener feed:', error)
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+}
