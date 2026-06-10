@@ -10,6 +10,8 @@ import Ranking from './pages/Ranking'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
 import Achievements from './pages/Achievements'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route path="/routes/:id" element={<RouteDetail />} />
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/ranking" element={<Ranking />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/achievements" element={<Achievements />} />
       </Routes>

@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import prisma from '../config/prisma.js'
 import { validationResult } from 'express-validator'
+import crypto from 'crypto'
+import { Resend } from 'resend'
 
 const generateTokens = (userId) => {
   const accessToken = jwt.sign(
@@ -202,6 +204,73 @@ export const getMe = async (req, res) => {
 
   } catch (error) {
     console.error('Error en getMe:', error)
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+}
+
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body
+    console.log('forgot-password request para:', email)
+    const user = await prisma.user.findUnique({ where: { email } })
+
+    // Siempre respondemos igual para no revelar si el email existe
+    if (!user) return res.json({ message: 'Si ese email existe, recibirás un enlace en breve' })
+
+    const token = crypto.randomBytes(32).toString('hex')
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000) // 1 hora
+
+    await prisma.passwordResetToken.create({
+      data: { token, expiresAt, userId: user.id }
+    })
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`
+
+    const emailResult = await resend.emails.send({
+  from: 'onboarding@resend.dev',
+  to: user.email,
+  subject: 'Recupera tu contrasena — TrailBlaze',
+  html: `<p>Hola ${user.username},</p>
+         <p>Haz clic en el enlace para restablecer tu contrasena. Expira en 1 hora.</p>
+         <a href="${resetUrl}">${resetUrl}</a>
+         <p>Si no lo pediste, ignora este email.</p>`
+})
+console.log('Resend result:', JSON.stringify(emailResult))
+
+    res.json({ message: 'Si ese email existe, recibirás un enlace en breve' })
+  } catch (error) {
+    console.error('Error en forgotPassword:', error)
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+}
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body
+
+    const record = await prisma.passwordResetToken.findUnique({ where: { token } })
+
+    if (!record || record.used || record.expiresAt < new Date()) {
+      return res.status(400).json({ error: 'Token invalido o expirado' })
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12)
+
+    await prisma.user.update({
+      where: { id: record.userId },
+      data: { passwordHash }
+    })
+
+    await prisma.passwordResetToken.update({
+      where: { token },
+      data: { used: true }
+    })
+
+    res.json({ message: 'Contraseña actualizada correctamente' })
+  } catch (error) {
+    console.error('Error en resetPassword:', error)
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 }

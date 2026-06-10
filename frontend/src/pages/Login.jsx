@@ -50,6 +50,9 @@ function Login() {
           No tienes cuenta?{' '}
           <a href="/register" style={{color: '#7c3aed'}}>Registrate</a>
         </p>
+        <p style={{textAlign: 'center', marginTop: '12px'}}>
+          <a href="/forgot-password" style={{color: '#475569', fontSize: '13px'}}>Olvidaste tu contrasena?</a>
+        </p>
       </div>
     </div>
   )
