@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { getRoute, completeRoute } from '../services/routes.service.js'
 import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
@@ -111,6 +112,15 @@ function RouteDetail() {
 
   return (
     <div style={{minHeight: '100vh', background: '#0f172a'}}>
+      <Helmet>
+        <title>{route ? route.title + ' - TrailBlaze' : 'TrailBlaze'}</title>
+        <meta name="description" content={route ? route.description.slice(0, 150) : ''} />
+        <meta property="og:title" content={route ? route.title : 'TrailBlaze'} />
+        <meta property="og:description" content={route ? route.description.slice(0, 150) : ''} />
+        <meta property="og:image" content={route && route.photos && route.photos.length > 0 ? route.photos[0].url : ''} />
+        <meta property="og:url" content={'https://trailblaze-fawn.vercel.app/routes/' + id} />
+        <meta property="og:type" content="article" />
+      </Helmet>
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 py-8">
         {successMsg && <div style={{background: '#14532d', border: '1px solid #16a34a', color: '#86efac', borderRadius: '12px', padding: '14px', marginBottom: '20px', fontWeight: '500'}}>{successMsg}</div>}
@@ -135,7 +145,7 @@ function RouteDetail() {
               <h1 style={{color: 'white', fontSize: '26px', fontWeight: '500', margin: 0}}>{route.title}</h1>
               <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                 <span style={{...DIFFICULTY_STYLES[route.difficulty], fontSize: '12px', padding: '4px 12px', borderRadius: '20px', fontWeight: '500', whiteSpace: 'nowrap'}}>{route.difficulty}</span>
-                {isAuthenticated && user?.id === route.userId && (
+                {isAuthenticated && user && user.id === route.userId && (
                   <button onClick={handleDeleteRoute} disabled={deleting} style={{background: '#450a0a', color: '#fca5a5', border: '1px solid #991b1b', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', cursor: 'pointer', opacity: deleting ? 0.6 : 1}}>
                     {deleting ? '...' : 'Eliminar'}
                   </button>
@@ -145,14 +155,14 @@ function RouteDetail() {
 
             <p style={{color: '#64748b', fontSize: '14px', marginBottom: '20px'}}>
               Publicada por{' '}
-              <a href={"/profile/" + route.user.username} style={{color: '#ec4899', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</a>
+              <a href={'/profile/' + route.user.username} style={{color: '#ec4899', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</a>
             </p>
 
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px'}}>
               {[
                 { value: route.distanceKm, label: 'km' },
-                route.elevationM && { value: route.elevationM, label: 'metros' },
-                route.estimatedTime && { value: route.estimatedTime, label: 'minutos' }
+                route.elevationM ? { value: route.elevationM, label: 'metros' } : null,
+                route.estimatedTime ? { value: route.estimatedTime, label: 'minutos' } : null
               ].filter(Boolean).map((stat) => (
                 <div key={stat.label} style={{background: '#0f172a', borderRadius: '12px', padding: '14px', textAlign: 'center', border: '1px solid #1e293b'}}>
                   <p style={{color: '#eab308', fontSize: '22px', fontWeight: '500', margin: 0}}>{stat.value}</p>
@@ -211,10 +221,10 @@ function RouteDetail() {
                 </div>
                 <div style={{flex: 1, background: '#0f172a', borderRadius: '10px', padding: '10px 14px'}}>
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
-                    <a href={"/profile/" + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</a>
+                    <a href={'/profile/' + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</a>
                     <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                       <span style={{color: '#475569', fontSize: '11px'}}>{new Date(comment.createdAt).toLocaleDateString()}</span>
-                      {user?.id === comment.user.id && (
+                      {user && user.id === comment.user.id && (
                         <button onClick={() => handleDeleteComment(comment.id)} style={{color: '#475569', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
                       )}
                     </div>

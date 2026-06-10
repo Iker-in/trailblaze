@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
@@ -65,6 +66,14 @@ function Home() {
 
   return (
     <div style={{minHeight: '100vh', background: '#0f172a'}}>
+      <Helmet>
+        <title>TrailBlaze - Comunidad de senderismo</title>
+        <meta name="description" content="Descubre, comparte y conquista rutas de senderismo. La comunidad hispanohablante para senderistas." />
+        <meta property="og:title" content="TrailBlaze - Comunidad de senderismo" />
+        <meta property="og:description" content="Descubre, comparte y conquista rutas de senderismo." />
+        <meta property="og:url" content="https://trailblaze-fawn.vercel.app" />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 py-16">
 
