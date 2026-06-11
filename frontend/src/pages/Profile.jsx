@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { getProfile, getUserRoutes, getUserCompletions, followUser, unfollowUser, getFollowStatus, updateProfile } from '../services/users.service.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
@@ -13,7 +14,7 @@ const DIFFICULTY_STYLES = {
 
 function Profile() {
   const { username } = useParams()
-  const { user: currentUser, login } = useAuthStore()
+  const { user: currentUser } = useAuthStore()
   const [profile, setProfile] = useState(null)
   const [routes, setRoutes] = useState([])
   const [completions, setCompletions] = useState([])
@@ -92,6 +93,14 @@ function Profile() {
 
   return (
     <div style={{minHeight: '100vh', background: '#0f172a'}}>
+      <Helmet>
+        <title>{profile.username} - TrailBlaze</title>
+        <meta name="description" content={profile.bio || 'Perfil de ' + profile.username + ' en TrailBlaze'} />
+        <meta property="og:title" content={profile.username + ' en TrailBlaze'} />
+        <meta property="og:description" content={profile.bio || 'Senderista en TrailBlaze'} />
+        <meta property="og:url" content={'https://trailblaze-fawn.vercel.app/profile/' + profile.username} />
+        <meta property="og:type" content="profile" />
+      </Helmet>
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 py-8">
         <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '24px', marginBottom: '20px'}}>
@@ -179,7 +188,7 @@ function Profile() {
                 <span>{route.distanceKm} km</span>
                 <span>completada {route._count.completions} veces</span>
               </div>
-              <a href={"/routes/" + route.id} style={{color: '#7c3aed', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
+              <a href={'/routes/' + route.id} style={{color: '#7c3aed', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
             </div>
           ))}
           {tab === 'completions' && completions.length === 0 && <div style={{background: '#1e293b', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#475569'}}>No ha completado rutas todavia.</div>}
@@ -193,7 +202,7 @@ function Profile() {
                 <span>{completion.route.distanceKm} km</span>
                 {completion.realTime && <span>{completion.realTime} min</span>}
               </div>
-              <a href={"/routes/" + completion.route.id} style={{color: '#7c3aed', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
+              <a href={'/routes/' + completion.route.id} style={{color: '#7c3aed', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
             </div>
           ))}
         </div>
