@@ -50,13 +50,14 @@ function Profile() {
       setBioValue(profileData.user.bio || '')
       setRoutes(routesData.routes)
       setCompletions(completionsData.completions)
-      const favRes = await api.get('/api/users/' + username + '/favorites').catch(() => ({ data: { favorites: [] } }))
-setFavorites(favRes.data.favorites || [])
+    
     } catch (err) {
       setError('Usuario no encontrado')
     } finally {
       setLoading(false)
     }
+    const favRes = await api.get('/users/' + username + '/favorites').catch(() => ({ data: { favorites: [] } }))
+setFavorites(favRes.data.favorites || [])
   }
 
   const handleFollow = async () => {
