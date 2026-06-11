@@ -15,6 +15,7 @@ import achievementRoutes from './routes/achievements.routes.js'
 import notificationRoutes from './routes/notifications.routes.js'
 import commentRoutes from './routes/comments.routes.js'
 import prisma from './config/prisma.js'
+import favoriteRoutes from './routes/favorites.routes.js'
 
 dotenv.config()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -62,6 +63,7 @@ app.use('/api/routes', photoRoutes)
 app.use('/api/achievements', achievementRoutes)
 app.use('/api/notifications', notificationRoutes)
 app.use('/api/routes', commentRoutes)
+app.use('/api/routes', favoriteRoutes)
 
 
 // Ruta de salud - para verificar que el servidor funciona

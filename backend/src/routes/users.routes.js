@@ -3,6 +3,7 @@ import { body } from 'express-validator'
 import { authenticate } from '../middleware/auth.middleware.js'
 import prisma from '../config/prisma.js'
 import { getProfile, getUserRoutes, getUserCompletions, updateProfile, searchUsers } from '../controllers/users.controller.js'
+import { getUserFavorites } from '../controllers/favorites.controller.js'
 
 
 const router = Router()
@@ -32,5 +33,6 @@ router.get('/:username/achievements', async (req, res) => {
 
 router.get('/search', searchUsers)
 
+router.get('/:username/favorites', getUserFavorites)
 
 export default router

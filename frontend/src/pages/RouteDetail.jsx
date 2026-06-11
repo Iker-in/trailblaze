@@ -29,6 +29,8 @@ function RouteDetail() {
   const [commentText, setCommentText] = useState('')
   const [sendingComment, setSendingComment] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [favoriteLoading, setFavoriteLoading] = useState(false)
 
   useEffect(() => { loadRoute(); loadComments() }, [id])
 
@@ -36,6 +38,10 @@ function RouteDetail() {
     try {
       const data = await getRoute(id)
       setRoute(data.route)
+      if (isAuthenticated) {
+        const favRes = await api.get('/routes/' + id + '/favorite-status')
+        setIsFavorite(favRes.data.isFavorite)
+      }
     } catch (err) {
       setError('Ruta no encontrada')
     } finally {
@@ -62,6 +68,24 @@ function RouteDetail() {
       setError(err.response?.data?.error || 'Error al completar la ruta')
     } finally {
       setCompleting(false)
+    }
+  }
+
+  const handleFavorite = async () => {
+    if (!isAuthenticated) { navigate('/login'); return }
+    setFavoriteLoading(true)
+    try {
+      if (isFavorite) {
+        await api.delete('/routes/' + id + '/favorite')
+        setIsFavorite(false)
+      } else {
+        await api.post('/routes/' + id + '/favorite')
+        setIsFavorite(true)
+      }
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setFavoriteLoading(false)
     }
   }
 
@@ -176,7 +200,12 @@ function RouteDetail() {
             <p style={{color: '#94a3b8', lineHeight: '1.7', marginBottom: '24px'}}>{route.description}</p>
 
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '20px', borderTop: '1px solid #334155'}}>
-              <p style={{color: '#475569', fontSize: '14px', margin: 0}}>Completada {route._count.completions} veces</p>
+              <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                <p style={{color: '#475569', fontSize: '14px', margin: 0}}>Completada {route._count.completions} veces</p>
+                <button onClick={handleFavorite} disabled={favoriteLoading} style={{background: 'transparent', color: isFavorite ? '#eab308' : '#475569', border: '1px solid ' + (isFavorite ? '#eab308' : '#334155'), borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>
+                  {isFavorite ? 'Guardado' : 'Guardar'}
+                </button>
+              </div>
               {isAuthenticated && route.userId !== user?.id && (
                 <button onClick={handleComplete} disabled={completing || completed} style={{background: completed ? '#14532d' : '#7c3aed', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
                   {completed ? 'Completada' : completing ? 'Guardando...' : 'Marcar como completada'}

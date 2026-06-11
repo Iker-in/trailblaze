@@ -208,7 +208,6 @@ export const getMe = async (req, res) => {
   }
 }
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const forgotPassword = async (req, res) => {
   try {
@@ -227,6 +226,8 @@ export const forgotPassword = async (req, res) => {
     })
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
     const emailResult = await resend.emails.send({
   from: 'onboarding@resend.dev',
