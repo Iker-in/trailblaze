@@ -262,3 +262,39 @@ export const getFeed = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 }
+
+export const updateRoute = async (req, res) => {
+  try {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+
+    const { id } = req.params
+    const route = await prisma.route.findUnique({ where: { id } })
+
+    if (!route) return res.status(404).json({ error: 'Ruta no encontrada' })
+    if (route.userId !== req.userId) return res.status(403).json({ error: 'No tienes permiso para editar esta ruta' })
+
+    const { title, description, difficulty, distanceKm, elevationM, estimatedTime, latitudeStart, longitudeStart } = req.body
+
+    const updated = await prisma.route.update({
+      where: { id },
+      data: {
+        title: title ? xss(title) : undefined,
+        description: description ? xss(description) : undefined,
+        difficulty: difficulty || undefined,
+        distanceKm: distanceKm ? parseFloat(distanceKm) : undefined,
+        elevationM: elevationM !== undefined ? (elevationM > 0 ? parseInt(elevationM) : null) : undefined,
+        estimatedTime: estimatedTime !== undefined ? (estimatedTime > 0 ? parseInt(estimatedTime) : null) : undefined,
+        latitudeStart: latitudeStart ? parseFloat(latitudeStart) : undefined,
+        longitudeStart: longitudeStart ? parseFloat(longitudeStart) : undefined,
+      }
+    })
+
+    res.json({ message: 'Ruta actualizada', route: updated })
+  } catch (error) {
+    console.error('Error al actualizar ruta:', error)
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+}

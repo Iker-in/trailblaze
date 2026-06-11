@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Helmet } from 'react-helmet-async'
 import { getRoute, completeRoute } from '../services/routes.service.js'
 import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
@@ -30,7 +29,7 @@ function RouteDetail() {
   const [sendingComment, setSendingComment] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [isFavorite, setIsFavorite] = useState(false)
-  const [favoriteLoading, setFavoriteLoading] = useState(false)
+const [favoriteLoading, setFavoriteLoading] = useState(false)
 
   useEffect(() => { loadRoute(); loadComments() }, [id])
 
@@ -39,9 +38,9 @@ function RouteDetail() {
       const data = await getRoute(id)
       setRoute(data.route)
       if (isAuthenticated) {
-        const favRes = await api.get('/routes/' + id + '/favorite-status')
-        setIsFavorite(favRes.data.isFavorite)
-      }
+  const favRes = await api.get('/routes/' + id + '/favorite-status')
+  setIsFavorite(favRes.data.isFavorite)
+}
     } catch (err) {
       setError('Ruta no encontrada')
     } finally {
@@ -71,24 +70,6 @@ function RouteDetail() {
     }
   }
 
-  const handleFavorite = async () => {
-    if (!isAuthenticated) { navigate('/login'); return }
-    setFavoriteLoading(true)
-    try {
-      if (isFavorite) {
-        await api.delete('/routes/' + id + '/favorite')
-        setIsFavorite(false)
-      } else {
-        await api.post('/routes/' + id + '/favorite')
-        setIsFavorite(true)
-      }
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setFavoriteLoading(false)
-    }
-  }
-
   const handleComment = async (e) => {
     e.preventDefault()
     if (!commentText.trim()) return
@@ -112,6 +93,7 @@ function RouteDetail() {
   }
 
   const handleDeleteRoute = async () => {
+    
     if (!window.confirm('Estas seguro de que quieres eliminar esta ruta?')) return
     setDeleting(true)
     try {
@@ -123,9 +105,28 @@ function RouteDetail() {
     }
   }
 
+  const handleFavorite = async () => {
+  if (!isAuthenticated) { navigate('/login'); return }
+  setFavoriteLoading(true)
+  try {
+    if (isFavorite) {
+      await api.delete('/routes/' + id + '/favorite')
+      setIsFavorite(false)
+    } else {
+      await api.post('/routes/' + id + '/favorite')
+      setIsFavorite(true)
+    }
+  } catch (err) {
+    console.error(err)
+  } finally {
+    setFavoriteLoading(false)
+  }
+}
+
   if (loading) return <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#94a3b8'}}>Cargando...</p></div>
 
   if (error && !route) return (
+    
     <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
       <div style={{textAlign: 'center'}}>
         <p style={{color: '#fca5a5', fontSize: '18px', marginBottom: '16px'}}>{error}</p>
@@ -136,15 +137,6 @@ function RouteDetail() {
 
   return (
     <div style={{minHeight: '100vh', background: '#0f172a'}}>
-      <Helmet>
-        <title>{route ? route.title + ' - TrailBlaze' : 'TrailBlaze'}</title>
-        <meta name="description" content={route ? route.description.slice(0, 150) : ''} />
-        <meta property="og:title" content={route ? route.title : 'TrailBlaze'} />
-        <meta property="og:description" content={route ? route.description.slice(0, 150) : ''} />
-        <meta property="og:image" content={route && route.photos && route.photos.length > 0 ? route.photos[0].url : ''} />
-        <meta property="og:url" content={'https://trailblaze-fawn.vercel.app/routes/' + id} />
-        <meta property="og:type" content="article" />
-      </Helmet>
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 py-8">
         {successMsg && <div style={{background: '#14532d', border: '1px solid #16a34a', color: '#86efac', borderRadius: '12px', padding: '14px', marginBottom: '20px', fontWeight: '500'}}>{successMsg}</div>}
@@ -169,7 +161,7 @@ function RouteDetail() {
               <h1 style={{color: 'white', fontSize: '26px', fontWeight: '500', margin: 0}}>{route.title}</h1>
               <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                 <span style={{...DIFFICULTY_STYLES[route.difficulty], fontSize: '12px', padding: '4px 12px', borderRadius: '20px', fontWeight: '500', whiteSpace: 'nowrap'}}>{route.difficulty}</span>
-                {isAuthenticated && user && user.id === route.userId && (
+                {isAuthenticated && user?.id === route.userId && (
                   <button onClick={handleDeleteRoute} disabled={deleting} style={{background: '#450a0a', color: '#fca5a5', border: '1px solid #991b1b', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', cursor: 'pointer', opacity: deleting ? 0.6 : 1}}>
                     {deleting ? '...' : 'Eliminar'}
                   </button>
@@ -179,14 +171,14 @@ function RouteDetail() {
 
             <p style={{color: '#64748b', fontSize: '14px', marginBottom: '20px'}}>
               Publicada por{' '}
-              <a href={'/profile/' + route.user.username} style={{color: '#ec4899', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</a>
+              <a href={"/profile/" + route.user.username} style={{color: '#ec4899', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</a>
             </p>
 
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px'}}>
               {[
                 { value: route.distanceKm, label: 'km' },
-                route.elevationM ? { value: route.elevationM, label: 'metros' } : null,
-                route.estimatedTime ? { value: route.estimatedTime, label: 'minutos' } : null
+                route.elevationM && { value: route.elevationM, label: 'metros' },
+                route.estimatedTime && { value: route.estimatedTime, label: 'minutos' }
               ].filter(Boolean).map((stat) => (
                 <div key={stat.label} style={{background: '#0f172a', borderRadius: '12px', padding: '14px', textAlign: 'center', border: '1px solid #1e293b'}}>
                   <p style={{color: '#eab308', fontSize: '22px', fontWeight: '500', margin: 0}}>{stat.value}</p>
@@ -200,17 +192,15 @@ function RouteDetail() {
             <p style={{color: '#94a3b8', lineHeight: '1.7', marginBottom: '24px'}}>{route.description}</p>
 
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '20px', borderTop: '1px solid #334155'}}>
-              <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                <p style={{color: '#475569', fontSize: '14px', margin: 0}}>Completada {route._count.completions} veces</p>
-                <button onClick={handleFavorite} disabled={favoriteLoading} style={{background: 'transparent', color: isFavorite ? '#eab308' : '#475569', border: '1px solid ' + (isFavorite ? '#eab308' : '#334155'), borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>
-                  {isFavorite ? 'Guardado' : 'Guardar'}
-                </button>
-              </div>
-              {isAuthenticated && route.userId !== user?.id && (
-                <button onClick={handleComplete} disabled={completing || completed} style={{background: completed ? '#14532d' : '#7c3aed', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
-                  {completed ? 'Completada' : completing ? 'Guardando...' : 'Marcar como completada'}
-                </button>
-              )}
+              <p style={{color: '#475569', fontSize: '14px', margin: 0}}>Completada {route._count.completions} veces</p>
+              {isAuthenticated && user && user.id === route.userId && (
+  <div style={{display: 'flex', gap: '8px'}}>
+    <a href={'/routes/' + id + '/edit'} style={{background: '#1e3a5f', color: '#93c5fd', border: '1px solid #1e40af', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', textDecoration: 'none'}}>Editar</a>
+    <button onClick={handleDeleteRoute} disabled={deleting} style={{background: '#450a0a', color: '#fca5a5', border: '1px solid #991b1b', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', cursor: 'pointer', opacity: deleting ? 0.6 : 1}}>
+      {deleting ? '...' : 'Eliminar'}
+    </button>
+  </div>
+)}
               {!isAuthenticated && <a href="/login" style={{background: '#7c3aed', color: 'white', padding: '10px 24px', borderRadius: '10px', fontWeight: '500', fontSize: '14px', textDecoration: 'none'}}>Inicia sesion para completar</a>}
             </div>
           </div>
@@ -250,10 +240,10 @@ function RouteDetail() {
                 </div>
                 <div style={{flex: 1, background: '#0f172a', borderRadius: '10px', padding: '10px 14px'}}>
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
-                    <a href={'/profile/' + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</a>
+                    <a href={"/profile/" + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</a>
                     <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                       <span style={{color: '#475569', fontSize: '11px'}}>{new Date(comment.createdAt).toLocaleDateString()}</span>
-                      {user && user.id === comment.user.id && (
+                      {user?.id === comment.user.id && (
                         <button onClick={() => handleDeleteComment(comment.id)} style={{color: '#475569', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
                       )}
                     </div>

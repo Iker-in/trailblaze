@@ -12,6 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Achievements from './pages/Achievements'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import EditRoute from './pages/EditRoute'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
 <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/routes/:id/edit" element={<ProtectedRoute><EditRoute /></ProtectedRoute>} />
         <Route path="/achievements" element={<Achievements />} />
       </Routes>
     </BrowserRouter>
