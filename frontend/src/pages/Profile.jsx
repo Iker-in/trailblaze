@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { getProfile, getUserRoutes, getUserCompletions, followUser, unfollowUser, getFollowStatus, updateProfile } from '../services/users.service.js'
+import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
 
@@ -50,14 +51,13 @@ function Profile() {
       setBioValue(profileData.user.bio || '')
       setRoutes(routesData.routes)
       setCompletions(completionsData.completions)
-    
+      const favRes = await api.get('/users/' + username + '/favorites').catch(() => ({ data: { favorites: [] } }))
+      setFavorites(favRes.data.favorites || [])
     } catch (err) {
       setError('Usuario no encontrado')
     } finally {
       setLoading(false)
     }
-    const favRes = await api.get('/users/' + username + '/favorites').catch(() => ({ data: { favorites: [] } }))
-setFavorites(favRes.data.favorites || [])
   }
 
   const handleFollow = async () => {
