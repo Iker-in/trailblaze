@@ -29,6 +29,7 @@ function Profile() {
   const [editingBio, setEditingBio] = useState(false)
   const [bioValue, setBioValue] = useState('')
   const [savingBio, setSavingBio] = useState(false)
+  const [uploadingAvatar, setUploadingAvatar] = useState(false)
 
   const isOwnProfile = currentUser?.username === username
 
@@ -93,6 +94,25 @@ function Profile() {
     }
   }
 
+  const handleAvatarChange = async (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+  setUploadingAvatar(true)
+  try {
+    const formData = new FormData()
+    formData.append('avatar', file)
+    const res = await api.patch('/users/me/avatar', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    setProfile((prev) => ({ ...prev, avatarUrl: res.data.user.avatarUrl }))
+  } catch (err) {
+    alert(err.response?.data?.error || 'Error al subir la imagen')
+    console.error(err)
+  } finally {
+    setUploadingAvatar(false)
+  }
+}
+
   if (loading) return <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#94a3b8'}}>Cargando perfil...</p></div>
   if (error) return <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#fca5a5'}}>{error}</p></div>
 
@@ -111,9 +131,21 @@ function Profile() {
         <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '24px', marginBottom: '20px'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
-              <div style={{width: '56px', height: '56px', borderRadius: '50%', background: '#7c3aed', border: '2px solid #ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: '500', color: 'white'}}>
-                {profile.username[0].toUpperCase()}
-              </div>
+              <div style={{position: 'relative', width: '56px', height: '56px'}}>
+  {profile.avatarUrl ? (
+    <img src={profile.avatarUrl} alt={profile.username} style={{width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #ec4899'}} />
+  ) : (
+    <div style={{width: '56px', height: '56px', borderRadius: '50%', background: '#7c3aed', border: '2px solid #ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: '500', color: 'white'}}>
+      {profile.username[0].toUpperCase()}
+    </div>
+  )}
+  {isOwnProfile && (
+    <label style={{position: 'absolute', bottom: 0, right: 0, background: '#eab308', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '10px'}}>
+      {uploadingAvatar ? '...' : '+'}
+      <input type="file" accept="image/*" onChange={handleAvatarChange} style={{display: 'none'}} />
+    </label>
+  )}
+</div>
               <div>
                 <h1 style={{color: 'white', fontSize: '20px', fontWeight: '500', margin: 0}}>{profile.username}</h1>
 <div style={{marginTop: '6px'}}>

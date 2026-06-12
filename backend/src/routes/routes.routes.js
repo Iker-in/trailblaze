@@ -20,6 +20,15 @@ const routeValidation = [
   body('distanceKm')
     .isFloat({ min: 0.1, max: 500 })
     .withMessage('La distancia debe ser entre 0.1 y 500 km')
+    ,
+  body('elevationM')
+  .optional()
+  .isInt({ min: 0 })
+  .withMessage('La elevacion no puede ser negativa'),
+body('estimatedTime')
+  .optional()
+  .isInt({ min: 0 })
+  .withMessage('El tiempo no puede ser negativo'),
 ]
 
 router.get('/popular', getPopularRoutes)

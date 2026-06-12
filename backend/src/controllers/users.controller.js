@@ -150,3 +150,30 @@ export const searchUsers = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 }
+import { v2 as cloudinary } from 'cloudinary'
+import { upload } from '../config/cloudinary.js'
+
+export const updateAvatar = async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No se envio ninguna imagen' })
+
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'trailblaze/avatars', transformation: [{ width: 200, height: 200, crop: 'fill', gravity: 'face' }] },
+        (error, result) => error ? reject(error) : resolve(result)
+      )
+      stream.end(req.file.buffer)
+    })
+
+    const user = await prisma.user.update({
+      where: { id: req.userId },
+      data: { avatarUrl: result.secure_url },
+      select: { id: true, username: true, avatarUrl: true }
+    })
+
+    res.json({ message: 'Avatar actualizado', user })
+  } catch (error) {
+    console.error('Error al actualizar avatar:', error)
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+}

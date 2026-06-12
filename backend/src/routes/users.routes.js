@@ -2,9 +2,9 @@ import { Router } from 'express'
 import { body } from 'express-validator'
 import { authenticate } from '../middleware/auth.middleware.js'
 import prisma from '../config/prisma.js'
-import { getProfile, getUserRoutes, getUserCompletions, updateProfile, searchUsers } from '../controllers/users.controller.js'
 import { getUserFavorites } from '../controllers/favorites.controller.js'
-
+import { getProfile, getUserRoutes, getUserCompletions, updateProfile, searchUsers, updateAvatar } from '../controllers/users.controller.js'
+import { upload } from '../config/cloudinary.js'
 
 const router = Router()
 
@@ -34,5 +34,16 @@ router.get('/:username/achievements', async (req, res) => {
 router.get('/search', searchUsers)
 
 router.get('/:username/favorites', getUserFavorites)
+
+import multer from 'multer'
+const avatarUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024 } })
+
+router.patch('/me/avatar', authenticate, (req, res, next) => {
+  avatarUpload.single('avatar')(req, res, (err) => {
+    if (err instanceof multer.MulterError) return res.status(400).json({ error: 'La imagen no puede superar 2MB' })
+    if (err) return res.status(500).json({ error: 'Error al subir imagen' })
+    next()
+  })
+}, updateAvatar)
 
 export default router
