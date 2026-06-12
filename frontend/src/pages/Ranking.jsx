@@ -35,9 +35,15 @@ function Ranking() {
               <div style={{width: '36px', textAlign: 'center'}}>
                 <span style={{color: entry.position === 1 ? '#eab308' : entry.position === 2 ? '#94a3b8' : entry.position === 3 ? '#b45309' : '#475569', fontWeight: '500', fontSize: '15px'}}>#{entry.position}</span>
               </div>
-              <div style={{width: '38px', height: '38px', borderRadius: '50%', background: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '500', color: 'white', fontSize: '15px'}}>
-                {entry.username[0].toUpperCase()}
-              </div>
+              <div style={{width: '38px', height: '38px', borderRadius: '50%', overflow: 'hidden', border: '2px solid #334155', flexShrink: 0}}>
+  {entry.avatarUrl ? (
+    <img src={entry.avatarUrl} alt={entry.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+  ) : (
+    <div style={{width: '100%', height: '100%', background: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '500', color: 'white', fontSize: '15px'}}>
+      {entry.username[0].toUpperCase()}
+    </div>
+  )}
+</div>
               <div style={{flex: 1}}>
                 <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
   <p style={{color: 'white', fontWeight: '500', margin: 0, fontSize: '15px'}}>{entry.username}{currentUser && currentUser.id === entry.id ? ' (tu)' : ''}</p>

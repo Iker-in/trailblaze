@@ -9,7 +9,7 @@ export const getComments = async (req, res) => {
       where: { routeId: id },
       orderBy: { createdAt: 'asc' },
       include: {
-        user: { select: { id: true, username: true } }
+        user: { select: { id: true, username: true, avatarUrl: true } }
       }
     })
     res.json({ comments })
@@ -33,7 +33,7 @@ export const createComment = async (req, res) => {
 
     const comment = await prisma.comment.create({
       data: { content, userId: req.userId, routeId: id },
-      include: { user: { select: { id: true, username: true } } }
+      include: { user: { select: { id: true, username: true, avatarUrl: true } } }
     })
 
     if (route.userId !== req.userId) {
