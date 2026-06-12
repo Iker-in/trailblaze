@@ -37,11 +37,7 @@ export const createComment = async (req, res) => {
     })
 
     if (route.userId !== req.userId) {
-      await createNotification(
-        route.userId,
-        'comment',
-        req.username + ' comento en tu ruta: ' + route.title
-      )
+      await createNotification(route.userId, 'comment', req.username + ' comento en tu ruta: ' + route.title, '/routes/' + id)
     }
 
     res.status(201).json({ comment })

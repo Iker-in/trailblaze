@@ -52,6 +52,7 @@ model Route {
   completions RouteCompletion[]
   comments Comment[]
   favorites Favorite[]
+  
 
   @@map("routes")
 }
@@ -132,6 +133,7 @@ model Notification {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  link      String?
 
   @@map("notifications")
 }

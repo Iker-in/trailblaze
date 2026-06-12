@@ -65,14 +65,14 @@ function NotificationBell() {
               <p style={{color: '#475569', fontSize: '13px', textAlign: 'center', padding: '24px'}}>Sin notificaciones</p>
             )}
             {notifications.map((n) => (
-              <div key={n.id} style={{padding: '12px 16px', borderBottom: '1px solid #0f172a', background: n.read ? 'transparent' : '#0f172a', display: 'flex', gap: '10px', alignItems: 'flex-start'}}>
-                <div style={{width: '8px', height: '8px', borderRadius: '50%', background: getTypeColor(n.type), marginTop: '5px', flexShrink: 0}} />
-                <div>
-                  <p style={{color: n.read ? '#94a3b8' : 'white', fontSize: '13px', margin: 0}}>{n.message}</p>
-                  <p style={{color: '#475569', fontSize: '11px', margin: '4px 0 0'}}>{new Date(n.createdAt).toLocaleDateString()}</p>
-                </div>
-              </div>
-            ))}
+  <a key={n.id} href={n.link || '#'} onClick={() => setOpen(false)} style={{padding: '12px 16px', borderBottom: '1px solid #0f172a', background: n.read ? 'transparent' : '#0f172a', display: 'flex', gap: '10px', alignItems: 'flex-start', textDecoration: 'none', cursor: n.link ? 'pointer' : 'default'}}>
+    <div style={{width: '8px', height: '8px', borderRadius: '50%', background: getTypeColor(n.type), marginTop: '5px', flexShrink: 0}} />
+    <div>
+      <p style={{color: n.read ? '#94a3b8' : 'white', fontSize: '13px', margin: 0}}>{n.message}</p>
+      <p style={{color: '#475569', fontSize: '11px', margin: '4px 0 0'}}>{new Date(n.createdAt).toLocaleDateString()}</p>
+    </div>
+  </a>
+))}
           </div>
         </div>
       )}

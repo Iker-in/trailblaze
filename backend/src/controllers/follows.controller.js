@@ -39,7 +39,8 @@ export const followUser = async (req, res) => {
     await createNotification(
   userToFollow.id,
   'follow',
-  req.username + ' empezo a seguirte'
+  req.username + ' empezo a seguirte',
+  '/profile/' + req.username
 )
     res.status(201).json({ message: `Ahora sigues a ${username}` })
 

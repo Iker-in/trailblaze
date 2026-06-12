@@ -153,11 +153,7 @@ export const completeRoute = async (req, res) => {
 
     await checkAndGrantAchievements(req.userId)
     if (route.userId !== req.userId) {
-  await createNotification(
-    route.userId,
-    'completion',
-    req.username + ' completo tu ruta: ' + route.title
-  )
+  await createNotification(route.userId, 'completion', req.username + ' completo tu ruta: ' + route.title, '/routes/' + id)
 }
     res.status(201).json({
       message: 'Ruta marcada como completada. +10 puntos',
