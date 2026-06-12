@@ -5,6 +5,7 @@ import { getProfile, getUserRoutes, getUserCompletions, followUser, unfollowUser
 import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
+import LevelBadge from '../components/LevelBadge.jsx'
 
 const DIFFICULTY_STYLES = {
   facil: { background: '#14532d', color: '#86efac' },
@@ -115,6 +116,9 @@ function Profile() {
               </div>
               <div>
                 <h1 style={{color: 'white', fontSize: '20px', fontWeight: '500', margin: 0}}>{profile.username}</h1>
+<div style={{marginTop: '6px'}}>
+  <LevelBadge points={profile.points} size="sm" />
+</div>
                 {!editingBio && (
                   <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px'}}>
                     {profile.bio

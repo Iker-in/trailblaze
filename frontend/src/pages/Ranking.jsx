@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { getRanking } from '../services/ranking.service.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
+import LevelBadge from '../components/LevelBadge.jsx'
 
 function Ranking() {
   const { user: currentUser } = useAuthStore()
@@ -38,7 +39,10 @@ function Ranking() {
                 {entry.username[0].toUpperCase()}
               </div>
               <div style={{flex: 1}}>
-                <p style={{color: 'white', fontWeight: '500', margin: 0, fontSize: '15px'}}>{entry.username}{currentUser && currentUser.id === entry.id ? ' (tu)' : ''}</p>
+                <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+  <p style={{color: 'white', fontWeight: '500', margin: 0, fontSize: '15px'}}>{entry.username}{currentUser && currentUser.id === entry.id ? ' (tu)' : ''}</p>
+  <LevelBadge points={entry.points} size="sm" />
+</div>
                 <p style={{color: '#64748b', fontSize: '12px', margin: 0}}>{entry._count.routes} rutas · {entry._count.completions} completadas · {entry._count.followers} seguidores</p>
               </div>
               <div style={{textAlign: 'right'}}>
