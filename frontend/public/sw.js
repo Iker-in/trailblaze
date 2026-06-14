@@ -1,4 +1,4 @@
-const CACHE_NAME = 'arventra-v1'
+const CACHE_NAME = 'arventra-v2'
 const urlsToCache = [
   '/',
   '/logo.png',
