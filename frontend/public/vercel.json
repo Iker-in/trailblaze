@@ -1,8 +1,8 @@
 {
   "rewrites": [
-    {
-      "source": "/((?!manifest.json|logo.png|sw.js|favicon).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/manifest.json", "destination": "/manifest.json" },
+    { "source": "/logo.png", "destination": "/logo.png" },
+    { "source": "/sw.js", "destination": "/sw.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
