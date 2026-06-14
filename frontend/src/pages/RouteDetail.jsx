@@ -28,6 +28,10 @@ function RouteDetail() {
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState('')
   const [sendingComment, setSendingComment] = useState(false)
+  const [commentsPage, setCommentsPage] = useState(1)
+const [commentsTotalPages, setCommentsTotalPages] = useState(1)
+const [commentsTotal, setCommentsTotal] = useState(0)
+const [loadingMore, setLoadingMore] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [isFavorite, setIsFavorite] = useState(false)
   const [favoriteLoading, setFavoriteLoading] = useState(false)
@@ -49,12 +53,25 @@ function RouteDetail() {
     }
   }
 
-  const loadComments = async () => {
-    try {
-      const res = await api.get('/routes/' + id + '/comments')
+  const loadComments = async (page = 1) => {
+  try {
+    const res = await api.get('/routes/' + id + '/comments?page=' + page + '&limit=10')
+    if (page === 1) {
       setComments(res.data.comments)
-    } catch (err) {}
-  }
+    } else {
+      setComments((prev) => [...prev, ...res.data.comments])
+    }
+    setCommentsPage(res.data.pagination.page)
+    setCommentsTotalPages(res.data.pagination.totalPages)
+    setCommentsTotal(res.data.pagination.total)
+  } catch (err) {}
+}
+
+const loadMoreComments = async () => {
+  setLoadingMore(true)
+  await loadComments(commentsPage + 1)
+  setLoadingMore(false)
+}
 
   const handleComplete = async () => {
     if (!isAuthenticated) { navigate('/login'); return }
@@ -95,7 +112,8 @@ function RouteDetail() {
     setSendingComment(true)
     try {
       const res = await api.post('/routes/' + id + '/comments', { content: commentText })
-      setComments((prev) => [...prev, res.data.comment])
+      setComments((prev) => [res.data.comment, ...prev])
+setCommentsTotal((prev) => prev + 1)
       setCommentText('')
     } catch (err) {
       console.error(err)
@@ -220,7 +238,7 @@ function RouteDetail() {
         </div>
 
         <div style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', padding: '24px'}}>
-          <h3 style={{color: 'white', fontWeight: '500', margin: '0 0 20px', fontSize: '16px'}}>Comentarios ({comments.length})</h3>
+          <h3 style={{color: 'white', fontWeight: '500', margin: '0 0 20px', fontSize: '16px'}}>Comentarios ({commentsTotal})</h3>
 
           {isAuthenticated && (
             <form onSubmit={handleComment} style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
@@ -264,6 +282,11 @@ function RouteDetail() {
                 </div>
               </div>
             ))}
+            {commentsPage < commentsTotalPages && (
+  <button onClick={loadMoreComments} disabled={loadingMore} style={{background: 'transparent', color: '#f97316', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '10px', fontSize: '13px', cursor: 'pointer', marginTop: '12px', width: '100%'}}>
+    {loadingMore ? 'Cargando...' : 'Cargar mas comentarios'}
+  </button>
+)}
           </div>
         </div>
       </div>

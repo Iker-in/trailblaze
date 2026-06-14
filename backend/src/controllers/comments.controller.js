@@ -5,14 +5,24 @@ import { createNotification } from '../services/notifications.service.js'
 export const getComments = async (req, res) => {
   try {
     const { id } = req.params
-    const comments = await prisma.comment.findMany({
-      where: { routeId: id },
-      orderBy: { createdAt: 'asc' },
-      include: {
-        user: { select: { id: true, username: true, avatarUrl: true } }
-      }
+    const { page = 1, limit = 10 } = req.query
+    const skip = (parseInt(page) - 1) * parseInt(limit)
+
+    const [comments, total] = await Promise.all([
+      prisma.comment.findMany({
+        where: { routeId: id },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: parseInt(limit),
+        include: { user: { select: { id: true, username: true, avatarUrl: true } } }
+      }),
+      prisma.comment.count({ where: { routeId: id } })
+    ])
+
+    res.json({
+      comments,
+      pagination: { total, page: parseInt(page), limit: parseInt(limit), totalPages: Math.ceil(total / parseInt(limit)) }
     })
-    res.json({ comments })
   } catch (error) {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
