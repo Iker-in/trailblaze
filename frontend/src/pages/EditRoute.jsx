@@ -44,18 +44,18 @@ function EditRoute() {
     }
   }
 
-  const inputStyle = { width: '100%', background: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }
-  const labelStyle = { color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px' }
+  const inputStyle = { width: '100%', background: '#160d28', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }
+  const labelStyle = { color: '#a78bb5', fontSize: '13px', display: 'block', marginBottom: '6px' }
 
-  if (fetching) return <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#94a3b8'}}>Cargando...</p></div>
+  if (fetching) return <div style={{minHeight: '100vh', background: '#160d28', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#a78bb5'}}>Cargando...</p></div>
 
   return (
-    <div style={{minHeight: '100vh', background: '#0f172a'}}>
+    <div style={{minHeight: '100vh', background: '#160d28'}}>
       <Navbar />
       <div className="max-w-2xl mx-auto px-4 py-8">
         <h1 style={{color: 'white', marginBottom: '24px', fontSize: '24px', fontWeight: '500'}}>Editar ruta</h1>
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
-        <form onSubmit={handleSubmit} style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px'}}>
+        <form onSubmit={handleSubmit} style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px'}}>
           <div>
             <label style={labelStyle}>Titulo</label>
             <input type="text" name="title" value={formData.title} onChange={handleChange} style={inputStyle} required />
@@ -95,10 +95,10 @@ function EditRoute() {
             </div>
           </div>
           <div style={{display: 'flex', gap: '12px'}}>
-            <button type="submit" disabled={loading} style={{flex: 1, background: '#7c3aed', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', opacity: loading ? 0.6 : 1}}>
+            <button type="submit" disabled={loading} style={{flex: 1, background: '#f97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', opacity: loading ? 0.6 : 1}}>
               {loading ? 'Guardando...' : 'Guardar cambios'}
             </button>
-            <button type="button" onClick={() => navigate('/routes/' + id)} style={{background: 'transparent', color: '#94a3b8', border: '1px solid #334155', borderRadius: '12px', padding: '14px 20px', fontSize: '15px', cursor: 'pointer'}}>
+            <button type="button" onClick={() => navigate('/routes/' + id)} style={{background: 'transparent', color: '#a78bb5', border: '1px solid #3d2a5c', borderRadius: '12px', padding: '14px 20px', fontSize: '15px', cursor: 'pointer'}}>
               Cancelar
             </button>
           </div>

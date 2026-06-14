@@ -113,34 +113,34 @@ function Profile() {
   }
 }
 
-  if (loading) return <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#94a3b8'}}>Cargando perfil...</p></div>
-  if (error) return <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#fca5a5'}}>{error}</p></div>
+  if (loading) return <div style={{minHeight: '100vh', background: '#160d28', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#a78bb5'}}>Cargando perfil...</p></div>
+  if (error) return <div style={{minHeight: '100vh', background: '#160d28', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#fca5a5'}}>{error}</p></div>
 
   return (
-    <div style={{minHeight: '100vh', background: '#0f172a'}}>
+    <div style={{minHeight: '100vh', background: '#160d28'}}>
       <Helmet>
-        <title>{profile.username} - TrailBlaze</title>
-        <meta name="description" content={profile.bio || 'Perfil de ' + profile.username + ' en TrailBlaze'} />
-        <meta property="og:title" content={profile.username + ' en TrailBlaze'} />
-        <meta property="og:description" content={profile.bio || 'Senderista en TrailBlaze'} />
-        <meta property="og:url" content={'https://trailblaze-fawn.vercel.app/profile/' + profile.username} />
+        <title>{profile.username} - ARVENTRA</title>
+        <meta name="description" content={profile.bio || 'Perfil de ' + profile.username + ' en ARVENTRA'} />
+        <meta property="og:title" content={profile.username + ' en ARVENTRA'} />
+        <meta property="og:description" content={profile.bio || 'Senderista en ARVENTRA'} />
+        <meta property="og:url" content={'https://arventra.app/profile/' + profile.username} />
         <meta property="og:type" content="profile" />
       </Helmet>
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 py-8">
-        <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '24px', marginBottom: '20px'}}>
+        <div style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', padding: '24px', marginBottom: '20px'}}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px'}}>
             <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
               <div style={{position: 'relative', width: '56px', height: '56px'}}>
   {profile.avatarUrl ? (
     <img src={profile.avatarUrl} alt={profile.username} style={{width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #ec4899'}} />
   ) : (
-    <div style={{width: '56px', height: '56px', borderRadius: '50%', background: '#7c3aed', border: '2px solid #ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: '500', color: 'white'}}>
+    <div style={{width: '56px', height: '56px', borderRadius: '50%', background: '#f97316', border: '2px solid #ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: '500', color: 'white'}}>
       {profile.username[0].toUpperCase()}
     </div>
   )}
   {isOwnProfile && (
-    <label style={{position: 'absolute', bottom: 0, right: 0, background: '#eab308', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '10px'}}>
+    <label style={{position: 'absolute', bottom: 0, right: 0, background: '#fbbf24', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '10px'}}>
       {uploadingAvatar ? '...' : '+'}
       <input type="file" accept="image/*" onChange={handleAvatarChange} style={{display: 'none'}} />
     </label>
@@ -154,27 +154,27 @@ function Profile() {
                 {!editingBio && (
                   <div style={{display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px'}}>
                     {profile.bio
-                      ? <p style={{color: '#94a3b8', fontSize: '14px', margin: 0}}>{profile.bio}</p>
-                      : <p style={{color: '#475569', fontSize: '13px', margin: 0}}>Sin bio todavia</p>
+                      ? <p style={{color: '#a78bb5', fontSize: '14px', margin: 0}}>{profile.bio}</p>
+                      : <p style={{color: '#5a4670', fontSize: '13px', margin: 0}}>Sin bio todavia</p>
                     }
                     {isOwnProfile && (
-                      <button onClick={() => setEditingBio(true)} style={{color: '#7c3aed', fontSize: '12px', background: 'none', border: 'none', cursor: 'pointer', padding: '0'}}>Editar</button>
+                      <button onClick={() => setEditingBio(true)} style={{color: '#f97316', fontSize: '12px', background: 'none', border: 'none', cursor: 'pointer', padding: '0'}}>Editar</button>
                     )}
                   </div>
                 )}
                 {editingBio && (
                   <div style={{marginTop: '8px', display: 'flex', gap: '8px', alignItems: 'flex-start'}}>
-                    <textarea value={bioValue} onChange={(e) => setBioValue(e.target.value)} maxLength={300} rows={2} placeholder="Escribe algo sobre ti..." style={{background: '#0f172a', border: '1px solid #ec4899', borderRadius: '8px', padding: '8px 12px', color: 'white', fontSize: '13px', outline: 'none', resize: 'none', width: '220px'}} />
+                    <textarea value={bioValue} onChange={(e) => setBioValue(e.target.value)} maxLength={300} rows={2} placeholder="Escribe algo sobre ti..." style={{background: '#160d28', border: '1px solid #ec4899', borderRadius: '8px', padding: '8px 12px', color: 'white', fontSize: '13px', outline: 'none', resize: 'none', width: '220px'}} />
                     <div style={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
-                      <button onClick={handleSaveBio} disabled={savingBio} style={{background: '#7c3aed', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', opacity: savingBio ? 0.6 : 1}}>{savingBio ? '...' : 'Guardar'}</button>
-                      <button onClick={() => setEditingBio(false)} style={{background: 'transparent', color: '#64748b', border: '1px solid #334155', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer'}}>Cancelar</button>
+                      <button onClick={handleSaveBio} disabled={savingBio} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', opacity: savingBio ? 0.6 : 1}}>{savingBio ? '...' : 'Guardar'}</button>
+                      <button onClick={() => setEditingBio(false)} style={{background: 'transparent', color: '#8b7aa3', border: '1px solid #3d2a5c', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer'}}>Cancelar</button>
                     </div>
                   </div>
                 )}
               </div>
             </div>
             {currentUser && !isOwnProfile && (
-              <button onClick={handleFollow} disabled={followLoading} style={{background: isFollowing ? 'transparent' : '#7c3aed', color: isFollowing ? '#94a3b8' : 'white', border: isFollowing ? '1px solid #334155' : 'none', borderRadius: '10px', padding: '8px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', opacity: followLoading ? 0.6 : 1}}>
+              <button onClick={handleFollow} disabled={followLoading} style={{background: isFollowing ? 'transparent' : '#f97316', color: isFollowing ? '#a78bb5' : 'white', border: isFollowing ? '1px solid #3d2a5c' : 'none', borderRadius: '10px', padding: '8px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', opacity: followLoading ? 0.6 : 1}}>
                 {followLoading ? '...' : isFollowing ? 'Siguiendo' : 'Seguir'}
               </button>
             )}
@@ -182,14 +182,14 @@ function Profile() {
 
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px'}}>
             {[
-              { value: profile.points, label: 'puntos', color: '#eab308' },
-              { value: profile._count.routes, label: 'rutas', color: '#7c3aed' },
+              { value: profile.points, label: 'puntos', color: '#fbbf24' },
+              { value: profile._count.routes, label: 'rutas', color: '#f97316' },
               { value: profile._count.completions, label: 'completadas', color: '#ec4899' },
-              { value: profile._count.followers, label: 'seguidores', color: '#94a3b8' }
+              { value: profile._count.followers, label: 'seguidores', color: '#a78bb5' }
             ].map((stat) => (
-              <div key={stat.label} style={{background: '#0f172a', borderRadius: '12px', padding: '14px', textAlign: 'center', border: '1px solid #1e293b'}}>
+              <div key={stat.label} style={{background: '#160d28', borderRadius: '12px', padding: '14px', textAlign: 'center', border: '1px solid #241640'}}>
                 <p style={{color: stat.color, fontSize: '22px', fontWeight: '500', margin: 0}}>{stat.value}</p>
-                <p style={{color: '#64748b', fontSize: '12px', margin: 0}}>{stat.label}</p>
+                <p style={{color: '#8b7aa3', fontSize: '12px', margin: 0}}>{stat.label}</p>
               </div>
             ))}
           </div>
@@ -197,53 +197,53 @@ function Profile() {
 
         <div style={{display: 'flex', gap: '8px', marginBottom: '20px'}}>
           {['routes', 'completions', 'favorites'].map((t) => (
-            <button key={t} onClick={() => setTab(t)} style={{background: tab === t ? '#7c3aed' : '#1e293b', color: tab === t ? 'white' : '#94a3b8', border: tab === t ? 'none' : '1px solid #334155', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: '500', cursor: 'pointer'}}>
+            <button key={t} onClick={() => setTab(t)} style={{background: tab === t ? '#f97316' : '#241640', color: tab === t ? 'white' : '#a78bb5', border: tab === t ? 'none' : '1px solid #3d2a5c', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: '500', cursor: 'pointer'}}>
               {t === 'routes' ? 'Publicadas (' + routes.length + ')' : t === 'completions' ? 'Completadas (' + completions.length + ')' : 'Guardadas (' + favorites.length + ')'}
             </button>
           ))}
         </div>
 
         <div className="flex flex-col gap-3">
-          {tab === 'routes' && routes.length === 0 && <div style={{background: '#1e293b', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#475569'}}>No ha publicado rutas todavia.</div>}
+          {tab === 'routes' && routes.length === 0 && <div style={{background: '#241640', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#5a4670'}}>No ha publicado rutas todavia.</div>}
           {tab === 'routes' && routes.map((route) => (
-            <div key={route.id} style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '14px', padding: '16px 20px'}}>
+            <div key={route.id} style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '14px', padding: '16px 20px'}}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
                 <p style={{color: 'white', fontWeight: '500', margin: 0}}>{route.title}</p>
                 <span style={{...DIFFICULTY_STYLES[route.difficulty], fontSize: '11px', padding: '3px 10px', borderRadius: '20px', fontWeight: '500'}}>{route.difficulty}</span>
               </div>
-              <div style={{display: 'flex', gap: '16px', fontSize: '13px', color: '#64748b', marginBottom: '12px'}}>
+              <div style={{display: 'flex', gap: '16px', fontSize: '13px', color: '#8b7aa3', marginBottom: '12px'}}>
                 <span>{route.distanceKm} km</span>
                 <span>completada {route._count.completions} veces</span>
               </div>
-              <a href={'/routes/' + route.id} style={{color: '#7c3aed', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
+              <a href={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
             </div>
           ))}
-          {tab === 'completions' && completions.length === 0 && <div style={{background: '#1e293b', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#475569'}}>No ha completado rutas todavia.</div>}
+          {tab === 'completions' && completions.length === 0 && <div style={{background: '#241640', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#5a4670'}}>No ha completado rutas todavia.</div>}
           {tab === 'completions' && completions.map((completion) => (
-            <div key={completion.id} style={{background: '#1e293b', border: '1px solid #334155', borderLeft: '3px solid #ec4899', borderRadius: '14px', padding: '16px 20px'}}>
+            <div key={completion.id} style={{background: '#241640', border: '1px solid #3d2a5c', borderLeft: '3px solid #ec4899', borderRadius: '14px', padding: '16px 20px'}}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
                 <p style={{color: 'white', fontWeight: '500', margin: 0}}>{completion.route.title}</p>
                 <span style={{...DIFFICULTY_STYLES[completion.route.difficulty], fontSize: '11px', padding: '3px 10px', borderRadius: '20px', fontWeight: '500'}}>{completion.route.difficulty}</span>
               </div>
-              <div style={{display: 'flex', gap: '16px', fontSize: '13px', color: '#64748b', marginBottom: '12px'}}>
+              <div style={{display: 'flex', gap: '16px', fontSize: '13px', color: '#8b7aa3', marginBottom: '12px'}}>
                 <span>{completion.route.distanceKm} km</span>
                 {completion.realTime && <span>{completion.realTime} min</span>}
               </div>
-              <a href={'/routes/' + completion.route.id} style={{color: '#7c3aed', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
+              <a href={'/routes/' + completion.route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
             </div>
           ))}
-          {tab === 'favorites' && favorites.length === 0 && <div style={{background: '#1e293b', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#475569'}}>No hay rutas guardadas todavia.</div>}
+          {tab === 'favorites' && favorites.length === 0 && <div style={{background: '#241640', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#5a4670'}}>No hay rutas guardadas todavia.</div>}
           {tab === 'favorites' && favorites.map((route) => (
-            <div key={route.id} style={{background: '#1e293b', border: '1px solid #334155', borderLeft: '3px solid #eab308', borderRadius: '14px', padding: '16px 20px'}}>
+            <div key={route.id} style={{background: '#241640', border: '1px solid #3d2a5c', borderLeft: '3px solid #fbbf24', borderRadius: '14px', padding: '16px 20px'}}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
                 <p style={{color: 'white', fontWeight: '500', margin: 0}}>{route.title}</p>
                 <span style={{...DIFFICULTY_STYLES[route.difficulty], fontSize: '11px', padding: '3px 10px', borderRadius: '20px', fontWeight: '500'}}>{route.difficulty}</span>
               </div>
-              <div style={{display: 'flex', gap: '16px', fontSize: '13px', color: '#64748b', marginBottom: '12px'}}>
+              <div style={{display: 'flex', gap: '16px', fontSize: '13px', color: '#8b7aa3', marginBottom: '12px'}}>
                 <span>{route.distanceKm} km</span>
                 <span>por {route.user.username}</span>
               </div>
-              <a href={'/routes/' + route.id} style={{color: '#7c3aed', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
+              <a href={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
             </div>
           ))}
         </div>

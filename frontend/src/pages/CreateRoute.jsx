@@ -48,16 +48,16 @@ function CreateRoute() {
     }
   }
 
-  const inputStyle = { width: '100%', background: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }
-  const labelStyle = { color: '#94a3b8', fontSize: '13px', display: 'block', marginBottom: '6px' }
+  const inputStyle = { width: '100%', background: '#160d28', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }
+  const labelStyle = { color: '#a78bb5', fontSize: '13px', display: 'block', marginBottom: '6px' }
 
   return (
-    <div style={{minHeight: '100vh', background: '#0f172a'}}>
+    <div style={{minHeight: '100vh', background: '#160d28'}}>
       <Navbar />
       <div className="max-w-2xl mx-auto px-4 py-8">
         <h1 style={{color: 'white', marginBottom: '24px'}} className="text-2xl font-bold">Publicar nueva ruta</h1>
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
-        <form onSubmit={handleSubmit} style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px'}}>
+        <form onSubmit={handleSubmit} style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px'}}>
           <div>
             <label style={labelStyle}>Titulo</label>
             <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Ej: Ruta al Cerro Verde" style={inputStyle} required />
@@ -98,7 +98,7 @@ function CreateRoute() {
                 {locating ? 'Obteniendo...' : 'Mi ubicacion'}
               </button>
             </div>
-            <p style={{color: '#475569', fontSize: '12px', marginTop: '6px'}}>Opcional. Usa el boton para obtener tu ubicacion actual.</p>
+            <p style={{color: '#5a4670', fontSize: '12px', marginTop: '6px'}}>Opcional. Usa el boton para obtener tu ubicacion actual.</p>
           </div>
           <div>
             <label style={labelStyle}>Fotos (maximo 5)</label>
@@ -106,12 +106,12 @@ function CreateRoute() {
             {previews.length > 0 && (
               <div style={{display: 'flex', gap: '8px', marginTop: '12px', flexWrap: 'wrap'}}>
                 {previews.map((src, i) => (
-                  <img key={i} src={src} style={{width: '72px', height: '72px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #334155'}} />
+                  <img key={i} src={src} style={{width: '72px', height: '72px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #3d2a5c'}} />
                 ))}
               </div>
             )}
           </div>
-          <button type="submit" disabled={loading} style={{background: '#7c3aed', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: loading ? 0.6 : 1}}>
+          <button type="submit" disabled={loading} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: loading ? 0.6 : 1}}>
             {loading ? 'Publicando...' : 'Publicar ruta'}
           </button>
         </form>

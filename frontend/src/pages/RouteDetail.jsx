@@ -123,26 +123,26 @@ function RouteDetail() {
     }
   }
 
-  if (loading) return <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#94a3b8'}}>Cargando...</p></div>
+  if (loading) return <div style={{minHeight: '100vh', background: '#160d28', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#a78bb5'}}>Cargando...</p></div>
 
   if (error && !route) return (
-    <div style={{minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+    <div style={{minHeight: '100vh', background: '#160d28', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
       <div style={{textAlign: 'center'}}>
         <p style={{color: '#fca5a5', fontSize: '18px', marginBottom: '16px'}}>{error}</p>
-        <a href="/routes" style={{color: '#7c3aed'}}>Volver a rutas</a>
+        <a href="/routes" style={{color: '#f97316'}}>Volver a rutas</a>
       </div>
     </div>
   )
 
   return (
-    <div style={{minHeight: '100vh', background: '#0f172a'}}>
+    <div style={{minHeight: '100vh', background: '#160d28'}}>
       <Helmet>
-        <title>{route ? route.title + ' - TrailBlaze' : 'TrailBlaze'}</title>
+        <title>{route ? route.title + ' - ARVENTRA' : 'ARVENTRA'}</title>
         <meta name="description" content={route ? route.description.slice(0, 150) : ''} />
-        <meta property="og:title" content={route ? route.title : 'TrailBlaze'} />
+        <meta property="og:title" content={route ? route.title : 'ARVENTRA'} />
         <meta property="og:description" content={route ? route.description.slice(0, 150) : ''} />
         <meta property="og:image" content={route && route.photos && route.photos.length > 0 ? route.photos[0].url : ''} />
-        <meta property="og:url" content={'https://trailblaze-fawn.vercel.app/routes/' + id} />
+        <meta property="og:url" content={'https://arventra.app/routes/' + id} />
         <meta property="og:type" content="article" />
       </Helmet>
       <Navbar />
@@ -150,14 +150,14 @@ function RouteDetail() {
         {successMsg && <div style={{background: '#14532d', border: '1px solid #16a34a', color: '#86efac', borderRadius: '12px', padding: '14px', marginBottom: '20px', fontWeight: '500'}}>{successMsg}</div>}
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '12px', padding: '14px', marginBottom: '20px'}}>{error}</div>}
 
-        <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px'}}>
+        <div style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px'}}>
           {route.photos && route.photos.length > 0 && (
             <div style={{position: 'relative'}}>
-              <img src={route.photos[currentPhoto].url} alt={route.title} style={{width: '100%', height: '280px', objectFit: 'contain', background: '#0f172a'}} />
+              <img src={route.photos[currentPhoto].url} alt={route.title} style={{width: '100%', height: '280px', objectFit: 'contain', background: '#160d28'}} />
               {route.photos.length > 1 && (
                 <div style={{position: 'absolute', bottom: '12px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '6px'}}>
                   {route.photos.map((_, i) => (
-                    <button key={i} onClick={() => setCurrentPhoto(i)} style={{width: '8px', height: '8px', borderRadius: '50%', border: 'none', background: i === currentPhoto ? '#eab308' : 'rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0}} />
+                    <button key={i} onClick={() => setCurrentPhoto(i)} style={{width: '8px', height: '8px', borderRadius: '50%', border: 'none', background: i === currentPhoto ? '#fbbf24' : 'rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0}} />
                   ))}
                 </div>
               )}
@@ -180,7 +180,7 @@ function RouteDetail() {
               </div>
             </div>
 
-            <p style={{color: '#64748b', fontSize: '14px', marginBottom: '20px'}}>
+            <p style={{color: '#8b7aa3', fontSize: '14px', marginBottom: '20px'}}>
               Publicada por{' '}
               <a href={'/profile/' + route.user.username} style={{color: '#ec4899', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</a>
             </p>
@@ -191,76 +191,76 @@ function RouteDetail() {
                 route.elevationM ? { value: route.elevationM, label: 'metros' } : null,
                 route.estimatedTime ? { value: route.estimatedTime, label: 'minutos' } : null
               ].filter(Boolean).map((stat) => (
-                <div key={stat.label} style={{background: '#0f172a', borderRadius: '12px', padding: '14px', textAlign: 'center', border: '1px solid #1e293b'}}>
-                  <p style={{color: '#eab308', fontSize: '22px', fontWeight: '500', margin: 0}}>{stat.value}</p>
-                  <p style={{color: '#64748b', fontSize: '13px', margin: 0}}>{stat.label}</p>
+                <div key={stat.label} style={{background: '#160d28', borderRadius: '12px', padding: '14px', textAlign: 'center', border: '1px solid #241640'}}>
+                  <p style={{color: '#fbbf24', fontSize: '22px', fontWeight: '500', margin: 0}}>{stat.value}</p>
+                  <p style={{color: '#8b7aa3', fontSize: '13px', margin: 0}}>{stat.label}</p>
                 </div>
               ))}
             </div>
 
             <RouteMap latitude={route.latitudeStart} longitude={route.longitudeStart} title={route.title} />
 
-            <p style={{color: '#94a3b8', lineHeight: '1.7', marginBottom: '24px'}}>{route.description}</p>
+            <p style={{color: '#a78bb5', lineHeight: '1.7', marginBottom: '24px'}}>{route.description}</p>
 
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '20px', borderTop: '1px solid #334155'}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '20px', borderTop: '1px solid #3d2a5c'}}>
               <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                <p style={{color: '#475569', fontSize: '14px', margin: 0}}>Completada {route._count.completions} veces</p>
-                <button onClick={handleFavorite} disabled={favoriteLoading} style={{background: 'transparent', color: isFavorite ? '#eab308' : '#475569', border: '1px solid ' + (isFavorite ? '#eab308' : '#334155'), borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>
+                <p style={{color: '#5a4670', fontSize: '14px', margin: 0}}>Completada {route._count.completions} veces</p>
+                <button onClick={handleFavorite} disabled={favoriteLoading} style={{background: 'transparent', color: isFavorite ? '#fbbf24' : '#5a4670', border: '1px solid ' + (isFavorite ? '#fbbf24' : '#3d2a5c'), borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>
                   {isFavorite ? 'Guardado' : 'Guardar'}
                 </button>
               </div>
               {isAuthenticated && route.userId !== user?.id && (
-                <button onClick={handleComplete} disabled={completing || completed} style={{background: completed ? '#14532d' : '#7c3aed', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
+                <button onClick={handleComplete} disabled={completing || completed} style={{background: completed ? '#14532d' : '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
                   {completed ? 'Completada' : completing ? 'Guardando...' : 'Marcar como completada'}
                 </button>
               )}
-              {!isAuthenticated && <a href="/login" style={{background: '#7c3aed', color: 'white', padding: '10px 24px', borderRadius: '10px', fontWeight: '500', fontSize: '14px', textDecoration: 'none'}}>Inicia sesion para completar</a>}
+              {!isAuthenticated && <a href="/login" style={{background: '#f97316', color: 'white', padding: '10px 24px', borderRadius: '10px', fontWeight: '500', fontSize: '14px', textDecoration: 'none'}}>Inicia sesion para completar</a>}
             </div>
           </div>
         </div>
 
-        <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '16px', padding: '24px'}}>
+        <div style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', padding: '24px'}}>
           <h3 style={{color: 'white', fontWeight: '500', margin: '0 0 20px', fontSize: '16px'}}>Comentarios ({comments.length})</h3>
 
           {isAuthenticated && (
             <form onSubmit={handleComment} style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
-              <input type="text" value={commentText} onChange={(e) => setCommentText(e.target.value)} placeholder="Escribe un comentario..." maxLength={500} style={{flex: 1, background: '#0f172a', border: '1px solid #334155', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none'}} />
-              <button type="submit" disabled={sendingComment || !commentText.trim()} style={{background: '#7c3aed', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 18px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: sendingComment ? 0.6 : 1}}>
+              <input type="text" value={commentText} onChange={(e) => setCommentText(e.target.value)} placeholder="Escribe un comentario..." maxLength={500} style={{flex: 1, background: '#160d28', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none'}} />
+              <button type="submit" disabled={sendingComment || !commentText.trim()} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 18px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: sendingComment ? 0.6 : 1}}>
                 {sendingComment ? '...' : 'Enviar'}
               </button>
             </form>
           )}
 
           {!isAuthenticated && (
-            <p style={{color: '#475569', fontSize: '13px', marginBottom: '20px'}}>
-              <a href="/login" style={{color: '#7c3aed'}}>Inicia sesion</a> para comentar
+            <p style={{color: '#5a4670', fontSize: '13px', marginBottom: '20px'}}>
+              <a href="/login" style={{color: '#f97316'}}>Inicia sesion</a> para comentar
             </p>
           )}
 
           <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
-            {comments.length === 0 && <p style={{color: '#475569', fontSize: '14px', textAlign: 'center', padding: '16px'}}>Sin comentarios todavia. Se el primero.</p>}
+            {comments.length === 0 && <p style={{color: '#5a4670', fontSize: '14px', textAlign: 'center', padding: '16px'}}>Sin comentarios todavia. Se el primero.</p>}
             {comments.map((comment) => (
               <div key={comment.id} style={{display: 'flex', gap: '10px', alignItems: 'flex-start'}}>
-                <div style={{width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #334155', flexShrink: 0}}>
+                <div style={{width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #3d2a5c', flexShrink: 0}}>
                   {comment.user.avatarUrl ? (
                     <img src={comment.user.avatarUrl} alt={comment.user.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                   ) : (
-                    <div style={{width: '100%', height: '100%', background: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '500', color: 'white'}}>
+                    <div style={{width: '100%', height: '100%', background: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '500', color: 'white'}}>
                       {comment.user.username[0].toUpperCase()}
                     </div>
                   )}
                 </div>
-                <div style={{flex: 1, background: '#0f172a', borderRadius: '10px', padding: '10px 14px'}}>
+                <div style={{flex: 1, background: '#160d28', borderRadius: '10px', padding: '10px 14px'}}>
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
                     <a href={'/profile/' + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</a>
                     <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                      <span style={{color: '#475569', fontSize: '11px'}}>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                      <span style={{color: '#5a4670', fontSize: '11px'}}>{new Date(comment.createdAt).toLocaleDateString()}</span>
                       {user && user.id === comment.user.id && (
-                        <button onClick={() => handleDeleteComment(comment.id)} style={{color: '#475569', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
+                        <button onClick={() => handleDeleteComment(comment.id)} style={{color: '#5a4670', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
                       )}
                     </div>
                   </div>
-                  <p style={{color: '#94a3b8', fontSize: '14px', margin: 0}}>{comment.content}</p>
+                  <p style={{color: '#a78bb5', fontSize: '14px', margin: 0}}>{comment.content}</p>
                 </div>
               </div>
             ))}
