@@ -7,6 +7,7 @@ import { getProfile, getUserRoutes, getUserCompletions, updateProfile, searchUse
 import { upload } from '../config/cloudinary.js'
 
 const router = Router()
+router.get('/search', searchUsers)
 
 router.get('/:username', getProfile)
 router.get('/:username/routes', getUserRoutes)
@@ -31,7 +32,6 @@ router.get('/:username/achievements', async (req, res) => {
   }
 })
 
-router.get('/search', searchUsers)
 
 router.get('/:username/favorites', getUserFavorites)
 

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../store/authStore.js'
 import NotificationBell from './NotificationBell.jsx'
+import UserSearch from './UserSearch.jsx'
 
 function Navbar() {
   const navigate = useNavigate()
@@ -18,6 +19,7 @@ function Navbar() {
         <span style={{color: '#fbbf24', fontSize: '20px', fontWeight: 'bold', letterSpacing: '1px'}}>ARVENTRA</span>
       </a>
       <div style={{display: 'flex', alignItems: 'center', gap: '24px'}}>
+        <UserSearch />
         <a href="/routes" style={{color: '#fbbf24', fontSize: '14px', textDecoration: 'none', fontWeight: '500'}}>Rutas</a>
         <a href="/ranking" style={{color: '#fbbf24', fontSize: '14px', textDecoration: 'none', fontWeight: '500'}}>Ranking</a>
         <a href="/achievements" style={{color: '#fbbf24', fontSize: '14px', textDecoration: 'none', fontWeight: '500'}}>Logros</a>

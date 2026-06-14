@@ -34,3 +34,8 @@ export const getFollowStatus = async (username) => {
   const response = await api.get(`/users/${username}/follow-status`)
   return response.data
 }
+
+export const searchUsers = async (query) => {
+  const response = await api.get('/users/search?q=' + encodeURIComponent(query))
+  return response.data
+}
