@@ -2,16 +2,15 @@
 @import "tailwindcss";
 
 :root {
-  --tb-purple: #7c3aed;
-  --tb-yellow: #eab308;
+  --tb-purple: #f97316;
+  --tb-yellow: #fbbf24;
   --tb-pink: #ec4899;
-  --tb-dark: #0f172a;
-  --tb-surface: #1e293b;
-  --tb-border: #334155;
-  --tb-muted: #94a3b8;
+  --tb-dark: #160d28;
+  --tb-surface: #241640;
+  --tb-border: #3d2a5c;
+  --tb-muted: #a78bb5;
 }
-
 body {
-  background-color: #0f172a;
+  background-color: #160d28;
   color: #f1f5f9;
 }
