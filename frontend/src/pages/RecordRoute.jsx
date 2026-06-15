@@ -88,15 +88,16 @@ const resumeRecording = () => {
 }
 
   const handleContinue = () => {
-    if (points.length < 2) {
-      setError('Necesitas al menos 2 puntos para crear una ruta')
-      return
-    }
-    const distanceKm = calculateDistance().toFixed(2)
-    const [latitudeStart, longitudeStart] = points[0]
-    sessionStorage.setItem('arventra_track', JSON.stringify({ trackPoints: points, distanceKm, latitudeStart, longitudeStart }))
-    navigate('/routes/create')
+  if (points.length < 2) {
+    setError('Necesitas al menos 2 puntos para crear una ruta')
+    return
   }
+  const distanceKm = calculateDistance().toFixed(2)
+  const estimatedTime = Math.round(elapsedSeconds / 60)
+  const [latitudeStart, longitudeStart] = points[0]
+  sessionStorage.setItem('arventra_track', JSON.stringify({ trackPoints: points, distanceKm, estimatedTime, latitudeStart, longitudeStart }))
+  navigate('/routes/create')
+}
 
   const center = points.length > 0 ? points[points.length - 1] : [40.4168, -3.7038]
 

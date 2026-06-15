@@ -18,6 +18,7 @@ useEffect(() => {
     setFormData((prev) => ({
       ...prev,
       distanceKm: data.distanceKm,
+      estimatedTime: data.estimatedTime,
       latitudeStart: data.latitudeStart,
       longitudeStart: data.longitudeStart
     }))
