@@ -8,6 +8,9 @@ function RecordRoute() {
   const navigate = useNavigate()
   const [points, setPoints] = useState([])
   const [recording, setRecording] = useState(false)
+  const [paused, setPaused] = useState(false)
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
+const timerRef = useRef(null)
   const [error, setError] = useState('')
   const watchIdRef = useRef(null)
 
@@ -27,15 +30,40 @@ function RecordRoute() {
       () => setError('No se pudo obtener tu ubicacion'),
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
     )
+    timerRef.current = setInterval(() => setElapsedSeconds((s) => s + 1), 1000)
   }
 
-  const stopRecording = () => {
-    if (watchIdRef.current !== null) {
-      navigator.geolocation.clearWatch(watchIdRef.current)
-      watchIdRef.current = null
-    }
-    setRecording(false)
+  const pauseRecording = () => {
+  if (watchIdRef.current !== null) {
+    navigator.geolocation.clearWatch(watchIdRef.current)
+    watchIdRef.current = null
+    clearInterval(timerRef.current)
   }
+  setPaused(true)
+}
+
+const resumeRecording = () => {
+  setPaused(false)
+  watchIdRef.current = navigator.geolocation.watchPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords
+      setPoints((prev) => [...prev, [latitude, longitude]])
+    },
+    () => setError('No se pudo obtener tu ubicacion'),
+    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+  )
+  timerRef.current = setInterval(() => setElapsedSeconds((s) => s + 1), 1000)
+}
+
+  const stopRecording = () => {
+  if (watchIdRef.current !== null) {
+    navigator.geolocation.clearWatch(watchIdRef.current)
+    watchIdRef.current = null
+  }
+  setRecording(false)
+  setPaused(false)
+  clearInterval(timerRef.current)
+}
 
   const calculateDistance = () => {
     if (points.length < 2) return 0
@@ -51,6 +79,13 @@ function RecordRoute() {
     }
     return total
   }
+
+  const formatTime = (s) => {
+  const h = Math.floor(s / 3600)
+  const m = Math.floor((s % 3600) / 60)
+  const sec = s % 60
+  return (h > 0 ? h + ':' : '') + String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0')
+}
 
   const handleContinue = () => {
     if (points.length < 2) {
@@ -71,8 +106,8 @@ function RecordRoute() {
       <div className="max-w-2xl mx-auto px-4 py-8">
         <h1 style={{color: 'white', fontSize: '24px', fontWeight: '500', marginBottom: '8px'}}>Grabar ruta</h1>
         <p style={{color: '#8b7aa3', fontSize: '14px', marginBottom: '20px'}}>
-          {recording ? 'Grabando... ' + points.length + ' puntos ? ' + calculateDistance().toFixed(2) + ' km' : 'Presiona iniciar y comienza a caminar'}
-        </p>
+  {recording ? (paused ? 'Pausado' : 'Grabando') + ' · ' + formatTime(elapsedSeconds) + ' · ' + calculateDistance().toFixed(2) + ' km' : 'Presiona iniciar y comienza a caminar'}
+</p>
 
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
 
@@ -88,21 +123,32 @@ function RecordRoute() {
         </div>
 
         <div style={{display: 'flex', gap: '12px'}}>
-          {!recording ? (
-            <button onClick={startRecording} style={{flex: 1, background: '#f97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
-              Iniciar grabacion
-            </button>
-          ) : (
-            <button onClick={stopRecording} style={{flex: 1, background: '#450a0a', color: '#fca5a5', border: '1px solid #991b1b', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
-              Detener
-            </button>
-          )}
-          {!recording && points.length > 1 && (
-            <button onClick={handleContinue} style={{flex: 1, background: '#ec4899', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
-              Continuar y publicar
-            </button>
-          )}
-        </div>
+  {!recording ? (
+    <button onClick={startRecording} style={{flex: 1, background: '#f97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
+      Iniciar grabacion
+    </button>
+  ) : (
+    <>
+      {!paused ? (
+        <button onClick={pauseRecording} style={{flex: 1, background: '#241640', color: '#fbbf24', border: '1px solid #3d2a5c', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
+          Pausar
+        </button>
+      ) : (
+        <button onClick={resumeRecording} style={{flex: 1, background: '#f97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
+          Reanudar
+        </button>
+      )}
+      <button onClick={stopRecording} style={{flex: 1, background: '#450a0a', color: '#fca5a5', border: '1px solid #991b1b', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
+        Detener
+      </button>
+    </>
+  )}
+  {!recording && points.length > 1 && (
+    <button onClick={handleContinue} style={{flex: 1, background: '#ec4899', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
+      Continuar y publicar
+    </button>
+  )}
+</div>
       </div>
     </div>
   )
