@@ -1,6 +1,7 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -9,7 +10,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-function RouteMap({ latitude, longitude, title }) {
+function RouteMap({ latitude, longitude, title, trackPoints }) {
   if (!latitude || !longitude) return null
 
   return (
@@ -23,6 +24,7 @@ function RouteMap({ latitude, longitude, title }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {trackPoints && trackPoints.length > 1 && <Polyline positions={trackPoints} color="#f97316" weight={4} />}
         <Marker position={[latitude, longitude]}>
           <Popup>{title}</Popup>
         </Marker>

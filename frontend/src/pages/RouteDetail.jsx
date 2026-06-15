@@ -216,7 +216,7 @@ setCommentsTotal((prev) => prev + 1)
               ))}
             </div>
 
-            <RouteMap latitude={route.latitudeStart} longitude={route.longitudeStart} title={route.title} />
+            <RouteMap latitude={route.latitudeStart} longitude={route.longitudeStart} title={route.title} trackPoints={route.trackPoints} />
 
             <p style={{color: '#a78bb5', lineHeight: '1.7', marginBottom: '24px'}}>{route.description}</p>
 
