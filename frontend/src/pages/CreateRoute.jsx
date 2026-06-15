@@ -1,11 +1,30 @@
-import { useState } from 'react'
+
 import { useNavigate } from 'react-router-dom'
 import { createRoute, uploadPhoto } from '../services/routes.service.js'
 import Navbar from '../components/Navbar.jsx'
+import { useState, useEffect } from 'react'
 
 function CreateRoute() {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({ title: '', description: '', difficulty: 'facil', distanceKm: '', elevationM: '', estimatedTime: '', latitudeStart: '', longitudeStart: '' })
+  
+const [trackData, setTrackData] = useState(null)
+
+useEffect(() => {
+  const saved = sessionStorage.getItem('arventra_track')
+  if (saved) {
+    const data = JSON.parse(saved)
+    setTrackData(data.trackPoints)
+    setFormData((prev) => ({
+      ...prev,
+      distanceKm: data.distanceKm,
+      latitudeStart: data.latitudeStart,
+      longitudeStart: data.longitudeStart
+    }))
+    sessionStorage.removeItem('arventra_track')
+  }
+}, [])
+
   const [photos, setPhotos] = useState([])
   const [previews, setPreviews] = useState([])
   const [error, setError] = useState('')
@@ -36,7 +55,8 @@ function CreateRoute() {
     setError('')
     setLoading(true)
     try {
-      const data = await createRoute(formData)
+      const payload = trackData ? { ...formData, trackPoints: JSON.stringify(trackData) } : formData
+const data = await createRoute(payload)
       const routeId = data.route.id
       for (const photo of photos) { await uploadPhoto(routeId, photo) }
       navigate('/routes/' + routeId)
@@ -57,6 +77,16 @@ function CreateRoute() {
       <div className="max-w-2xl mx-auto px-4 py-8">
         <h1 style={{color: 'white', marginBottom: '24px'}} className="text-2xl font-bold">Publicar nueva ruta</h1>
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
+        {!trackData && (
+  <a href="/routes/record" style={{display: 'block', background: '#241640', border: '1px solid #3d2a5c', borderRadius: '12px', padding: '14px', marginBottom: '16px', textDecoration: 'none', textAlign: 'center', color: '#f97316', fontSize: '14px', fontWeight: '500'}}>
+    📍 Grabar ruta con GPS en vivo
+  </a>
+)}
+{trackData && (
+  <div style={{background: '#241640', border: '1px solid #ec4899', borderRadius: '12px', padding: '12px', marginBottom: '16px', textAlign: 'center', color: '#ec4899', fontSize: '13px'}}>
+    Ruta grabada con {trackData.length} puntos GPS ({formData.distanceKm} km)
+  </div>
+)}
         <form onSubmit={handleSubmit} style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px'}}>
           <div>
             <label style={labelStyle}>Titulo</label>

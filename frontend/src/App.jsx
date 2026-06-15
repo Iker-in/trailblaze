@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import RoutesList from './pages/Routes'
 import CreateRoute from './pages/CreateRoute'
+import RecordRoute from './pages/RecordRoute'
 import RouteDetail from './pages/RouteDetail'
 import Profile from './pages/Profile'
 import Ranking from './pages/Ranking'
@@ -28,6 +29,7 @@ function App() {
         <Route path="/ranking" element={<Ranking />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 <Route path="/reset-password" element={<ResetPassword />} />
+<Route path="/routes/record" element={<ProtectedRoute><RecordRoute /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
         <Route path="/routes/:id/edit" element={<ProtectedRoute><EditRoute /></ProtectedRoute>} />
         <Route path="/achievements" element={<Achievements />} />

@@ -11,7 +11,7 @@ export const createRoute = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { title, description, difficulty, distanceKm, elevationM, estimatedTime, latitudeStart, longitudeStart } = req.body
+    const { title, description, difficulty, distanceKm, elevationM, estimatedTime, latitudeStart, longitudeStart, trackPoints } = req.body
     const safeTitle = xss(title)
 const safeDescription = xss(description)
 
@@ -25,6 +25,7 @@ const safeDescription = xss(description)
     estimatedTime: estimatedTime && estimatedTime > 0 ? parseInt(estimatedTime) : null,
     latitudeStart: latitudeStart ? parseFloat(latitudeStart) : null,
     longitudeStart: longitudeStart ? parseFloat(longitudeStart) : null,
+    trackPoints: trackPoints ? JSON.parse(trackPoints) : undefined,
     userId: req.userId
   },
       include: {
