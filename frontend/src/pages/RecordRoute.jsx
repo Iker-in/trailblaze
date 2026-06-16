@@ -1,18 +1,33 @@
-import { useState, useRef } from 'react'
+
 import { useNavigate } from 'react-router-dom'
 import { MapContainer, TileLayer, Polyline, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import Navbar from '../components/Navbar.jsx'
+import { useState, useRef, useEffect } from 'react'
 
 function RecordRoute() {
   const navigate = useNavigate()
   const [points, setPoints] = useState([])
   const [recording, setRecording] = useState(false)
+  const [error, setError] = useState('')
   const [paused, setPaused] = useState(false)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
+
+useEffect(() => {
+  const handleBeforeUnload = (e) => {
+    if (recording) {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+  }
+  window.addEventListener('beforeunload', handleBeforeUnload)
+  return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+}, [recording])
+
 const timerRef = useRef(null)
-  const [error, setError] = useState('')
   const watchIdRef = useRef(null)
+
+  
 
   const startRecording = () => {
     if (!navigator.geolocation) {
