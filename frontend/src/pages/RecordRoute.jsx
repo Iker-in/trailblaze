@@ -12,6 +12,7 @@ function RecordRoute() {
   const [error, setError] = useState('')
   const [paused, setPaused] = useState(false)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
+  const [accuracy, setAccuracy] = useState(null)
 
 useEffect(() => {
   const handleBeforeUnload = (e) => {
@@ -39,9 +40,10 @@ const timerRef = useRef(null)
     setRecording(true)
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
-        const { latitude, longitude, altitude } = pos.coords
-setPoints((prev) => [...prev, [latitude, longitude, altitude]])
-      },
+  const { latitude, longitude, altitude, accuracy } = pos.coords
+  setPoints((prev) => [...prev, [latitude, longitude, altitude]])
+  setAccuracy(accuracy)
+},
       () => setError('No se pudo obtener tu ubicacion'),
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
     )
@@ -61,9 +63,10 @@ const resumeRecording = () => {
   setPaused(false)
   watchIdRef.current = navigator.geolocation.watchPosition(
     (pos) => {
-      const { latitude, longitude, altitude } = pos.coords
-setPoints((prev) => [...prev, [latitude, longitude, altitude]])
-    },
+  const { latitude, longitude, altitude, accuracy } = pos.coords
+  setPoints((prev) => [...prev, [latitude, longitude, altitude]])
+  setAccuracy(accuracy)
+},
     () => setError('No se pudo obtener tu ubicacion'),
     { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
   )
@@ -137,6 +140,12 @@ setPoints((prev) => [...prev, [latitude, longitude, altitude]])
         <p style={{color: '#8b7aa3', fontSize: '14px', marginBottom: '20px'}}>
   {recording ? (paused ? 'Pausado' : 'Grabando') + ' · ' + formatTime(elapsedSeconds) + ' · ' + calculateDistance().toFixed(2) + ' km · ' + calculateElevationGain() + ' m' : 'Presiona iniciar y comienza a caminar'}
 </p>
+
+{recording && accuracy !== null && (
+  <p style={{color: accuracy <= 15 ? '#86efac' : accuracy <= 30 ? '#fde68a' : '#fca5a5', fontSize: '12px', marginBottom: '12px'}}>
+    {accuracy <= 15 ? 'Senal GPS buena' : accuracy <= 30 ? 'Senal GPS regular' : 'Senal GPS debil'} (±{Math.round(accuracy)}m)
+  </p>
+)}
 
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
 
