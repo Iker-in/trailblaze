@@ -24,8 +24,8 @@ const timerRef = useRef(null)
     setRecording(true)
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
-        const { latitude, longitude } = pos.coords
-        setPoints((prev) => [...prev, [latitude, longitude]])
+        const { latitude, longitude, altitude } = pos.coords
+setPoints((prev) => [...prev, [latitude, longitude, altitude]])
       },
       () => setError('No se pudo obtener tu ubicacion'),
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
@@ -46,8 +46,8 @@ const resumeRecording = () => {
   setPaused(false)
   watchIdRef.current = navigator.geolocation.watchPosition(
     (pos) => {
-      const { latitude, longitude } = pos.coords
-      setPoints((prev) => [...prev, [latitude, longitude]])
+      const { latitude, longitude, altitude } = pos.coords
+setPoints((prev) => [...prev, [latitude, longitude, altitude]])
     },
     () => setError('No se pudo obtener tu ubicacion'),
     { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
@@ -80,6 +80,18 @@ const resumeRecording = () => {
     return total
   }
 
+  const calculateElevationGain = () => {
+  let gain = 0
+  for (let i = 1; i < points.length; i++) {
+    const alt1 = points[i - 1][2]
+    const alt2 = points[i][2]
+    if (alt1 != null && alt2 != null && alt2 > alt1) {
+      gain += alt2 - alt1
+    }
+  }
+  return Math.round(gain)
+}
+
   const formatTime = (s) => {
   const h = Math.floor(s / 3600)
   const m = Math.floor((s % 3600) / 60)
@@ -94,8 +106,9 @@ const resumeRecording = () => {
   }
   const distanceKm = calculateDistance().toFixed(2)
   const estimatedTime = Math.round(elapsedSeconds / 60)
+  const elevationM = calculateElevationGain()
   const [latitudeStart, longitudeStart] = points[0]
-  sessionStorage.setItem('arventra_track', JSON.stringify({ trackPoints: points, distanceKm, estimatedTime, latitudeStart, longitudeStart }))
+  sessionStorage.setItem('arventra_track', JSON.stringify({ trackPoints: points, distanceKm, estimatedTime, elevationM, latitudeStart, longitudeStart }))
   navigate('/routes/create')
 }
 
@@ -107,7 +120,7 @@ const resumeRecording = () => {
       <div className="max-w-2xl mx-auto px-4 py-8">
         <h1 style={{color: 'white', fontSize: '24px', fontWeight: '500', marginBottom: '8px'}}>Grabar ruta</h1>
         <p style={{color: '#8b7aa3', fontSize: '14px', marginBottom: '20px'}}>
-  {recording ? (paused ? 'Pausado' : 'Grabando') + ' · ' + formatTime(elapsedSeconds) + ' · ' + calculateDistance().toFixed(2) + ' km' : 'Presiona iniciar y comienza a caminar'}
+  {recording ? (paused ? 'Pausado' : 'Grabando') + ' · ' + formatTime(elapsedSeconds) + ' · ' + calculateDistance().toFixed(2) + ' km · ' + calculateElevationGain() + ' m' : 'Presiona iniciar y comienza a caminar'}
 </p>
 
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}

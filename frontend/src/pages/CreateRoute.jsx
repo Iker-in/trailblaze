@@ -16,12 +16,13 @@ useEffect(() => {
     const data = JSON.parse(saved)
     setTrackData(data.trackPoints)
     setFormData((prev) => ({
-      ...prev,
-      distanceKm: data.distanceKm,
-      estimatedTime: data.estimatedTime,
-      latitudeStart: data.latitudeStart,
-      longitudeStart: data.longitudeStart
-    }))
+  ...prev,
+  distanceKm: data.distanceKm,
+  estimatedTime: data.estimatedTime,
+  elevationM: data.elevationM,
+  latitudeStart: data.latitudeStart,
+  longitudeStart: data.longitudeStart
+}))
     sessionStorage.removeItem('arventra_track')
   }
 }, [])
