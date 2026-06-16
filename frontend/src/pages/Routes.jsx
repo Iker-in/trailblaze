@@ -19,6 +19,9 @@ function Routes() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [total, setTotal] = useState(0)
+  const [userLocation, setUserLocation] = useState(null)
+const [locating, setLocating] = useState(false)
+const [sortByDistance, setSortByDistance] = useState(false)
 
   useEffect(() => {
     setPage(1)
@@ -45,6 +48,45 @@ function Routes() {
       setLoading(false)
     }
   }
+
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371
+  const dLat = (lat2 - lat1) * Math.PI / 180
+  const dLon = (lon2 - lon1) * Math.PI / 180
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+}
+
+const handleFindNearby = () => {
+  setLocating(true)
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      setUserLocation([pos.coords.latitude, pos.coords.longitude])
+      setSortByDistance(true)
+      setLocating(false)
+    },
+    () => { setError('No se pudo obtener tu ubicacion'); setLocating(false) },
+    { enableHighAccuracy: true }
+  )
+}
+
+const getRoutesWithDistance = () => {
+  if (!userLocation) return routes
+  const withDistance = routes.map((r) => ({
+    ...r,
+    distanceFromUser: r.latitudeStart && r.longitudeStart
+      ? calculateDistance(userLocation[0], userLocation[1], r.latitudeStart, r.longitudeStart)
+      : null
+  }))
+  if (sortByDistance) {
+    return [...withDistance].sort((a, b) => {
+      if (a.distanceFromUser === null) return 1
+      if (b.distanceFromUser === null) return -1
+      return a.distanceFromUser - b.distanceFromUser
+    })
+  }
+  return withDistance
+}
 
   const inputStyle = { background: '#241640', border: '1px solid #3d2a5c', color: '#a78bb5', borderRadius: '10px', padding: '9px 14px', fontSize: '13px', outline: 'none' }
 
@@ -80,6 +122,9 @@ function Routes() {
             <option value="20">Hasta 20 km</option>
             <option value="50">Hasta 50 km</option>
           </select>
+          <button onClick={handleFindNearby} disabled={locating} style={{background: sortByDistance ? '#f97316' : 'transparent', color: sortByDistance ? 'white' : '#f97316', border: '1px solid #f97316', borderRadius: '10px', padding: '9px 16px', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
+  {locating ? 'Localizando...' : 'Cerca de mi'}
+</button>
           {(search || difficulty || maxDistance) && (
             <button onClick={() => { setSearch(''); setDifficulty(''); setMaxDistance('') }} style={{background: 'transparent', color: '#ec4899', border: '1px solid #ec4899', borderRadius: '10px', padding: '9px 16px', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
               Limpiar
@@ -98,7 +143,7 @@ function Routes() {
         )}
 
         <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px', marginBottom: '28px'}}>
-          {routes.map((route) => (
+          {getRoutesWithDistance().map((route) => (
             <a key={route.id} href={"/routes/" + route.id} style={{textDecoration: 'none', display: 'block'}}>
               <div style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '14px', overflow: 'hidden', transition: 'border-color 0.2s'}}
                 onMouseEnter={(e) => e.currentTarget.style.borderColor = '#f97316'}
@@ -122,6 +167,11 @@ function Routes() {
                     {route.elevationM && <span>{route.elevationM} m</span>}
                     {route.estimatedTime && <span>{route.estimatedTime} min</span>}
                   </div>
+                  {route.distanceFromUser !== null && route.distanceFromUser !== undefined && (
+  <p style={{color: '#f97316', fontSize: '12px', margin: '0 0 8px', fontWeight: '500'}}>
+    📍 {route.distanceFromUser.toFixed(1)} km de ti
+  </p>
+)}
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px solid #160d28'}}>
                     <span style={{color: '#5a4670', fontSize: '12px'}}>por <span style={{color: '#ec4899'}}>{route.user.username}</span></span>
                     <div style={{display: 'flex', gap: '10px', fontSize: '12px', color: '#5a4670'}}>
