@@ -1,9 +1,17 @@
 
 import { useNavigate } from 'react-router-dom'
-import { MapContainer, TileLayer, Polyline, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import Navbar from '../components/Navbar.jsx'
 import { useState, useRef, useEffect } from 'react'
+import { MapContainer, TileLayer, Polyline, Marker, useMap } from 'react-leaflet'
+
+function MapAutoCenter({ position }) {
+  const map = useMap()
+  useEffect(() => {
+    if (position) map.setView(position, map.getZoom())
+  }, [position])
+  return null
+}
 
 function RecordRoute() {
   const navigate = useNavigate()
@@ -155,6 +163,7 @@ const resumeRecording = () => {
               attribution='&copy; OpenStreetMap'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+            {points.length > 0 && <MapAutoCenter position={points[points.length - 1]} />}
             {points.length > 1 && <Polyline positions={points} color="#f97316" weight={4} />}
             {points.length > 0 && <Marker position={points[points.length - 1]} />}
           </MapContainer>
