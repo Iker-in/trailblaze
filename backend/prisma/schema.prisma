@@ -150,6 +150,10 @@ model Comment {
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   route   Route  @relation(fields: [routeId], references: [id], onDelete: Cascade)
 
+  parentId  String?
+parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+replies   Comment[] @relation("CommentReplies")
+
   @@map("comments")
 }
 

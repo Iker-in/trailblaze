@@ -27,6 +27,7 @@ function RouteDetail() {
   const [currentPhoto, setCurrentPhoto] = useState(0)
   const [comments, setComments] = useState([])
   const [commentText, setCommentText] = useState('')
+  const [replyingTo, setReplyingTo] = useState(null)
   const [sendingComment, setSendingComment] = useState(false)
   const [commentsPage, setCommentsPage] = useState(1)
 const [commentsTotalPages, setCommentsTotalPages] = useState(1)
@@ -107,20 +108,25 @@ const loadMoreComments = async () => {
   }
 
   const handleComment = async (e) => {
-    e.preventDefault()
-    if (!commentText.trim()) return
-    setSendingComment(true)
-    try {
-      const res = await api.post('/routes/' + id + '/comments', { content: commentText })
+  e.preventDefault()
+  if (!commentText.trim()) return
+  setSendingComment(true)
+  try {
+    const res = await api.post('/routes/' + id + '/comments', { content: commentText, parentId: replyingTo })
+    if (replyingTo) {
+      setComments((prev) => prev.map((c) => c.id === replyingTo ? { ...c, replies: [...(c.replies || []), res.data.comment] } : c))
+    } else {
       setComments((prev) => [res.data.comment, ...prev])
-setCommentsTotal((prev) => prev + 1)
-      setCommentText('')
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setSendingComment(false)
+      setCommentsTotal((prev) => prev + 1)
     }
+    setCommentText('')
+    setReplyingTo(null)
+  } catch (err) {
+    console.error(err)
+  } finally {
+    setSendingComment(false)
   }
+}
 
   const handleDeleteComment = async (commentId) => {
     try {
@@ -240,8 +246,8 @@ setCommentsTotal((prev) => prev + 1)
         <div style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', padding: '24px'}}>
           <h3 style={{color: 'white', fontWeight: '500', margin: '0 0 20px', fontSize: '16px'}}>Comentarios ({commentsTotal})</h3>
 
-          {isAuthenticated && (
-            <form onSubmit={handleComment} style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
+          {isAuthenticated && !replyingTo && (
+  <form onSubmit={handleComment} style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
               <input type="text" value={commentText} onChange={(e) => setCommentText(e.target.value)} placeholder="Escribe un comentario..." maxLength={500} style={{flex: 1, background: '#160d28', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none'}} />
               <button type="submit" disabled={sendingComment || !commentText.trim()} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 18px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: sendingComment ? 0.6 : 1}}>
                 {sendingComment ? '...' : 'Enviar'}
@@ -258,30 +264,81 @@ setCommentsTotal((prev) => prev + 1)
           <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
             {comments.length === 0 && <p style={{color: '#5a4670', fontSize: '14px', textAlign: 'center', padding: '16px'}}>Sin comentarios todavia. Se el primero.</p>}
             {comments.map((comment) => (
-              <div key={comment.id} style={{display: 'flex', gap: '10px', alignItems: 'flex-start'}}>
-                <div style={{width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #3d2a5c', flexShrink: 0}}>
-                  {comment.user.avatarUrl ? (
-                    <img src={comment.user.avatarUrl} alt={comment.user.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
-                  ) : (
-                    <div style={{width: '100%', height: '100%', background: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '500', color: 'white'}}>
-                      {comment.user.username[0].toUpperCase()}
-                    </div>
-                  )}
+  <div key={comment.id}>
+    <div style={{display: 'flex', gap: '10px', alignItems: 'flex-start'}}>
+      <div style={{width: '32px', height: '32px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #3d2a5c', flexShrink: 0}}>
+        {comment.user.avatarUrl ? (
+          <img src={comment.user.avatarUrl} alt={comment.user.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+        ) : (
+          <div style={{width: '100%', height: '100%', background: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '500', color: 'white'}}>
+            {comment.user.username[0].toUpperCase()}
+          </div>
+        )}
+      </div>
+      <div style={{flex: 1, background: '#160d28', borderRadius: '10px', padding: '10px 14px'}}>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
+          <a href={'/profile/' + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</a>
+          <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+            <span style={{color: '#5a4670', fontSize: '11px'}}>{new Date(comment.createdAt).toLocaleDateString()}</span>
+            {user && user.id === comment.user.id && (
+              <button onClick={() => handleDeleteComment(comment.id)} style={{color: '#5a4670', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
+            )}
+          </div>
+        </div>
+        <p style={{color: '#a78bb5', fontSize: '14px', margin: '0 0 6px'}}>{comment.content}</p>
+        {isAuthenticated && (
+          <button onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)} style={{color: '#f97316', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', padding: 0}}>
+            {replyingTo === comment.id ? 'Cancelar' : 'Responder'}
+          </button>
+        )}
+      </div>
+    </div>
+
+    {comment.replies && comment.replies.length > 0 && (
+      <div style={{marginLeft: '42px', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px'}}>
+        {comment.replies.map((reply) => (
+          <div key={reply.id} style={{display: 'flex', gap: '10px', alignItems: 'flex-start'}}>
+            <div style={{width: '26px', height: '26px', borderRadius: '50%', overflow: 'hidden', border: '1px solid #3d2a5c', flexShrink: 0}}>
+              {reply.user.avatarUrl ? (
+                <img src={reply.user.avatarUrl} alt={reply.user.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+              ) : (
+                <div style={{width: '100%', height: '100%', background: '#ec4899', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '500', color: 'white'}}>
+                  {reply.user.username[0].toUpperCase()}
                 </div>
-                <div style={{flex: 1, background: '#160d28', borderRadius: '10px', padding: '10px 14px'}}>
-                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
-                    <a href={'/profile/' + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</a>
-                    <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                      <span style={{color: '#5a4670', fontSize: '11px'}}>{new Date(comment.createdAt).toLocaleDateString()}</span>
-                      {user && user.id === comment.user.id && (
-                        <button onClick={() => handleDeleteComment(comment.id)} style={{color: '#5a4670', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
-                      )}
-                    </div>
-                  </div>
-                  <p style={{color: '#a78bb5', fontSize: '14px', margin: 0}}>{comment.content}</p>
-                </div>
+              )}
+            </div>
+            <div style={{flex: 1, background: '#241640', borderRadius: '10px', padding: '8px 12px'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
+                <a href={'/profile/' + reply.user.username} style={{color: '#ec4899', fontSize: '12px', fontWeight: '500', textDecoration: 'none'}}>{reply.user.username}</a>
+                {user && user.id === reply.user.id && (
+                  <button onClick={() => handleDeleteComment(reply.id)} style={{color: '#5a4670', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
+                )}
               </div>
-            ))}
+              <p style={{color: '#a78bb5', fontSize: '13px', margin: 0}}>{reply.content}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    {replyingTo === comment.id && (
+      <form onSubmit={handleComment} style={{display: 'flex', gap: '8px', marginTop: '10px', marginLeft: '42px'}}>
+        <input
+          type="text"
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+          placeholder={'Responder a ' + comment.user.username + '...'}
+          maxLength={500}
+          autoFocus
+          style={{flex: 1, background: '#160d28', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '8px 12px', color: 'white', fontSize: '13px', outline: 'none'}}
+        />
+        <button type="submit" disabled={sendingComment || !commentText.trim()} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '8px 14px', fontWeight: '500', fontSize: '13px', cursor: 'pointer', opacity: sendingComment ? 0.6 : 1}}>
+          {sendingComment ? '...' : 'Enviar'}
+        </button>
+      </form>
+    )}
+  </div>
+))}
             {commentsPage < commentsTotalPages && (
   <button onClick={loadMoreComments} disabled={loadingMore} style={{background: 'transparent', color: '#f97316', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '10px', fontSize: '13px', cursor: 'pointer', marginTop: '12px', width: '100%'}}>
     {loadingMore ? 'Cargando...' : 'Cargar mas comentarios'}

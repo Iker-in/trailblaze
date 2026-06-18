@@ -10,14 +10,20 @@ export const getComments = async (req, res) => {
 
     const [comments, total] = await Promise.all([
       prisma.comment.findMany({
-        where: { routeId: id },
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: parseInt(limit),
-        include: { user: { select: { id: true, username: true, avatarUrl: true } } }
-      }),
-      prisma.comment.count({ where: { routeId: id } })
-    ])
+  where: { routeId: id, parentId: null },
+  orderBy: { createdAt: 'desc' },
+  skip,
+  take: parseInt(limit),
+  include: {
+    user: { select: { id: true, username: true, avatarUrl: true } },
+    replies: {
+      orderBy: { createdAt: 'asc' },
+      include: { user: { select: { id: true, username: true, avatarUrl: true } } }
+    }
+  }
+}),
+prisma.comment.count({ where: { routeId: id, parentId: null } })
+])
 
     res.json({
       comments,
@@ -36,13 +42,13 @@ export const createComment = async (req, res) => {
     }
 
     const { id } = req.params
-    const { content } = req.body
+    const { content, parentId } = req.body
 
     const route = await prisma.route.findUnique({ where: { id } })
     if (!route) return res.status(404).json({ error: 'Ruta no encontrada' })
 
     const comment = await prisma.comment.create({
-      data: { content, userId: req.userId, routeId: id },
+      data: { content, userId: req.userId, routeId: id, parentId: parentId || null },
       include: { user: { select: { id: true, username: true, avatarUrl: true } } }
     })
 
