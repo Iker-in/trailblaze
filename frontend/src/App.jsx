@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -17,7 +17,7 @@ import EditRoute from './pages/EditRoute'
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -28,13 +28,13 @@ function App() {
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/ranking" element={<Ranking />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-<Route path="/reset-password" element={<ResetPassword />} />
-<Route path="/routes/record" element={<ProtectedRoute><RecordRoute /></ProtectedRoute>} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/routes/record" element={<ProtectedRoute><RecordRoute /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
         <Route path="/routes/:id/edit" element={<ProtectedRoute><EditRoute /></ProtectedRoute>} />
         <Route path="/achievements" element={<Achievements />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 

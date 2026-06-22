@@ -36,6 +36,8 @@ app.use(cookieParser())
 // Configuracion de CORS
 const allowedOrigins = [
   'http://localhost:5173',
+  'https://localhost',
+  'capacitor://localhost',
   process.env.FRONTEND_URL
 ].filter(Boolean)
 
