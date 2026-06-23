@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import api from '../services/api.js'
@@ -39,7 +40,7 @@ function ResetPassword() {
           {done ? (
             <>
               <p style={{color: '#86efac', fontSize: '14px', textAlign: 'center', marginBottom: '20px'}}>Contrasena actualizada correctamente.</p>
-              <a href="/login" style={{display: 'block', textAlign: 'center', background: '#f97316', color: 'white', padding: '12px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: '500'}}>Ir al login</a>
+              <Link to="/login" style={{display: 'block', textAlign: 'center', background: '#f97316', color: 'white', padding: '12px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: '500'}}>Ir al login</Link>
             </>
           ) : (
             <form onSubmit={handleSubmit}>
@@ -71,7 +72,7 @@ function ResetPassword() {
           )}
 
           <p style={{textAlign: 'center', marginTop: '20px', fontSize: '13px'}}>
-            <a href="/login" style={{color: '#f97316', textDecoration: 'none'}}>Volver al login</a>
+            <Link to="/login" style={{color: '#f97316', textDecoration: 'none'}}>Volver al login</Link>
           </p>
         </div>
       </div>

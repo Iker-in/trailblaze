@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
@@ -215,7 +216,7 @@ function Profile() {
                 <span>{route.distanceKm} km</span>
                 <span>completada {route._count.completions} veces</span>
               </div>
-              <a href={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
+              <Link to={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
             </div>
           ))}
           {tab === 'completions' && completions.length === 0 && <div style={{background: '#241640', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#5a4670'}}>No ha completado rutas todavia.</div>}
@@ -229,7 +230,7 @@ function Profile() {
                 <span>{completion.route.distanceKm} km</span>
                 {completion.realTime && <span>{completion.realTime} min</span>}
               </div>
-              <a href={'/routes/' + completion.route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
+              <Link to={'/routes/' + completion.route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
             </div>
           ))}
           {tab === 'favorites' && favorites.length === 0 && <div style={{background: '#241640', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#5a4670'}}>No hay rutas guardadas todavia.</div>}
@@ -243,7 +244,7 @@ function Profile() {
                 <span>{route.distanceKm} km</span>
                 <span>por {route.user.username}</span>
               </div>
-              <a href={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</a>
+              <Link to={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
             </div>
           ))}
         </div>

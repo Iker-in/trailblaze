@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { registerUser } from '../services/auth.service.js'
 import useAuthStore from '../store/authStore.js'
 
@@ -30,7 +30,7 @@ function Register() {
   return (
     <div style={{minHeight: '100vh', background: '#160d28', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
       <div style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', padding: '40px', width: '100%', maxWidth: '400px'}}>
-        <a href="/" style={{color: '#fbbf24', fontWeight: 'bold', fontSize: '20px', display: 'block', marginBottom: '28px'}}>ARVENTRA</a>
+        <Link to="/" style={{color: '#fbbf24', fontWeight: 'bold', fontSize: '20px', display: 'block', marginBottom: '28px'}}>ARVENTRA</Link>
         <h2 style={{color: 'white', fontSize: '22px', fontWeight: '500', marginBottom: '24px'}}>Crear cuenta</h2>
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
         <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
@@ -52,7 +52,7 @@ function Register() {
         </form>
         <p style={{color: '#8b7aa3', fontSize: '13px', textAlign: 'center', marginTop: '20px'}}>
           Ya tienes cuenta?{' '}
-          <a href="/login" style={{color: '#f97316'}}>Inicia sesion</a>
+          <Link to="/login" style={{color: '#f97316'}}>Inicia sesion</Link>
         </p>
       </div>
     </div>

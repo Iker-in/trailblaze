@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import api from '../services/api.js'
 import Navbar from '../components/Navbar.jsx'
@@ -56,7 +57,7 @@ function ForgotPassword() {
           )}
 
           <p style={{textAlign: 'center', marginTop: '20px', fontSize: '13px'}}>
-            <a href="/login" style={{color: '#f97316', textDecoration: 'none'}}>Volver al login</a>
+            <Link to="/login" style={{color: '#f97316', textDecoration: 'none'}}>Volver al login</Link>
           </p>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { getRoutes } from '../services/routes.service.js'
 import Navbar from '../components/Navbar.jsx'
 
@@ -144,7 +145,7 @@ const getRoutesWithDistance = () => {
 
         <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px', marginBottom: '28px'}}>
           {getRoutesWithDistance().map((route) => (
-            <a key={route.id} href={"/routes/" + route.id} style={{textDecoration: 'none', display: 'block'}}>
+            <Link key={route.id} to={"/routes/" + route.id} style={{textDecoration: 'none', display: 'block'}}>
               <div style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '14px', overflow: 'hidden', transition: 'border-color 0.2s'}}
                 onMouseEnter={(e) => e.currentTarget.style.borderColor = '#f97316'}
                 onMouseLeave={(e) => e.currentTarget.style.borderColor = '#3d2a5c'}
@@ -181,7 +182,7 @@ const getRoutesWithDistance = () => {
                   </div>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
 

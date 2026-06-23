@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { getRoute, completeRoute } from '../services/routes.service.js'
 import api from '../services/api.js'
@@ -153,7 +153,7 @@ const loadMoreComments = async () => {
     <div style={{minHeight: '100vh', background: '#160d28', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
       <div style={{textAlign: 'center'}}>
         <p style={{color: '#fca5a5', fontSize: '18px', marginBottom: '16px'}}>{error}</p>
-        <a href="/routes" style={{color: '#f97316'}}>Volver a rutas</a>
+        <Link to="/routes" style={{color: '#f97316'}}>Volver a rutas</Link>
       </div>
     </div>
   )
@@ -195,7 +195,7 @@ const loadMoreComments = async () => {
                 <span style={{...DIFFICULTY_STYLES[route.difficulty], fontSize: '12px', padding: '4px 12px', borderRadius: '20px', fontWeight: '500', whiteSpace: 'nowrap'}}>{route.difficulty}</span>
                 {isAuthenticated && user && user.id === route.userId && (
                   <div style={{display: 'flex', gap: '8px'}}>
-                    <a href={'/routes/' + id + '/edit'} style={{background: '#1e3a5f', color: '#93c5fd', border: '1px solid #1e40af', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', textDecoration: 'none'}}>Editar</a>
+                    <Link to={'/routes/' + id + '/edit'} style={{background: '#1e3a5f', color: '#93c5fd', border: '1px solid #1e40af', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', textDecoration: 'none'}}>Editar</Link>
                     <button onClick={handleDeleteRoute} disabled={deleting} style={{background: '#450a0a', color: '#fca5a5', border: '1px solid #991b1b', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', cursor: 'pointer', opacity: deleting ? 0.6 : 1}}>
                       {deleting ? '...' : 'Eliminar'}
                     </button>
@@ -206,7 +206,7 @@ const loadMoreComments = async () => {
 
             <p style={{color: '#8b7aa3', fontSize: '14px', marginBottom: '20px'}}>
               Publicada por{' '}
-              <a href={'/profile/' + route.user.username} style={{color: '#ec4899', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</a>
+              <Link to={'/profile/' + route.user.username} style={{color: '#ec4899', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</Link>
             </p>
 
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px'}}>
@@ -238,7 +238,7 @@ const loadMoreComments = async () => {
                   {completed ? 'Completada' : completing ? 'Guardando...' : 'Marcar como completada'}
                 </button>
               )}
-              {!isAuthenticated && <a href="/login" style={{background: '#f97316', color: 'white', padding: '10px 24px', borderRadius: '10px', fontWeight: '500', fontSize: '14px', textDecoration: 'none'}}>Inicia sesion para completar</a>}
+              {!isAuthenticated && <Link to="/login" style={{background: '#f97316', color: 'white', padding: '10px 24px', borderRadius: '10px', fontWeight: '500', fontSize: '14px', textDecoration: 'none'}}>Inicia sesion para completar</Link>}
             </div>
           </div>
         </div>
@@ -257,7 +257,7 @@ const loadMoreComments = async () => {
 
           {!isAuthenticated && (
             <p style={{color: '#5a4670', fontSize: '13px', marginBottom: '20px'}}>
-              <a href="/login" style={{color: '#f97316'}}>Inicia sesion</a> para comentar
+              <Link to="/login" style={{color: '#f97316'}}>Inicia sesion</Link> para comentar
             </p>
           )}
 
@@ -277,7 +277,7 @@ const loadMoreComments = async () => {
       </div>
       <div style={{flex: 1, background: '#160d28', borderRadius: '10px', padding: '10px 14px'}}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
-          <a href={'/profile/' + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</a>
+          <Link to={'/profile/' + comment.user.username} style={{color: '#ec4899', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</Link>
           <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
             <span style={{color: '#5a4670', fontSize: '11px'}}>{new Date(comment.createdAt).toLocaleDateString()}</span>
             {user && user.id === comment.user.id && (
@@ -309,7 +309,7 @@ const loadMoreComments = async () => {
             </div>
             <div style={{flex: 1, background: '#241640', borderRadius: '10px', padding: '8px 12px'}}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
-                <a href={'/profile/' + reply.user.username} style={{color: '#ec4899', fontSize: '12px', fontWeight: '500', textDecoration: 'none'}}>{reply.user.username}</a>
+                <Link to={'/profile/' + reply.user.username} style={{color: '#ec4899', fontSize: '12px', fontWeight: '500', textDecoration: 'none'}}>{reply.user.username}</Link>
                 {user && user.id === reply.user.id && (
                   <button onClick={() => handleDeleteComment(reply.id)} style={{color: '#5a4670', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
                 )}

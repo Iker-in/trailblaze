@@ -1,5 +1,5 @@
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { createRoute, uploadPhoto } from '../services/routes.service.js'
 import Navbar from '../components/Navbar.jsx'
 import { useState, useEffect } from 'react'
@@ -80,9 +80,9 @@ const data = await createRoute(payload)
         <h1 style={{color: 'white', marginBottom: '24px'}} className="text-2xl font-bold">Publicar nueva ruta</h1>
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
         {!trackData && (
-  <a href="/routes/record" style={{display: 'block', background: '#241640', border: '1px solid #3d2a5c', borderRadius: '12px', padding: '14px', marginBottom: '16px', textDecoration: 'none', textAlign: 'center', color: '#f97316', fontSize: '14px', fontWeight: '500'}}>
+  <Link to="/routes/record" style={{display: 'block', background: '#241640', border: '1px solid #3d2a5c', borderRadius: '12px', padding: '14px', marginBottom: '16px', textDecoration: 'none', textAlign: 'center', color: '#f97316', fontSize: '14px', fontWeight: '500'}}>
     📍 Grabar ruta con GPS en vivo
-  </a>
+  </Link>
 )}
 {trackData && (
   <div style={{background: '#241640', border: '1px solid #ec4899', borderRadius: '12px', padding: '12px', marginBottom: '16px', textAlign: 'center', color: '#ec4899', fontSize: '13px'}}>
