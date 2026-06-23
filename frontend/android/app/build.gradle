@@ -16,10 +16,21 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+
+signingConfigs {
+        release {
+            storeFile file("../arventra-release.keystore")
+            storePassword "re_f3fALR9W_3VZLUwHt8djc6bYUyHD2csw2"
+            keyAlias "arventra"
+            keyPassword "re_f3fALR9W_3VZLUwHt8djc6bYUyHD2csw2"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 }
