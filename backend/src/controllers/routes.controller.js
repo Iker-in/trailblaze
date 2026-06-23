@@ -104,6 +104,13 @@ export const getRoute = async (req, res) => {
         },
         _count: {
           select: { completions: true }
+        },
+        completions: {
+          take: 1,
+          orderBy: { createdAt: 'asc' },
+          include: {
+            user: { select: { id: true, username: true, avatarUrl: true } }
+          }
         }
       }
     })
@@ -134,6 +141,11 @@ export const completeRoute = async (req, res) => {
       where: { userId_routeId: { userId: req.userId, routeId: id } }
     })
 
+    const completionCount = await prisma.routeCompletion.count({
+  where: { routeId: id }
+})
+const isFirstExplorer = completionCount === 0
+
     if (existing) {
       return res.status(400).json({ error: 'Ya marcaste esta ruta como completada' })
     }
@@ -156,10 +168,31 @@ export const completeRoute = async (req, res) => {
     if (route.userId !== req.userId) {
   await createNotification(route.userId, 'completion', req.username + ' completo tu ruta: ' + route.title, '/routes/' + id)
 }
-    res.status(201).json({
-      message: 'Ruta marcada como completada. +10 puntos',
-      completion
+
+if (isFirstExplorer) {
+  const achievement = await prisma.achievement.findUnique({
+    where: { name: 'Primer Explorador' }
+  })
+  
+  if (achievement) {
+    await prisma.userAchievement.upsert({
+      where: { userId_achievementId: { userId: req.userId, achievementId: achievement.id } },
+      update: {},
+      create: { userId: req.userId, achievementId: achievement.id }
     })
+
+    await prisma.user.update({
+      where: { id: req.userId },
+      data: { points: { increment: achievement.points } }
+    })
+  }
+}
+
+    res.status(201).json({
+  message: 'Ruta completada',
+  completion,
+  isFirstExplorer
+})
 
   } catch (error) {
     console.error('Error al completar ruta:', error)

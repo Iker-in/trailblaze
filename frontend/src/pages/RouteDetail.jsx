@@ -209,6 +209,15 @@ const loadMoreComments = async () => {
               <Link to={'/profile/' + route.user.username} style={{color: '#ec4899', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</Link>
             </p>
 
+            {route.completions && route.completions.length > 0 && (
+  <p style={{color: '#fbbf24', fontSize: '13px', margin: '4px 0 0'}}>
+    🏆 Primer explorador:{' '}
+    <Link to={'/profile/' + route.completions[0].user.username} style={{color: '#fbbf24', textDecoration: 'none', fontWeight: '500'}}>
+      {route.completions[0].user.username}
+    </Link>
+  </p>
+)}
+
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px'}}>
               {[
                 { value: route.distanceKm, label: 'km' },
