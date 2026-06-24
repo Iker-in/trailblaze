@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+import LoginPrompt from "../components/LoginPrompt.jsx"
 import { getRanking } from "../services/ranking.service.js"
 import api from "../services/api.js"
 import useAuthStore from "../store/authStore.js"
@@ -118,7 +119,8 @@ function Ranking() {
           </>
         )}
 
-        {tab === "anual" && (
+        {tab === "anual" && !isAuthenticated && <LoginPrompt message="Inicia sesion para ver el ranking anual" />}
+        {tab === "anual" && isAuthenticated && (
           <>
             <p style={{color: "#6B8CAE", fontSize: "14px", marginBottom: "24px"}}>Top exploradores de {currentYear} — por rutas completadas</p>
             {loadingAnnual && <div style={{color: "#6B8CAE", textAlign: "center", padding: "48px"}}>Cargando...</div>}
@@ -135,7 +137,8 @@ function Ranking() {
           </>
         )}
 
-        {tab === "amigos" && (
+        {tab === "amigos" && !isAuthenticated && <LoginPrompt message="Inicia sesion para ver el ranking entre amigos" />}
+        {tab === "amigos" && isAuthenticated && (
           <>
             <p style={{color: "#4A6480", fontSize: "14px", marginBottom: "24px"}}>Ranking entre los senderistas que sigues</p>
             {loadingFriends && <div style={{color: "#6B8CAE", textAlign: "center", padding: "48px"}}>Cargando...</div>}

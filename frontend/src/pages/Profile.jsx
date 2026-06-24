@@ -6,6 +6,7 @@ import { getProfile, getUserRoutes, getUserCompletions, followUser, unfollowUser
 import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
+import LoginPrompt from '../components/LoginPrompt.jsx'
 import LevelBadge from '../components/LevelBadge.jsx'
 
 const DIFFICULTY_STYLES = {
@@ -74,6 +75,8 @@ function Profile() {
       setLoading(false)
     }
   }
+
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false)
 
   const handleFollow = async () => {
     setFollowLoading(true)
@@ -189,7 +192,7 @@ function Profile() {
               </div>
             </div>
             {currentUser && !isOwnProfile && (
-              <button onClick={handleFollow} disabled={followLoading} style={{background: isFollowing ? 'transparent' : '#f97316', color: isFollowing ? '#6B8CAE' : 'white', border: isFollowing ? '1px solid #1A3050' : 'none', borderRadius: '10px', padding: '8px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', opacity: followLoading ? 0.6 : 1}}>
+              <button onClick={() => { if (!isAuthenticated) { setShowLoginPrompt(true) } else { handleFollow() } }} disabled={followLoading} style={{background: isFollowing ? 'transparent' : '#f97316', color: isFollowing ? '#6B8CAE' : 'white', border: isFollowing ? '1px solid #1A3050' : 'none', borderRadius: '10px', padding: '8px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', opacity: followLoading ? 0.6 : 1}}>
                 {followLoading ? '...' : isFollowing ? 'Siguiendo' : 'Seguir'}
               </button>
             )}

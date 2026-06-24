@@ -5,6 +5,7 @@ import { getRoute, completeRoute } from '../services/routes.service.js'
 import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
+import LoginPrompt from '../components/LoginPrompt.jsx'
 import RouteMap from '../components/RouteMap.jsx'
 
 const DIFFICULTY_STYLES = {
@@ -257,7 +258,7 @@ const loadMoreComments = async () => {
                   {completed ? 'Completada' : completing ? 'Guardando...' : 'Marcar como completada'}
                 </button>
               )}
-              {!isAuthenticated && <Link to="/login" style={{background: '#f97316', color: 'white', padding: '10px 24px', borderRadius: '10px', fontWeight: '500', fontSize: '14px', textDecoration: 'none'}}>Inicia sesion para completar</Link>}
+              {!isAuthenticated && <LoginPrompt message="Inicia sesion para completar esta ruta" />}
               <button onClick={handleShare} style={{background: '#0D1F35', color: '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px 20px', fontSize: '14px', cursor: 'pointer'}}>🔗 Compartir ruta</button>
             </div>
           </div>
@@ -277,7 +278,7 @@ const loadMoreComments = async () => {
 
           {!isAuthenticated && (
             <p style={{color: '#2A4A6A', fontSize: '13px', marginBottom: '20px'}}>
-              <Link to="/login" style={{color: '#f97316'}}>Inicia sesion</Link> para comentar
+              <LoginPrompt message="Inicia sesion para comentar" />
             </p>
           )}
 
