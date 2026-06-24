@@ -135,6 +135,16 @@ const loadMoreComments = async () => {
     } catch (err) {}
   }
 
+  const handleShare = () => {
+    const url = window.location.origin + '/#/routes/' + id
+    if (navigator.share) {
+      navigator.share({ title: route.title, text: 'Mira esta ruta en ARVENTRA: ' + route.title, url })
+    } else {
+      navigator.clipboard.writeText(url)
+      alert('Link copiado al portapapeles')
+    }
+  }
+
   const handleDeleteRoute = async () => {
     if (!window.confirm('Estas seguro de que quieres eliminar esta ruta?')) return
     setDeleting(true)
@@ -248,6 +258,7 @@ const loadMoreComments = async () => {
                 </button>
               )}
               {!isAuthenticated && <Link to="/login" style={{background: '#f97316', color: 'white', padding: '10px 24px', borderRadius: '10px', fontWeight: '500', fontSize: '14px', textDecoration: 'none'}}>Inicia sesion para completar</Link>}
+              <button onClick={handleShare} style={{background: '#0D1F35', color: '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px 20px', fontSize: '14px', cursor: 'pointer'}}>🔗 Compartir ruta</button>
             </div>
           </div>
         </div>
