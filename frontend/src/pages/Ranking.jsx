@@ -43,6 +43,9 @@ function Ranking() {
   const [friendsRanking, setFriendsRanking] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadingFriends, setLoadingFriends] = useState(false)
+  const [annualRanking, setAnnualRanking] = useState([])
+  const [loadingAnnual, setLoadingAnnual] = useState(false)
+  const currentYear = new Date().getFullYear()
   const [search, setSearch] = useState("")
 
   useEffect(() => {
@@ -61,6 +64,16 @@ function Ranking() {
         .finally(() => setLoadingFriends(false))
     }
   }, [tab, isAuthenticated])
+
+  useEffect(() => {
+    if (tab === 'anual' && annualRanking.length === 0) {
+      setLoadingAnnual(true)
+      api.get('/ranking/annual')
+        .then(res => setAnnualRanking(res.data.ranking))
+        .catch(console.error)
+        .finally(() => setLoadingAnnual(false))
+    }
+  }, [tab])
 
   const filtered = ranking.filter((u) => u.username.toLowerCase().includes(search.toLowerCase()))
 
@@ -90,6 +103,7 @@ function Ranking() {
           <div style={{display: "flex", gap: "8px", marginBottom: "20px"}}>
             <button onClick={() => setTab("global")} style={tabStyle("global")}>🌍 Global</button>
             <button onClick={() => setTab("amigos")} style={tabStyle("amigos")}>👥 Entre amigos</button>
+            <button onClick={() => setTab("anual")} style={tabStyle("anual")}>🏆 {currentYear}</button>
           </div>
         )}
 
@@ -100,6 +114,23 @@ function Ranking() {
             <div className="flex flex-col gap-3">
               {filtered.map((entry) => <RankingEntry key={entry.id} entry={entry} currentUser={currentUser} />)}
               {filtered.length === 0 && !loading && <div style={{color: "#2A4A6A", textAlign: "center", padding: "32px"}}>No se encontro ese usuario</div>}
+            </div>
+          </>
+        )}
+
+        {tab === "anual" && (
+          <>
+            <p style={{color: "#6B8CAE", fontSize: "14px", marginBottom: "24px"}}>Top exploradores de {currentYear} — por rutas completadas</p>
+            {loadingAnnual && <div style={{color: "#6B8CAE", textAlign: "center", padding: "48px"}}>Cargando...</div>}
+            <div className="flex flex-col gap-3">
+              {annualRanking.map((entry) => (
+                <RankingEntry key={entry.id} entry={entry} currentUser={currentUser} />
+              ))}
+              {!loadingAnnual && annualRanking.length === 0 && (
+                <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", padding: "40px", textAlign: "center"}}>
+                  <p style={{color: "#6B8CAE", fontSize: "15px", margin: 0}}>Nadie ha completado rutas este año todavia.</p>
+                </div>
+              )}
             </div>
           </>
         )}
