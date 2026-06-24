@@ -25,6 +25,8 @@ function Profile() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [tab, setTab] = useState('routes')
+  const [stats, setStats] = useState(null)
+  const [statsLoading, setStatsLoading] = useState(false)
   const [isFollowing, setIsFollowing] = useState(false)
   const [followLoading, setFollowLoading] = useState(false)
   const [editingBio, setEditingBio] = useState(false)
@@ -117,6 +119,16 @@ function Profile() {
   if (loading) return <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#6B8CAE'}}>Cargando perfil...</p></div>
   if (error) return <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#fca5a5'}}>{error}</p></div>
 
+  useEffect(() => {
+    if (tab === 'stats' && !stats) {
+      setStatsLoading(true)
+      api.get('/users/' + username + '/stats')
+        .then(res => setStats(res.data))
+        .catch(() => {})
+        .finally(() => setStatsLoading(false))
+    }
+  }, [tab, username])
+
   return (
     <div style={{minHeight: '100vh', background: '#050B18'}}>
       <Helmet>
@@ -197,9 +209,9 @@ function Profile() {
         </div>
 
         <div style={{display: 'flex', gap: '8px', marginBottom: '20px'}}>
-          {['routes', 'completions', 'favorites'].map((t) => (
+          {['routes', 'completions', 'favorites', 'stats'].map((t) => (
             <button key={t} onClick={() => setTab(t)} style={{background: tab === t ? '#f97316' : '#0D1F35', color: tab === t ? 'white' : '#6B8CAE', border: tab === t ? 'none' : '1px solid #1A3050', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: '500', cursor: 'pointer'}}>
-              {t === 'routes' ? 'Publicadas (' + routes.length + ')' : t === 'completions' ? 'Completadas (' + completions.length + ')' : 'Guardadas (' + favorites.length + ')'}
+              {t === 'routes' ? 'Publicadas (' + routes.length + ')' : t === 'completions' ? 'Completadas (' + completions.length + ')' : t === 'favorites' ? 'Guardadas (' + favorites.length + ')' : '📊 Stats'}
             </button>
           ))}
         </div>
@@ -233,6 +245,100 @@ function Profile() {
               <Link to={'/routes/' + completion.route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
             </div>
           ))}
+          {tab === 'stats' && statsLoading && <div style={{textAlign: 'center', padding: '40px', color: '#6B8CAE'}}>Cargando estadisticas...</div>}
+          {tab === 'stats' && !statsLoading && stats && stats.hidden && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#6B8CAE'}}>Este usuario tiene sus estadisticas privadas.</div>}
+          {tab === 'stats' && !statsLoading && stats && !stats.hidden && (
+            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+              {isOwnProfile && (
+                <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span style={{color: '#6B8CAE', fontSize: '13px'}}>Estadisticas publicas</span>
+                  <button onClick={() => {
+                    api.patch('/users/me/stats-visibility', { statsPublic: !stats.statsPublic })
+                      .then(() => setStats(s => ({...s, statsPublic: !s.statsPublic})))
+                      .catch(() => {})
+                  }} style={{background: stats.statsPublic ? '#f97316' : '#1A3050', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', fontWeight: '500'}}>
+                    {stats.statsPublic ? 'Publicas' : 'Privadas'}
+                  </button>
+                </div>
+              )}
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
+                {[
+                  { label: 'km totales', value: stats.totalKm, color: '#f97316' },
+                  { label: 'metros subidos', value: stats.totalElevation + 'm', color: '#fb923c' },
+                  { label: 'rutas completadas', value: stats.totalCompletions, color: '#f43f5e' },
+                  { label: 'rutas faciles', value: stats.byDifficulty?.facil || 0, color: '#86efac' },
+                  { label: 'rutas moderadas', value: stats.byDifficulty?.moderado || 0, color: '#fde68a' },
+                  { label: 'rutas expertas', value: (stats.byDifficulty?.dificil || 0) + (stats.byDifficulty?.experto || 0), color: '#fca5a5' }
+                ].map(s => (
+                  <div key={s.label} style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '16px', textAlign: 'center'}}>
+                    <p style={{color: s.color, fontSize: '28px', fontWeight: '500', margin: '0 0 4px'}}>{s.value}</p>
+                    <p style={{color: '#4A6480', fontSize: '12px', margin: 0}}>{s.label}</p>
+                  </div>
+                ))}
+              </div>
+              {stats.longestRoute && (
+                <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '16px'}}>
+                  <p style={{color: '#6B8CAE', fontSize: '12px', margin: '0 0 4px'}}>Ruta mas larga</p>
+                  <p style={{color: 'white', fontSize: '15px', fontWeight: '500', margin: '0 0 2px'}}>{stats.longestRoute.title}</p>
+                  <p style={{color: '#f97316', fontSize: '13px', margin: 0}}>{stats.longestRoute.distanceKm} km</p>
+                </div>
+              )}
+              {stats.highestElevation && (
+                <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '16px'}}>
+                  <p style={{color: '#6B8CAE', fontSize: '12px', margin: '0 0 4px'}}>Mayor elevacion</p>
+                  <p style={{color: 'white', fontSize: '15px', fontWeight: '500', margin: '0 0 2px'}}>{stats.highestElevation.title}</p>
+                  <p style={{color: '#fb923c', fontSize: '13px', margin: 0}}>{stats.highestElevation.elevationM} m</p>
+                </div>
+              )}
+            </div>
+          )}
+          {tab === 'stats' && statsLoading && <div style={{textAlign: 'center', padding: '40px', color: '#6B8CAE'}}>Cargando estadisticas...</div>}
+          {tab === 'stats' && !statsLoading && stats && stats.hidden && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#6B8CAE'}}>Este usuario tiene sus estadisticas privadas.</div>}
+          {tab === 'stats' && !statsLoading && stats && !stats.hidden && (
+            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+              {isOwnProfile && (
+                <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                  <span style={{color: '#6B8CAE', fontSize: '13px'}}>Estadisticas publicas</span>
+                  <button onClick={() => {
+                    api.patch('/users/me/stats-visibility', { statsPublic: !stats.statsPublic })
+                      .then(() => setStats(s => ({...s, statsPublic: !s.statsPublic})))
+                      .catch(() => {})
+                  }} style={{background: stats.statsPublic ? '#f97316' : '#1A3050', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', fontWeight: '500'}}>
+                    {stats.statsPublic ? 'Publicas' : 'Privadas'}
+                  </button>
+                </div>
+              )}
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
+                {[
+                  { label: 'km totales', value: stats.totalKm, color: '#f97316' },
+                  { label: 'metros subidos', value: stats.totalElevation + 'm', color: '#fb923c' },
+                  { label: 'rutas completadas', value: stats.totalCompletions, color: '#f43f5e' },
+                  { label: 'rutas faciles', value: stats.byDifficulty?.facil || 0, color: '#86efac' },
+                  { label: 'rutas moderadas', value: stats.byDifficulty?.moderado || 0, color: '#fde68a' },
+                  { label: 'rutas expertas', value: (stats.byDifficulty?.dificil || 0) + (stats.byDifficulty?.experto || 0), color: '#fca5a5' }
+                ].map(s => (
+                  <div key={s.label} style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '16px', textAlign: 'center'}}>
+                    <p style={{color: s.color, fontSize: '28px', fontWeight: '500', margin: '0 0 4px'}}>{s.value}</p>
+                    <p style={{color: '#4A6480', fontSize: '12px', margin: 0}}>{s.label}</p>
+                  </div>
+                ))}
+              </div>
+              {stats.longestRoute && (
+                <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '16px'}}>
+                  <p style={{color: '#6B8CAE', fontSize: '12px', margin: '0 0 4px'}}>Ruta mas larga</p>
+                  <p style={{color: 'white', fontSize: '15px', fontWeight: '500', margin: '0 0 2px'}}>{stats.longestRoute.title}</p>
+                  <p style={{color: '#f97316', fontSize: '13px', margin: 0}}>{stats.longestRoute.distanceKm} km</p>
+                </div>
+              )}
+              {stats.highestElevation && (
+                <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '16px'}}>
+                  <p style={{color: '#6B8CAE', fontSize: '12px', margin: '0 0 4px'}}>Mayor elevacion</p>
+                  <p style={{color: 'white', fontSize: '15px', fontWeight: '500', margin: '0 0 2px'}}>{stats.highestElevation.title}</p>
+                  <p style={{color: '#fb923c', fontSize: '13px', margin: 0}}>{stats.highestElevation.elevationM} m</p>
+                </div>
+              )}
+            </div>
+          )}
           {tab === 'favorites' && favorites.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No hay rutas guardadas todavia.</div>}
           {tab === 'favorites' && favorites.map((route) => (
             <div key={route.id} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #fb923c', borderRadius: '14px', padding: '16px 20px'}}>
