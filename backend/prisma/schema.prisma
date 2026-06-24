@@ -18,6 +18,7 @@ model User {
   points       Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  statsPublic Boolean @default(true)
 
   routes       Route[]
   completions  RouteCompletion[]
@@ -29,6 +30,7 @@ model User {
   passwordResetTokens PasswordResetToken[]
   favorites Favorite[]
   liveSessions LiveSession[]
+  
 
   @@map("users")
 }
