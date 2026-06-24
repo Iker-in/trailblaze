@@ -16,10 +16,13 @@ import ResetPassword from './pages/ResetPassword'
 import EditRoute from './pages/EditRoute'
 import LiveTrack from './pages/LiveTrack.jsx'
 import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
+import OfflineBanner from './components/OfflineBanner.jsx'
 
 function App() {
   return (
     <HashRouter>
+      <OfflineBanner />
+      <OfflineBanner />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
