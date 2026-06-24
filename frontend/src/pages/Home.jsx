@@ -170,6 +170,9 @@ function Home() {
           </div>
         </div>
       </div>
+      <div style={{textAlign: "center", padding: "20px", borderTop: "1px solid #1A3050", marginTop: "20px"}}>
+        <Link to="/privacy" style={{color: "#4A6480", fontSize: "12px", textDecoration: "none"}}>Politica de Privacidad</Link>
+      </div>
     </div>
   )
 }

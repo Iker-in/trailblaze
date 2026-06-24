@@ -15,6 +15,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import EditRoute from './pages/EditRoute'
 import LiveTrack from './pages/LiveTrack.jsx'
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
 
 function App() {
   return (
@@ -34,7 +35,9 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/routes/:id/edit" element={<ProtectedRoute><EditRoute /></ProtectedRoute>} />
         <Route path="/achievements" element={<Achievements />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/track/:sessionId" element={<LiveTrack />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
       </Routes>
     </HashRouter>
   )
