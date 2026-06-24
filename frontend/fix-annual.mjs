@@ -1,39 +1,8 @@
-import prisma from '../config/prisma.js'
+﻿import { readFileSync, writeFileSync } from "fs"
 
-export const getRanking = async (req, res) => {
-  try {
-    const { limit = 20 } = req.query
-
-    const users = await prisma.user.findMany({
-      take: parseInt(limit),
-      orderBy: { points: 'desc' },
-      select: {
-        id: true,
-        username: true,
-        avatarUrl: true,
-        points: true,
-        _count: {
-          select: {
-            routes: true,
-            completions: true,
-            followers: true
-          }
-        }
-      }
-    })
-
-    const ranking = users.map((user, index) => ({
-      position: index + 1,
-      ...user
-    }))
-
-    res.json({ ranking })
-
-  } catch (error) {
-    console.error('Error al obtener ranking:', error)
-    res.status(500).json({ error: 'Error interno del servidor' })
-  }
-}
+// Añadir al controller
+let c = readFileSync("C:/proyectos/trailblaze/backend/src/controllers/ranking.controller.js", "utf8")
+c = c + `
 export const getAnnualRanking = async (req, res) => {
   try {
     const year = parseInt(req.query.year) || new Date().getFullYear()
@@ -68,3 +37,18 @@ export const getAnnualRanking = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 }
+`
+writeFileSync("C:/proyectos/trailblaze/backend/src/controllers/ranking.controller.js", c)
+
+// Añadir ruta
+let r = readFileSync("C:/proyectos/trailblaze/backend/src/routes/ranking.routes.js", "utf8")
+r = r.replace(
+  "import { getRanking } from '../controllers/ranking.controller.js'",
+  "import { getRanking, getAnnualRanking } from '../controllers/ranking.controller.js'"
+)
+r = r.replace(
+  "router.get('/', getRanking)",
+  "router.get('/', getRanking)\nrouter.get('/annual', getAnnualRanking)"
+)
+writeFileSync("C:/proyectos/trailblaze/backend/src/routes/ranking.routes.js", r)
+console.log("Listo")
