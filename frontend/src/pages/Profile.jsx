@@ -44,6 +44,16 @@ function Profile() {
     }
   }, [profile])
 
+  useEffect(() => {
+    if (tab === 'stats' && !stats) {
+      setStatsLoading(true)
+      api.get('/users/' + username + '/stats')
+        .then(res => setStats(res.data))
+        .catch(() => {})
+        .finally(() => setStatsLoading(false))
+    }
+  }, [tab, username])
+
   const loadProfile = async () => {
     setLoading(true)
     try {
@@ -119,15 +129,7 @@ function Profile() {
   if (loading) return <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#6B8CAE'}}>Cargando perfil...</p></div>
   if (error) return <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#fca5a5'}}>{error}</p></div>
 
-  useEffect(() => {
-    if (tab === 'stats' && !stats) {
-      setStatsLoading(true)
-      api.get('/users/' + username + '/stats')
-        .then(res => setStats(res.data))
-        .catch(() => {})
-        .finally(() => setStatsLoading(false))
-    }
-  }, [tab, username])
+
 
   return (
     <div style={{minHeight: '100vh', background: '#050B18'}}>

@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useRef } from "react"
-import { useNavigate } from "react-router-dom"
+
 import api from "../services/api.js"
 
 function NotificationBell() {
@@ -7,7 +7,7 @@ function NotificationBell() {
   const [unreadCount, setUnreadCount] = useState(0)
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
-  const navigate = useNavigate()
+
 
   useEffect(() => {
     loadNotifications()
@@ -42,7 +42,9 @@ function NotificationBell() {
 
   const handleNotificationClick = (n) => {
     setOpen(false)
-    if (n.link) navigate(n.link)
+    if (n.link) {
+      setTimeout(() => { window.location.hash = '#' + n.link }, 50)
+    }
   }
 
   const getTypeColor = (type) => {
