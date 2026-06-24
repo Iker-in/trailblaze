@@ -30,15 +30,15 @@ function UserSearch() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Buscar senderistas..."
-        style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '6px 12px', color: 'white', fontSize: '13px', outline: 'none', width: '160px'}}
+        style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '10px', padding: '6px 12px', color: 'white', fontSize: '13px', outline: 'none', width: '160px'}}
       />
       {open && (
-        <div style={{position: 'absolute', left: 0, top: '36px', width: '240px', background: '#241640', border: '1px solid #ec4899', borderRadius: '12px', zIndex: 100, overflow: 'hidden'}}>
+        <div style={{position: 'absolute', left: 0, top: '36px', width: '240px', background: '#0D1F35', border: '1px solid #f43f5e', borderRadius: '12px', zIndex: 100, overflow: 'hidden'}}>
           {results.length === 0 && (
-            <p style={{color: '#5a4670', fontSize: '13px', textAlign: 'center', padding: '16px'}}>Sin resultados</p>
+            <p style={{color: '#2A4A6A', fontSize: '13px', textAlign: 'center', padding: '16px'}}>Sin resultados</p>
           )}
           {results.map((u) => (
-            <a key={u.id} href={'/profile/' + u.username} onClick={() => setOpen(false)} style={{display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', textDecoration: 'none', borderBottom: '1px solid #3d2a5c'}}>
+            <a key={u.id} href={'/profile/' + u.username} onClick={() => setOpen(false)} style={{display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', textDecoration: 'none', borderBottom: '1px solid #1A3050'}}>
               <div style={{width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0}}>
                 {u.avatarUrl ? (
                   <img src={u.avatarUrl} alt={u.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />

@@ -39,13 +39,13 @@ function LiveTrack() {
   }, [sessionId])
 
   return (
-    <div style={{minHeight: "100vh", background: "#160d28"}}>
-      <div style={{background: "#0d0820", borderBottom: "1px solid #ec4899", padding: "12px 24px", display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+    <div style={{minHeight: "100vh", background: "#050B18"}}>
+      <div style={{background: "#030D16", borderBottom: "1px solid #f43f5e", padding: "12px 24px", display: "flex", justifyContent: "space-between", alignItems: "center"}}>
         <Link to="/" style={{display: "flex", alignItems: "center", gap: "8px", textDecoration: "none"}}>
           <img src="/logo.png" alt="ARVENTRA" style={{width: "32px", height: "32px", borderRadius: "6px"}} />
-          <span style={{color: "#fbbf24", fontSize: "18px", fontWeight: "bold"}}>ARVENTRA</span>
+          <span style={{color: "#fb923c", fontSize: "18px", fontWeight: "bold"}}>ARVENTRA</span>
         </Link>
-        <span style={{color: "#ec4899", fontSize: "13px", fontWeight: "500"}}>🛡️ Seguimiento en vivo</span>
+        <span style={{color: "#f43f5e", fontSize: "13px", fontWeight: "500"}}>🛡️ Seguimiento en vivo</span>
       </div>
 
       <div style={{maxWidth: "600px", margin: "0 auto", padding: "24px 16px"}}>
@@ -54,24 +54,24 @@ function LiveTrack() {
             <p style={{margin: 0}}>{error}</p>
           </div>
         ) : !session ? (
-          <div style={{textAlign: "center", padding: "60px", color: "#a78bb5"}}>Cargando ubicacion...</div>
+          <div style={{textAlign: "center", padding: "60px", color: "#6B8CAE"}}>Cargando ubicacion...</div>
         ) : (
           <>
-            <div style={{background: "#241640", border: "1px solid #3d2a5c", borderRadius: "14px", padding: "16px", marginBottom: "16px"}}>
-              <p style={{color: "#fbbf24", fontSize: "15px", fontWeight: "500", margin: "0 0 4px"}}>
+            <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", padding: "16px", marginBottom: "16px"}}>
+              <p style={{color: "#fb923c", fontSize: "15px", fontWeight: "500", margin: "0 0 4px"}}>
                 {session.user.username} está en ruta
               </p>
-              <p style={{color: "#a78bb5", fontSize: "12px", margin: "0 0 4px"}}>
+              <p style={{color: "#6B8CAE", fontSize: "12px", margin: "0 0 4px"}}>
                 {session.active ? "🟢 Seguimiento activo" : "🔴 Seguimiento finalizado"}
               </p>
               {lastUpdate && (
-                <p style={{color: "#5a4670", fontSize: "11px", margin: 0}}>
+                <p style={{color: "#2A4A6A", fontSize: "11px", margin: 0}}>
                   Ultima actualización: {lastUpdate.toLocaleTimeString()}
                 </p>
               )}
             </div>
 
-            <div style={{borderRadius: "14px", overflow: "hidden", border: "1px solid #3d2a5c", height: "400px"}}>
+            <div style={{borderRadius: "14px", overflow: "hidden", border: "1px solid #1A3050", height: "400px"}}>
               <MapContainer center={[session.lastLat, session.lastLng]} zoom={15} style={{height: "100%", width: "100%"}}>
                 <TileLayer
                   attribution="&copy; OpenStreetMap"
@@ -83,7 +83,7 @@ function LiveTrack() {
               </MapContainer>
             </div>
 
-            <p style={{color: "#5a4670", fontSize: "11px", textAlign: "center", marginTop: "12px"}}>
+            <p style={{color: "#2A4A6A", fontSize: "11px", textAlign: "center", marginTop: "12px"}}>
               El mapa se actualiza automaticamente cada 30 segundos
             </p>
           </>

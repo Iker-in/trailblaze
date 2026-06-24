@@ -3,15 +3,15 @@
 
 :root {
   --tb-purple: #f97316;
-  --tb-yellow: #fbbf24;
-  --tb-pink: #ec4899;
-  --tb-dark: #160d28;
-  --tb-surface: #241640;
-  --tb-border: #3d2a5c;
-  --tb-muted: #a78bb5;
+  --tb-yellow: #fb923c;
+  --tb-pink: #f43f5e;
+  --tb-dark: #050B18;
+  --tb-surface: #0D1F35;
+  --tb-border: #1A3050;
+  --tb-muted: #6B8CAE;
 }
 body {
-  background-color: #160d28;
+  background-color: #050B18;
   color: #f1f5f9;
 }
 

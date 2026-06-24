@@ -30,12 +30,12 @@ function ResetPassword() {
   }
 
   return (
-    <div style={{minHeight: '100vh', background: '#160d28'}}>
+    <div style={{minHeight: '100vh', background: '#050B18'}}>
       <Navbar />
       <div style={{maxWidth: '400px', margin: '80px auto', padding: '0 16px'}}>
-        <div style={{background: '#241640', border: '1px solid #3d2a5c', borderRadius: '16px', padding: '32px'}}>
+        <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '16px', padding: '32px'}}>
           <h1 style={{color: 'white', fontSize: '22px', fontWeight: '500', margin: '0 0 8px'}}>Nueva contrasena</h1>
-          <p style={{color: '#8b7aa3', fontSize: '14px', margin: '0 0 24px'}}>Elige una contrasena segura.</p>
+          <p style={{color: '#4A6480', fontSize: '14px', margin: '0 0 24px'}}>Elige una contrasena segura.</p>
 
           {done ? (
             <>
@@ -50,7 +50,7 @@ function ResetPassword() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                style={{width: '100%', background: '#160d28', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '12px', color: 'white', fontSize: '14px', marginBottom: '12px', boxSizing: 'border-box'}}
+                style={{width: '100%', background: '#050B18', border: '1px solid #1A3050', borderRadius: '10px', padding: '12px', color: 'white', fontSize: '14px', marginBottom: '12px', boxSizing: 'border-box'}}
               />
               <input
                 type="password"
@@ -58,7 +58,7 @@ function ResetPassword() {
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 required
-                style={{width: '100%', background: '#160d28', border: '1px solid #3d2a5c', borderRadius: '10px', padding: '12px', color: 'white', fontSize: '14px', marginBottom: '16px', boxSizing: 'border-box'}}
+                style={{width: '100%', background: '#050B18', border: '1px solid #1A3050', borderRadius: '10px', padding: '12px', color: 'white', fontSize: '14px', marginBottom: '16px', boxSizing: 'border-box'}}
               />
               {error && <p style={{color: '#fca5a5', fontSize: '13px', margin: '0 0 12px'}}>{error}</p>}
               <button
