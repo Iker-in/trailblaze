@@ -1,4 +1,5 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
+import { useState } from 'react'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -16,12 +17,16 @@ import ResetPassword from './pages/ResetPassword'
 import EditRoute from './pages/EditRoute'
 import LiveTrack from './pages/LiveTrack.jsx'
 import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
+import Onboarding from './components/Onboarding.jsx'
 import OfflineBanner from './components/OfflineBanner.jsx'
 
 function App() {
+  const [showOnboarding, setShowOnboarding] = useState(!localStorage.getItem('arventra_onboarding_done'))
   return (
     <HashRouter>
       <OfflineBanner />
+      {showOnboarding && <Onboarding onFinish={() => setShowOnboarding(false)} />}
+      {showOnboarding && <Onboarding onFinish={() => setShowOnboarding(false)} />}
       <OfflineBanner />
       <Routes>
         <Route path="/" element={<Home />} />
