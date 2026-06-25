@@ -30,6 +30,7 @@ model User {
   passwordResetTokens PasswordResetToken[]
   favorites Favorite[]
   liveSessions LiveSession[]
+  ratings RouteRating[]
   
 
   @@map("users")
@@ -56,6 +57,7 @@ model Route {
   completions RouteCompletion[]
   comments Comment[]
   favorites Favorite[]
+  ratings RouteRating[]
   
 
   @@map("routes")
@@ -200,4 +202,17 @@ model Favorite {
 
   @@unique([userId, routeId])
   @@map("favorites")
+}
+
+model RouteRating {
+  id        String   @id @default(uuid())
+  rating    Int      // 1 = thumbs up, -1 = thumbs down
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  routeId   String
+  user      User     @relation(fields: [userId], references: [id])
+  route     Route    @relation(fields: [routeId], references: [id])
+
+  @@unique([userId, routeId])
 }
