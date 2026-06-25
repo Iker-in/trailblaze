@@ -28,10 +28,10 @@ const PORT = process.env.PORT || 3000
 app.use(helmet())
 
 // Logs de peticiones
-app.use(morgan('dev'))
+app.use(morgan(isProduction ? 'combined' : 'dev'))
 
 // Parsear JSON en el body de las peticiones
-app.use(express.json())
+app.use(express.json({ limit: '10kb' }))
 app.use(cookieParser())
 
 // Configuracion de CORS
@@ -44,7 +44,7 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true)
+    if ((!origin && !isProduction) || allowedOrigins.includes(origin)) return callback(null, true)
     callback(new Error('CORS no permitido'))
   },
   credentials: true
@@ -53,7 +53,7 @@ app.use(cors({
 // Rate limiting global - max 100 peticiones cada 15 minutos por IP
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 60,
   message: { error: 'Demasiadas peticiones, intenta mas tarde' }
 })
 app.use(limiter)
@@ -75,7 +75,7 @@ app.use('/api/tracking', trackingRoutes)
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
-    message: 'TrailBlaze API funcionando',
+    message: 'OK',
     timestamp: new Date().toISOString()
   })
 })
