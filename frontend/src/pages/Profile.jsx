@@ -28,6 +28,8 @@ function Profile() {
   const [tab, setTab] = useState('routes')
   const [stats, setStats] = useState(null)
   const [statsLoading, setStatsLoading] = useState(false)
+  const [activity, setActivity] = useState([])
+  const [activityLoading, setActivityLoading] = useState(false)
   const [isFollowing, setIsFollowing] = useState(false)
   const [followLoading, setFollowLoading] = useState(false)
   const [editingBio, setEditingBio] = useState(false)
@@ -52,6 +54,16 @@ function Profile() {
         .then(res => setStats(res.data))
         .catch(() => {})
         .finally(() => setStatsLoading(false))
+    }
+  }, [tab, username])
+
+  useEffect(() => {
+    if (tab === 'activity' && activity.length === 0) {
+      setActivityLoading(true)
+      api.get('/users/' + username + '/activity')
+        .then(res => setActivity(res.data.activity))
+        .catch(() => {})
+        .finally(() => setActivityLoading(false))
     }
   }, [tab, username])
 
@@ -214,9 +226,9 @@ function Profile() {
         </div>
 
         <div style={{display: 'flex', gap: '8px', marginBottom: '20px'}}>
-          {['routes', 'completions', 'favorites', 'stats'].map((t) => (
+          {['routes', 'completions', 'favorites', 'stats', 'activity'].map((t) => (
             <button key={t} onClick={() => setTab(t)} style={{background: tab === t ? '#f97316' : '#0D1F35', color: tab === t ? 'white' : '#6B8CAE', border: tab === t ? 'none' : '1px solid #1A3050', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: '500', cursor: 'pointer'}}>
-              {t === 'routes' ? 'Publicadas (' + routes.length + ')' : t === 'completions' ? 'Completadas (' + completions.length + ')' : t === 'favorites' ? 'Guardadas (' + favorites.length + ')' : '📊 Stats'}
+              {t === 'routes' ? 'Publicadas (' + routes.length + ')' : t === 'completions' ? 'Completadas (' + completions.length + ')' : t === 'favorites' ? 'Guardadas (' + favorites.length + ')' : t === 'stats' ? '📊 Stats' : '📈 Actividad'}
             </button>
           ))}
         </div>
@@ -297,6 +309,28 @@ function Profile() {
               )}
             </div>
           )}
+          {tab === 'activity' && activityLoading && <div style={{textAlign: 'center', padding: '40px', color: '#6B8CAE'}}>Cargando actividad...</div>}
+          {tab === 'activity' && !activityLoading && activity.length === 0 && (
+            <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#4A6480'}}>Sin actividad reciente.</div>
+          )}
+          {tab === 'activity' && !activityLoading && activity.map((item, i) => (
+            <div key={i} style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '14px 16px', display: 'flex', gap: '12px', alignItems: 'center'}}>
+              <span style={{fontSize: '20px'}}>
+                {item.type === 'completion' ? '✅' : item.type === 'achievement' ? (item.icon || '🏅') : '🗺️'}
+              </span>
+              <div style={{flex: 1}}>
+                <p style={{color: 'white', fontSize: '13px', fontWeight: '500', margin: '0 0 2px'}}>
+                  {item.type === 'completion' ? 'Completó ' + item.routeTitle : item.type === 'achievement' ? 'Ganó logro: ' + item.name : 'Publicó ' + item.routeTitle}
+                </p>
+                <p style={{color: '#4A6480', fontSize: '11px', margin: 0}}>
+                  {new Date(item.date).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+              </div>
+              {(item.type === 'completion' || item.type === 'route') && (
+                <Link to={'/routes/' + item.routeId} style={{color: '#f97316', fontSize: '12px', textDecoration: 'none'}}>Ver</Link>
+              )}
+            </div>
+          ))}
           {tab === 'favorites' && favorites.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No hay rutas guardadas todavia.</div>}
           {tab === 'favorites' && favorites.map((route) => (
             <div key={route.id} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #fb923c', borderRadius: '14px', padding: '16px 20px'}}>
