@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { body } from 'express-validator'
 import { authenticate } from '../middleware/auth.middleware.js'
 import { createRoute, getRoutes, getRoute, completeRoute, deleteRoute, getPopularRoutes, getFeed, updateRoute } from '../controllers/routes.controller.js'
+import prisma from '../config/prisma.js'
 
 const router = Router()
 
@@ -33,8 +34,6 @@ body('estimatedTime')
 
 router.get('/featured', async (req, res) => {
   try {
-    const { PrismaClient } = await import('@prisma/client')
-    const prisma = new PrismaClient()
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
     const completions = await prisma.routeCompletion.groupBy({
       by: ['routeId'],
@@ -53,8 +52,7 @@ router.get('/featured', async (req, res) => {
           _count: { select: { completions: true } }
         }
       })
-      await prisma.$disconnect()
-      return res.json({ route, completionsThisWeek: 0 })
+        return res.json({ route, completionsThisWeek: 0 })
     }
     const route = await prisma.route.findUnique({
       where: { id: completions[0].routeId },
@@ -64,7 +62,6 @@ router.get('/featured', async (req, res) => {
         _count: { select: { completions: true } }
       }
     })
-    await prisma.$disconnect()
     res.json({ route, completionsThisWeek: completions[0]._count.routeId })
   } catch (error) {
     console.error(error)
