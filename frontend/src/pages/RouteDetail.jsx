@@ -190,6 +190,13 @@ const loadMoreComments = async () => {
             <div style={{position: 'relative'}}>
               <img src={route.photos[currentPhoto].url} alt={route.title} style={{width: '100%', height: '280px', objectFit: 'contain', background: '#050B18'}} />
               {route.photos.length > 1 && (
+              <div style={{display: 'flex', gap: '8px', padding: '8px', overflowX: 'auto', background: '#050B18'}}>
+                {route.photos.map((photo, i) => (
+                  <img key={i} src={photo.url} alt={route.title + ' foto ' + (i+1)} onClick={() => setCurrentPhoto(i)} style={{width: '60px', height: '60px', objectFit: 'cover', borderRadius: '6px', cursor: 'pointer', border: i === currentPhoto ? '2px solid #f97316' : '2px solid transparent', flexShrink: 0}} />
+                ))}
+              </div>
+            )}
+            {route.photos.length > 1 && (
                 <div style={{position: 'absolute', bottom: '12px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '6px'}}>
                   {route.photos.map((_, i) => (
                     <button key={i} onClick={() => setCurrentPhoto(i)} style={{width: '8px', height: '8px', borderRadius: '50%', border: 'none', background: i === currentPhoto ? '#fb923c' : 'rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0}} />

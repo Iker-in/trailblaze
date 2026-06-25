@@ -21,8 +21,8 @@ export const uploadPhoto = async (req, res) => {
 
     const photoCount = await prisma.routePhoto.count({ where: { routeId: id } })
 
-    if (photoCount >= 5) {
-      return res.status(400).json({ error: 'Maximo 5 fotos por ruta' })
+    if (photoCount >= 10) {
+      return res.status(400).json({ error: 'Maximo 10 fotos por ruta' })
     }
 
    const result = await uploadToCloudinary(req.file.buffer)

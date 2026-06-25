@@ -36,7 +36,7 @@ useEffect(() => {
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
   const handlePhotos = (e) => {
-    const files = Array.from(e.target.files).slice(0, 5)
+    const files = Array.from(e.target.files).slice(0, 10)
     setPhotos(files)
     setPreviews(files.map((f) => URL.createObjectURL(f)))
   }
