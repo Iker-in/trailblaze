@@ -37,6 +37,8 @@ const [loadingMore, setLoadingMore] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [isFavorite, setIsFavorite] = useState(false)
   const [favoriteLoading, setFavoriteLoading] = useState(false)
+  const [ratings, setRatings] = useState({ thumbsUp: 0, thumbsDown: 0, userRating: null })
+  const [ratingLoading, setRatingLoading] = useState(false)
 
   useEffect(() => { loadRoute(); loadComments() }, [id])
 
@@ -44,6 +46,8 @@ const [loadingMore, setLoadingMore] = useState(false)
     try {
       const data = await getRoute(id)
       setRoute(data.route)
+      const ratingRes = await api.get('/routes/' + id + '/rating')
+      setRatings(ratingRes.data)
       if (isAuthenticated) {
         const favRes = await api.get('/routes/' + id + '/favorite-status')
         setIsFavorite(favRes.data.isFavorite)
@@ -134,6 +138,17 @@ const loadMoreComments = async () => {
       await api.delete('/routes/' + id + '/comments/' + commentId)
       setComments((prev) => prev.filter((c) => c.id !== commentId))
     } catch (err) {}
+  }
+
+  const handleRate = async (value) => {
+    if (!isAuthenticated) return
+    setRatingLoading(true)
+    try {
+      await api.post('/routes/' + id + '/rate', { rating: value })
+      const res = await api.get('/routes/' + id + '/rating')
+      setRatings(res.data)
+    } catch {}
+    setRatingLoading(false)
   }
 
   const handleShare = () => {
@@ -267,6 +282,14 @@ const loadMoreComments = async () => {
               )}
               {!isAuthenticated && <LoginPrompt message="Inicia sesion para completar esta ruta" />}
               <button onClick={handleShare} style={{background: '#0D1F35', color: '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px 20px', fontSize: '14px', cursor: 'pointer'}}>🔗 Compartir ruta</button>
+              <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                <button onClick={() => handleRate(1)} disabled={ratingLoading || !isAuthenticated} style={{background: ratings.userRating === 1 ? '#14532d' : '#0D1F35', color: ratings.userRating === 1 ? '#86efac' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px 16px', fontSize: '14px', cursor: isAuthenticated ? 'pointer' : 'default', display: 'flex', alignItems: 'center', gap: '6px'}}>
+                  👍 {ratings.thumbsUp}
+                </button>
+                <button onClick={() => handleRate(-1)} disabled={ratingLoading || !isAuthenticated} style={{background: ratings.userRating === -1 ? '#450a0a' : '#0D1F35', color: ratings.userRating === -1 ? '#fca5a5' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px 16px', fontSize: '14px', cursor: isAuthenticated ? 'pointer' : 'default', display: 'flex', alignItems: 'center', gap: '6px'}}>
+                  👎 {ratings.thumbsDown}
+                </button>
+              </div>
             </div>
           </div>
         </div>
