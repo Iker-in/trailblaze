@@ -31,6 +31,7 @@ model User {
   favorites Favorite[]
   liveSessions LiveSession[]
   ratings RouteRating[]
+  conditions RouteCondition[]
   
 
   @@map("users")
@@ -58,6 +59,7 @@ model Route {
   comments Comment[]
   favorites Favorite[]
   ratings RouteRating[]
+  conditions RouteCondition[]
   
 
   @@map("routes")
@@ -215,4 +217,14 @@ model RouteRating {
   route     Route    @relation(fields: [routeId], references: [id])
 
   @@unique([userId, routeId])
+}
+
+model RouteCondition {
+  id        String   @id @default(uuid())
+  condition String
+  createdAt DateTime @default(now())
+  userId    String
+  routeId   String
+  user      User     @relation(fields: [userId], references: [id])
+  route     Route    @relation(fields: [routeId], references: [id])
 }
