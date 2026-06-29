@@ -11,7 +11,7 @@ function CreateRoute() {
 const [trackData, setTrackData] = useState(null)
 
 useEffect(() => {
-  const saved = sessionStorage.getItem('arventra_track')
+  const saved = localStorage.getItem('arventra_track')
   if (saved) {
     const data = JSON.parse(saved)
     setTrackData(data.trackPoints)
@@ -23,7 +23,7 @@ useEffect(() => {
   latitudeStart: data.latitudeStart,
   longitudeStart: data.longitudeStart
 }))
-    sessionStorage.removeItem('arventra_track')
+    localStorage.removeItem('arventra_track')
   }
 }, [])
 

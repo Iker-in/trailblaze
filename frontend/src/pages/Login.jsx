@@ -19,7 +19,12 @@ function Login() {
     try {
       const data = await loginUser(formData.email, formData.password)
       login(data.user, data.token)
-      navigate('/')
+      const pendingTrack = localStorage.getItem('arventra_track')
+      if (pendingTrack) {
+        navigate('/routes/create')
+      } else {
+        navigate('/')
+      }
     } catch (err) {
       setError(err.response?.data?.error || 'Error al iniciar sesion')
     } finally {

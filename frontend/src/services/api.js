@@ -55,9 +55,13 @@ api.interceptors.response.use(
         return api(originalRequest)
       } catch (refreshError) {
         processQueue(refreshError, null)
+        // Si es error de red (sin internet), no cerrar sesion
+        if (!refreshError.response) {
+          return Promise.reject(refreshError)
+        }
         localStorage.removeItem('token')
         localStorage.removeItem('user')
-        window.location.href = '/login'
+        window.location.href = '/#/login'
         return Promise.reject(refreshError)
       } finally {
         isRefreshing = false

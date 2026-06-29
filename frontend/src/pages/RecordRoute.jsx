@@ -186,7 +186,7 @@ const resumeRecording = () => {
   const estimatedTime = Math.round(elapsedSeconds / 60)
   const elevationM = calculateElevationGain()
   const [latitudeStart, longitudeStart] = points[0]
-  sessionStorage.setItem('arventra_track', JSON.stringify({ trackPoints: points, distanceKm, estimatedTime, elevationM, latitudeStart, longitudeStart }))
+  localStorage.setItem('arventra_track', JSON.stringify({ trackPoints: points, distanceKm, estimatedTime, elevationM, latitudeStart, longitudeStart }))
   navigate('/routes/create')
 }
 
