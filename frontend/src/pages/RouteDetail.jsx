@@ -7,6 +7,7 @@ import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
 import LoginPrompt from '../components/LoginPrompt.jsx'
 import RouteMap from '../components/RouteMap.jsx'
+import RouteFollowMap from '../components/RouteFollowMap.jsx'
 
 const DIFFICULTY_STYLES = {
   facil: { background: '#14532d', color: '#86efac' },
@@ -39,6 +40,7 @@ const [loadingMore, setLoadingMore] = useState(false)
   const [favoriteLoading, setFavoriteLoading] = useState(false)
   const [ratings, setRatings] = useState({ thumbsUp: 0, thumbsDown: 0, userRating: null })
   const [ratingLoading, setRatingLoading] = useState(false)
+  const [showFollowMap, setShowFollowMap] = useState(false)
   const [condition, setCondition] = useState(null)
   const [showConditionForm, setShowConditionForm] = useState(false)
   const [submittingCondition, setSubmittingCondition] = useState(false)
@@ -311,6 +313,11 @@ const loadMoreComments = async () => {
                   {isFavorite ? 'Guardado' : 'Guardar'}
                 </button>
               </div>
+              {route.trackPoints && route.trackPoints.length > 1 && (
+                <button onClick={() => setShowFollowMap(true)} style={{background: '#0D1F35', color: '#fb923c', border: '1px solid #fb923c', borderRadius: '10px', padding: '10px 20px', fontWeight: '500', fontSize: '14px', cursor: 'pointer'}}>
+                  🗺️ Seguir ruta
+                </button>
+              )}
               {isAuthenticated && route.userId !== user?.id && (
                 <button onClick={handleComplete} disabled={completing || completed} style={{background: completed ? '#14532d' : '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
                   {completed ? 'Completada' : completing ? 'Guardando...' : 'Marcar como completada'}
@@ -453,6 +460,7 @@ const loadMoreComments = async () => {
           </div>
         </div>
       </div>
+      {showFollowMap && route && <RouteFollowMap route={route} onClose={() => setShowFollowMap(false)} />}
     </div>
   )
 }
