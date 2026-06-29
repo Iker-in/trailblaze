@@ -16,7 +16,7 @@ function MapCenter({ position }) {
   return null
 }
 
-function RouteFollowMap({ route, onClose }) {
+function RouteFollowMap({ route, onClose, onComplete }) {
   const [userPos, setUserPos] = useState(null)
   const [accuracy, setAccuracy] = useState(null)
   const [error, setError] = useState("")
@@ -92,6 +92,11 @@ function RouteFollowMap({ route, onClose }) {
                 {nearStart ? "✅ Estas aqui" : Math.round(distToStart) + "m"}
               </p>
             </div>
+            {(nearStart || nearEnd) && onComplete && (
+                <button onClick={onComplete} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '8px', width: '100%'}}>
+                  ✅ Marcar como completada
+                </button>
+              )}
             {endPos && (
               <div style={{textAlign: "center"}}>
                 <p style={{color: nearEnd ? "#86efac" : "#6B8CAE", fontSize: "12px", margin: "0 0 2px"}}>Punto final</p>
