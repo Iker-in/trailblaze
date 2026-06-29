@@ -314,7 +314,7 @@ const loadMoreComments = async () => {
                 </button>
               </div>
               {route.trackPoints && route.trackPoints.length > 1 && (
-                <button onClick={() => { if (!isAuthenticated) { navigate('/login'); return } setShowFollowMap(true) }} style={{background: '#0D1F35', color: '#fb923c', border: '1px solid #fb923c', borderRadius: '10px', padding: '10px 20px', fontWeight: '500', fontSize: '14px', cursor: 'pointer'}}>
+                <button onClick={() => setShowFollowMap(true)} style={{background: '#0D1F35', color: '#fb923c', border: '1px solid #fb923c', borderRadius: '10px', padding: '10px 20px', fontWeight: '500', fontSize: '14px', cursor: 'pointer'}}>
                   🗺️ Seguir ruta
                 </button>
               )}
@@ -460,7 +460,7 @@ const loadMoreComments = async () => {
           </div>
         </div>
       </div>
-      {showFollowMap && route && <RouteFollowMap route={route} onClose={() => setShowFollowMap(false)} onComplete={() => { setShowFollowMap(false); handleComplete() }} />}
+      {showFollowMap && route && isAuthenticated && <RouteFollowMap route={route} onClose={() => setShowFollowMap(false)} onComplete={() => { setShowFollowMap(false); handleComplete() }} />}
     </div>
   )
 }
