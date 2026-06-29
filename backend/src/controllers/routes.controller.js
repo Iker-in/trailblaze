@@ -137,18 +137,12 @@ export const completeRoute = async (req, res) => {
       return res.status(404).json({ error: 'Ruta no encontrada' })
     }
 
-    const existing = await prisma.routeCompletion.findUnique({
-      where: { userId_routeId: { userId: req.userId, routeId: id } }
-    })
 
     const completionCount = await prisma.routeCompletion.count({
   where: { routeId: id }
 })
 const isFirstExplorer = completionCount === 0
 
-    if (existing) {
-      return res.status(400).json({ error: 'Ya marcaste esta ruta como completada' })
-    }
 
     const completion = await prisma.routeCompletion.create({
       data: {

@@ -24,7 +24,7 @@ function RouteDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [completing, setCompleting] = useState(false)
-  const [completed, setCompleted] = useState(false)
+  const [completionCount, setCompletionCount] = useState(0)
   const [successMsg, setSuccessMsg] = useState('')
   const [currentPhoto, setCurrentPhoto] = useState(0)
   const [comments, setComments] = useState([])
@@ -92,7 +92,7 @@ const loadMoreComments = async () => {
     const doComplete = async () => {
       try {
         const data = await completeRoute(id)
-        setCompleted(true)
+        setCompletionCount(prev => prev + 1)
         setSuccessMsg(data.message)
         setRoute((prev) => ({ ...prev, _count: { completions: prev._count.completions + 1 } }))
       } catch (err) {
@@ -345,8 +345,8 @@ const loadMoreComments = async () => {
                 </button>
               )}
               {isAuthenticated && route.userId !== user?.id && (
-                <button onClick={handleComplete} disabled={completing || completed} style={{background: completed ? '#14532d' : '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
-                  {completed ? 'Completada' : completing ? 'Guardando...' : 'Marcar como completada'}
+                <button onClick={handleComplete} disabled={completing} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
+                  {completing ? 'Guardando...' : completionCount > 0 ? 'Completar nuevamente (' + completionCount + ')' : 'Marcar como completada'}
                 </button>
               )}
               {!isAuthenticated && <LoginPrompt message="Inicia sesion para completar esta ruta" />}

@@ -88,7 +88,7 @@ model RouteCompletion {
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   route   Route  @relation(fields: [routeId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, routeId])
+
   @@map("route_completions")
 }
 
