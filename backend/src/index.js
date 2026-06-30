@@ -114,6 +114,12 @@ app.use((err, req, res, next) => {
   })
 
 })
+
+app.get('/api/debug-db', async (req, res) => {
+  const constraints = await prisma.$queryRawUnsafe(`SELECT conname FROM pg_constraint WHERE conrelid = 'route_completions'::regclass AND contype = 'u'`)
+  res.json({ dbUrl: process.env.DATABASE_URL?.split('@')[1], constraints })
+})
+
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`)
 })
