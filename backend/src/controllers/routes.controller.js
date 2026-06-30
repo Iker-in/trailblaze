@@ -190,6 +190,17 @@ if (isFirstExplorer) {
 
   } catch (error) {
     console.error('Error al completar ruta:', error)
+    if (error.code === 'P2002') {
+      try {
+        const { randomUUID } = await import('crypto')
+        await prisma.routeCompletion.create({
+          data: { id: randomUUID(), userId: req.userId, routeId: id, notes: req.body.notes || null, realTime: req.body.realTime ? parseInt(req.body.realTime) : null }
+        })
+        return res.status(201).json({ message: 'Ruta completada', isFirstExplorer: false })
+      } catch (e2) {
+        return res.status(500).json({ error: 'Error al completar la ruta' })
+      }
+    }
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 }
