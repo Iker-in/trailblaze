@@ -193,7 +193,6 @@ if (isFirstExplorer) {
     console.error('Error al completar ruta:', error)
     if (error.code === 'P2002') {
       try {
-        const { randomUUID } = await import('crypto')
         await prisma.routeCompletion.create({
           data: { id: randomUUID(), userId: req.userId, routeId: id, notes: req.body.notes || null, realTime: req.body.realTime ? parseInt(req.body.realTime) : null }
         })
