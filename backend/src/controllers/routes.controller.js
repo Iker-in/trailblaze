@@ -191,15 +191,18 @@ if (isFirstExplorer) {
 
   } catch (error) {
     console.error('Error al completar ruta:', error)
-    if (error.code === 'P2002') {
-      console.error('P2002 catch activado, intentando con UUID:', randomUUID())
-      try {
-        await prisma.routeCompletion.create({
-          data: { id: randomUUID(), userId: req.userId, routeId: id, notes: req.body.notes || null, realTime: req.body.realTime ? parseInt(req.body.realTime) : null }
-        })
-        return res.status(201).json({ message: 'Ruta completada', isFirstExplorer: false })
-      } catch (e2) {
-        return res.status(500).json({ error: 'Error al completar la ruta' })
+      if (error.code === 'P2002') {
+        try {
+          const newId = randomUUID()
+          await prisma.$executeRawUnsafe(
+            `INSERT INTO route_completions (id, "userId", "routeId", notes, "realTime", "createdAt") VALUES ($1, $2, $3, $4, $5, NOW())`,
+            newId, req.userId, id, req.body.notes || null, req.body.realTime ? parseInt(req.body.realTime) : null
+          )
+          return res.status(201).json({ message: 'Ruta completada', isFirstExplorer: false })
+        } catch (e2) {
+          console.error('Error en SQL raw:', e2)
+          return res.status(500).json({ error: 'Error al completar la ruta' })
+        }
       }
     }
     res.status(500).json({ error: 'Error interno del servidor' })
