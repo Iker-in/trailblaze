@@ -3,6 +3,7 @@ import prisma from '../config/prisma.js'
 import { validationResult } from 'express-validator'
 import { checkAndGrantAchievements } from '../services/achievements.service.js'
 import { createNotification } from '../services/notifications.service.js'
+import { randomUUID } from 'crypto'
 
 export const createRoute = async (req, res) => {
   try {
