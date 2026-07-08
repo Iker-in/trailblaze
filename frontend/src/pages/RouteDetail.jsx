@@ -86,12 +86,12 @@ const loadMoreComments = async () => {
   setLoadingMore(false)
 }
 
-  const handleComplete = async () => {
-    if (!isAuthenticated) { navigate('/login'); return }
-    setCompleting(true)
-    const doComplete = async () => {
-      try {
-        const data = await completeRoute(id)
+  const handleComplete = async (recordedPoints) => {
+  if (!isAuthenticated) { navigate('/login'); return }
+  setCompleting(true)
+  const doComplete = async () => {
+    try {
+      const data = await completeRoute(id, { recordedPoints })
         setCompletionCount(prev => prev + 1)
         setSuccessMsg(data.message)
         setRoute((prev) => ({ ...prev, _count: { completions: prev._count.completions + 1 } }))
@@ -486,7 +486,7 @@ const loadMoreComments = async () => {
           </div>
         </div>
       </div>
-      {showFollowMap && route && isAuthenticated && <RouteFollowMap route={route} onClose={() => setShowFollowMap(false)} onComplete={() => { setShowFollowMap(false); handleComplete() }} />}
+      {showFollowMap && route && isAuthenticated && <RouteFollowMap route={route} onClose={() => setShowFollowMap(false)} onComplete={(recordedPoints) => { setShowFollowMap(false); handleComplete(recordedPoints) }} />}
     </div>
   )
 }

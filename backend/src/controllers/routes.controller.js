@@ -3,6 +3,7 @@ import prisma from '../config/prisma.js'
 import { validationResult } from 'express-validator'
 import { checkAndGrantAchievements } from '../services/achievements.service.js'
 import { createNotification } from '../services/notifications.service.js'
+import { calculateRouteCoverage } from '../utils/routeCoverage.js'
 
 export const createRoute = async (req, res) => {
   try {
@@ -130,13 +131,22 @@ export const getRoute = async (req, res) => {
 export const completeRoute = async (req, res) => {
   try {
     const { id } = req.params
-    const { notes, realTime } = req.body
+    const { notes, realTime, recordedPoints } = req.body
 
     const route = await prisma.route.findUnique({ where: { id } })
     if (!route) {
       return res.status(404).json({ error: 'Ruta no encontrada' })
     }
 
+    if (route.trackPoints && route.trackPoints.length > 1) {
+  const coverage = calculateRouteCoverage(recordedPoints, route.trackPoints, 50)
+  if (coverage < 70) {
+    return res.status(400).json({
+      error: `Solo recorriste el ${Math.round(coverage)}% de la ruta. Necesitas al menos 70% para completarla.`,
+      coverage: Math.round(coverage)
+    })
+  }
+}
 
     const completionCount = await prisma.routeCompletion.count({
   where: { routeId: id }
