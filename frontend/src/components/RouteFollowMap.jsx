@@ -21,6 +21,7 @@ function RouteFollowMap({ route, onClose, onComplete }) {
   const [accuracy, setAccuracy] = useState(null)
   const [error, setError] = useState("")
   const watchRef = useRef(null)
+  const recordedPointsRef = useRef([])
   const trackPoints = route.trackPoints || []
   const startPos = [route.latitudeStart, route.longitudeStart]
   const endPos = trackPoints.length > 0 ? trackPoints[trackPoints.length - 1] : null
@@ -37,9 +38,11 @@ function RouteFollowMap({ route, onClose, onComplete }) {
     if (!navigator.geolocation) { setError("GPS no disponible"); return }
     watchRef.current = navigator.geolocation.watchPosition(
       (pos) => {
-        setUserPos([pos.coords.latitude, pos.coords.longitude])
-        setAccuracy(pos.coords.accuracy)
-      },
+  const point = [pos.coords.latitude, pos.coords.longitude]
+  setUserPos(point)
+  setAccuracy(pos.coords.accuracy)
+  recordedPointsRef.current.push(point)
+},
       () => setError("No se pudo obtener tu ubicacion"),
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
     )
@@ -93,7 +96,7 @@ function RouteFollowMap({ route, onClose, onComplete }) {
               </p>
             </div>
             {(nearStart || nearEnd) && onComplete && (
-                <button onClick={onComplete} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '8px', width: '100%'}}>
+                <button onClick={() => onComplete(recordedPointsRef.current)} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '8px', width: '100%'}}>
                   ✅ Marcar como completada
                 </button>
               )}

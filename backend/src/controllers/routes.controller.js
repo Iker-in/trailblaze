@@ -182,8 +182,13 @@ if (isFirstExplorer) {
   }
 }
 
-    res.status(201).json({
-  message: 'Ruta completada',
+    const totalCompletions = completionCount + 1
+const message = totalCompletions === 1
+  ? 'Ruta completada'
+  : `Completada nuevamente (${totalCompletions}ª vez)`
+
+res.status(201).json({
+  message,
   completion,
   isFirstExplorer
 })
