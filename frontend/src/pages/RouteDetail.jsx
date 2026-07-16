@@ -354,8 +354,8 @@ const loadMoreComments = async () => {
                   🗺️ Seguir ruta
                 </button>
               )}
-              {isAuthenticated && route.userId !== user?.id && (
-                <button onClick={handleComplete} disabled={completing} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
+              {isAuthenticated && route.userId !== user?.id && !(route.trackPoints && route.trackPoints.length > 1) && (
+                <button onClick={() => handleComplete()} disabled={completing} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
                   {completing ? 'Guardando...' : completionCount > 0 ? 'Completar nuevamente (' + completionCount + ')' : 'Marcar como completada'}
                 </button>
               )}
