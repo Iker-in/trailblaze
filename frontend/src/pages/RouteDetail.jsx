@@ -44,6 +44,7 @@ const [loadingMore, setLoadingMore] = useState(false)
   const [condition, setCondition] = useState(null)
   const [showConditionForm, setShowConditionForm] = useState(false)
   const [submittingCondition, setSubmittingCondition] = useState(false)
+  const [weather, setWeather] = useState(null)
 
   useEffect(() => { loadRoute(); loadComments() }, [id])
 
@@ -55,6 +56,8 @@ const [loadingMore, setLoadingMore] = useState(false)
       setRatings(ratingRes.data)
       const condRes = await api.get('/routes/' + id + '/condition')
       setCondition(condRes.data)
+      const weatherRes = await api.get('/routes/' + id + '/weather').catch(() => null)
+if (weatherRes) setWeather(weatherRes.data)
       if (isAuthenticated) {
         const favRes = await api.get('/routes/' + id + '/favorite-status')
         setIsFavorite(favRes.data.isFavorite)
@@ -362,6 +365,24 @@ const loadMoreComments = async () => {
             </div>
           </div>
         </div>
+
+{weather && (
+  <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', padding: '16px', marginBottom: '16px'}}>
+    <h3 style={{color: 'white', fontSize: '15px', fontWeight: '500', margin: '0 0 12px'}}>🌤️ Clima</h3>
+    <div style={{display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px'}}>
+      <img src={`https://openweathermap.org/img/wn/${weather.current.icon}@2x.png`} alt="" style={{width: '48px', height: '48px'}} />
+      <div>
+        <p style={{color: 'white', fontSize: '20px', fontWeight: '600', margin: 0}}>{weather.current.temp}°C</p>
+        <p style={{color: '#6B8CAE', fontSize: '13px', margin: 0, textTransform: 'capitalize'}}>{weather.current.description} · {weather.current.rainProbability}% lluvia</p>
+      </div>
+    </div>
+    {weather.tomorrow.rainProbability >= 40 && (
+      <p style={{color: '#fde68a', fontSize: '13px', margin: 0, borderTop: '1px solid #1A3050', paddingTop: '10px'}}>
+        ⚠️ Mañana: {weather.tomorrow.description}, {weather.tomorrow.rainProbability}% de probabilidad de lluvia
+      </p>
+    )}
+  </div>
+)}
 
         <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '16px', padding: '24px'}}>
             <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', padding: '16px', marginBottom: '16px'}}>

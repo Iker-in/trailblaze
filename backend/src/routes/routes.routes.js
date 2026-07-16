@@ -3,6 +3,7 @@ import { body } from 'express-validator'
 import { authenticate } from '../middleware/auth.middleware.js'
 import { createRoute, getRoutes, getRoute, completeRoute, deleteRoute, getPopularRoutes, getFeed, updateRoute } from '../controllers/routes.controller.js'
 import prisma from '../config/prisma.js'
+import { getRouteWeather } from '../services/weather.service.js'
 
 const router = Router()
 
@@ -66,6 +67,22 @@ router.get('/featured', async (req, res) => {
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Error interno del servidor' })
+  }
+})
+
+router.get('/:id/weather', async (req, res) => {
+  try {
+    const { id } = req.params
+    const route = await prisma.route.findUnique({ where: { id } })
+    if (!route) return res.status(404).json({ error: 'Ruta no encontrada' })
+    if (!route.latitudeStart || !route.longitudeStart) {
+      return res.status(400).json({ error: 'Esta ruta no tiene coordenadas de inicio' })
+    }
+    const weather = await getRouteWeather(route.latitudeStart, route.longitudeStart)
+    res.json(weather)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Error al obtener el clima' })
   }
 })
 
