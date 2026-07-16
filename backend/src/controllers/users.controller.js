@@ -72,19 +72,21 @@ export const getUserCompletions = async (req, res) => {
     }
 
     const completions = await prisma.routeCompletion.findMany({
-      where: { userId: user.id },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        route: {
-          select: {
-            id: true,
-            title: true,
-            difficulty: true,
-            distanceKm: true
-          }
-        }
+  where: { userId: user.id },
+  orderBy: { createdAt: 'desc' },
+  include: {
+    route: {
+      select: {
+        id: true,
+        title: true,
+        difficulty: true,
+        distanceKm: true,
+        elevationM: true
       }
-    })
+    },
+    photos: { orderBy: { order: 'asc' } }
+  }
+})
 
     res.json({ completions })
 

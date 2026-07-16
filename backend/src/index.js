@@ -19,6 +19,7 @@ import favoriteRoutes from './routes/favorites.routes.js'
 import trackingRoutes from './routes/tracking.routes.js'
 import ratingsRoutes from './routes/ratings.routes.js'
 import conditionsRoutes from './routes/conditions.routes.js'
+import completionsRoutes from './routes/completions.routes.js'
 
 dotenv.config()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -74,6 +75,7 @@ app.use('/api/routes', ratingsRoutes)
 app.use('/api/routes', conditionsRoutes)
 app.use('/api/routes', conditionsRoutes)
 app.use('/api/routes', conditionsRoutes)
+app.use('/api/completions', completionsRoutes)
 
 
 
