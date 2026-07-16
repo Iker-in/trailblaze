@@ -369,9 +369,9 @@ function Profile() {
                 <span>por {route.user.username}</span>
               </div>
               <Link to={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
-              {selectedCompletion && <AdventureDetailModal completion={selectedCompletion} onClose={() => setSelectedCompletion(null)} />}
             </div>
           ))}
+          {selectedCompletion && <AdventureDetailModal completion={selectedCompletion} onClose={() => setSelectedCompletion(null)} />}
         </div>
       </div>
     </div>
