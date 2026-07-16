@@ -8,6 +8,7 @@ import Navbar from '../components/Navbar.jsx'
 import LoginPrompt from '../components/LoginPrompt.jsx'
 import RouteMap from '../components/RouteMap.jsx'
 import RouteFollowMap from '../components/RouteFollowMap.jsx'
+import SaveMemoryModal from '../components/SaveMemoryModal.jsx'
 
 const DIFFICULTY_STYLES = {
   facil: { background: '#14532d', color: '#86efac' },
@@ -45,6 +46,9 @@ const [loadingMore, setLoadingMore] = useState(false)
   const [showConditionForm, setShowConditionForm] = useState(false)
   const [submittingCondition, setSubmittingCondition] = useState(false)
   const [weather, setWeather] = useState(null)
+  const [showMemoryModal, setShowMemoryModal] = useState(false)
+const [lastCompletionId, setLastCompletionId] = useState(null)
+  
 
   useEffect(() => { loadRoute(); loadComments() }, [id])
 
@@ -92,12 +96,15 @@ const loadMoreComments = async () => {
   const handleComplete = async (recordedPoints) => {
   if (!isAuthenticated) { navigate('/login'); return }
   setCompleting(true)
+
   const doComplete = async () => {
     try {
       const data = await completeRoute(id, { recordedPoints })
-        setCompletionCount(prev => prev + 1)
-        setSuccessMsg(data.message)
-        setRoute((prev) => ({ ...prev, _count: { completions: prev._count.completions + 1 } }))
+  setCompletionCount(prev => prev + 1)
+  setSuccessMsg(data.message)
+  setRoute((prev) => ({ ...prev, _count: { completions: prev._count.completions + 1 } }))
+  setLastCompletionId(data.completion.id)
+  setShowMemoryModal(true)
       } catch (err) {
         setError(err.response?.data?.error || 'Error al completar la ruta')
       } finally {
@@ -508,6 +515,7 @@ const loadMoreComments = async () => {
         </div>
       </div>
       {showFollowMap && route && isAuthenticated && <RouteFollowMap route={route} onClose={() => setShowFollowMap(false)} onComplete={(recordedPoints) => { setShowFollowMap(false); handleComplete(recordedPoints) }} />}
+   {showMemoryModal && lastCompletionId && <SaveMemoryModal completionId={lastCompletionId} onClose={() => setShowMemoryModal(false)} />}
     </div>
   )
 }

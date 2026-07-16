@@ -38,3 +38,26 @@ export const uploadPhoto = async (routeId, file) => {
   )
   return response.data
 }
+
+export const updateCompletion = async (completionId, data) => {
+  const response = await api.patch('/completions/' + completionId, data)
+  return response.data
+}
+
+export const uploadCompletionPhoto = async (completionId, file) => {
+  const formData = new FormData()
+  formData.append('photo', file)
+  const token = localStorage.getItem('token')
+  const response = await axios.post(
+    (import.meta.env.VITE_API_URL || 'http://localhost:3000/api') + '/completions/' + completionId + '/photos',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: 'Bearer ' + token
+      },
+      withCredentials: true
+    }
+  )
+  return response.data
+}
