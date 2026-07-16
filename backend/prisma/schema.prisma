@@ -79,6 +79,8 @@ model RoutePhoto {
 
 model RouteCompletion {
   id        String   @id @default(uuid())
+  title     String?
+  mood      String?
   notes     String?
   realTime  Int?
   createdAt DateTime @default(now())
@@ -87,7 +89,7 @@ model RouteCompletion {
   routeId String
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   route   Route  @relation(fields: [routeId], references: [id], onDelete: Cascade)
-
+  photos  CompletionPhoto[]
 
   @@map("route_completions")
 }
@@ -227,4 +229,15 @@ model RouteCondition {
   routeId   String
   user      User     @relation(fields: [userId], references: [id])
   route     Route    @relation(fields: [routeId], references: [id])
+}
+
+model CompletionPhoto {
+  id           String   @id @default(uuid())
+  url          String
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  completionId String
+  completion   RouteCompletion @relation(fields: [completionId], references: [id], onDelete: Cascade)
+
+  @@map("completion_photos")
 }
