@@ -76,14 +76,16 @@ export const getUserCompletions = async (req, res) => {
   orderBy: { createdAt: 'desc' },
   include: {
     route: {
-      select: {
-        id: true,
-        title: true,
-        difficulty: true,
-        distanceKm: true,
-        elevationM: true
-      }
-    },
+  select: {
+    id: true,
+    title: true,
+    difficulty: true,
+    distanceKm: true,
+    elevationM: true,
+    latitudeStart: true,
+    longitudeStart: true
+  }
+},
     photos: { orderBy: { order: 'asc' } }
   }
 })
