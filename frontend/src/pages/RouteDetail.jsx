@@ -104,7 +104,7 @@ const loadMoreComments = async () => {
   setSuccessMsg(data.message)
   setRoute((prev) => ({ ...prev, _count: { completions: prev._count.completions + 1 } }))
   setLastCompletionId(data.completion.id)
-  setShowMemoryModal(true)
+setTimeout(() => setShowMemoryModal(true), 900)
       } catch (err) {
         setError(err.response?.data?.error || 'Error al completar la ruta')
       } finally {

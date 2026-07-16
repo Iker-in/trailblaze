@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { updateCompletion, uploadCompletionPhoto } from "../services/routes.service.js"
 
 const MOODS = [
@@ -10,6 +10,8 @@ const MOODS = [
 ]
 
 function SaveMemoryModal({ completionId, onClose }) {
+  const [visible, setVisible] = useState(false)
+  useEffect(() => { const t = setTimeout(() => setVisible(true), 20); return () => clearTimeout(t) }, [])
   const [title, setTitle] = useState("")
   const [notes, setNotes] = useState("")
   const [mood, setMood] = useState(null)
@@ -44,7 +46,7 @@ function SaveMemoryModal({ completionId, onClose }) {
   }
 
   return (
-    <div style={{position: "fixed", inset: 0, background: "rgba(5,11,24,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px"}}>
+    <div style={{position: "fixed", inset: 0, background: "rgba(5,11,24,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px", opacity: visible ? 1 : 0, transition: "opacity 0.3s ease"}}>
       <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "16px", padding: "24px", maxWidth: "480px", width: "100%", maxHeight: "90vh", overflowY: "auto"}}>
         <h2 style={{color: "white", fontSize: "18px", fontWeight: "500", margin: "0 0 4px"}}>✨ Guarda este momento</h2>
         <p style={{color: "#6B8CAE", fontSize: "13px", margin: "0 0 20px"}}>¿Como fue tu aventura? (opcional)</p>

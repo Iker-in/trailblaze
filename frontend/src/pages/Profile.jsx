@@ -9,6 +9,14 @@ import Navbar from '../components/Navbar.jsx'
 import LoginPrompt from '../components/LoginPrompt.jsx'
 import LevelBadge from '../components/LevelBadge.jsx'
 
+const MOOD_EMOJIS = {
+  increible: '🤩',
+  desafiante: '💪',
+  relajante: '😌',
+  inspiradora: '✨',
+  agotadora: '🥵'
+}
+
 const DIFFICULTY_STYLES = {
   facil: { background: '#14532d', color: '#86efac' },
   moderado: { background: '#713f12', color: '#fde68a' },
@@ -250,18 +258,34 @@ function Profile() {
           ))}
           {tab === 'completions' && completions.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha completado rutas todavia.</div>}
           {tab === 'completions' && completions.map((completion) => (
-            <div key={completion.id} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #f43f5e', borderRadius: '14px', padding: '16px 20px'}}>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
-                <p style={{color: 'white', fontWeight: '500', margin: 0}}>{completion.route.title}</p>
-                <span style={{...DIFFICULTY_STYLES[completion.route.difficulty], fontSize: '11px', padding: '3px 10px', borderRadius: '20px', fontWeight: '500'}}>{completion.route.difficulty}</span>
-              </div>
-              <div style={{display: 'flex', gap: '16px', fontSize: '13px', color: '#4A6480', marginBottom: '12px'}}>
-                <span>{completion.route.distanceKm} km</span>
-                {completion.realTime && <span>{completion.realTime} min</span>}
-              </div>
-              <Link to={'/routes/' + completion.route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
-            </div>
-          ))}
+  <div key={completion.id} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #f43f5e', borderRadius: '14px', overflow: 'hidden'}}>
+    {completion.photos && completion.photos.length > 0 && (
+      <img src={completion.photos[0].url} alt="" style={{width: '100%', height: '160px', objectFit: 'cover'}} />
+    )}
+    <div style={{padding: '16px 20px'}}>
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
+        <p style={{color: 'white', fontWeight: '500', margin: 0}}>
+          {MOOD_EMOJIS[completion.mood] ? MOOD_EMOJIS[completion.mood] + ' ' : '🏔️ '}
+          {completion.title || completion.route.title}
+        </p>
+        <span style={{...DIFFICULTY_STYLES[completion.route.difficulty], fontSize: '11px', padding: '3px 10px', borderRadius: '20px', fontWeight: '500'}}>{completion.route.difficulty}</span>
+      </div>
+      {completion.title && (
+        <p style={{color: '#4A6480', fontSize: '12px', margin: '0 0 8px'}}>{completion.route.title}</p>
+      )}
+      <div style={{display: 'flex', gap: '16px', fontSize: '13px', color: '#4A6480', marginBottom: '10px'}}>
+        <span>{completion.route.distanceKm} km</span>
+        {completion.route.elevationM && <span>{completion.route.elevationM} m</span>}
+        {completion.realTime && <span>{completion.realTime} min</span>}
+        {completion.photos && completion.photos.length > 0 && <span>📸 {completion.photos.length}</span>}
+      </div>
+      {completion.notes && (
+        <p style={{color: '#6B8CAE', fontSize: '13px', fontStyle: 'italic', margin: '0 0 10px', lineHeight: '1.5'}}>"{completion.notes}"</p>
+      )}
+      <Link to={'/routes/' + completion.route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
+    </div>
+  </div>
+))}
           {tab === 'stats' && statsLoading && <div style={{textAlign: 'center', padding: '40px', color: '#6B8CAE'}}>Cargando estadisticas...</div>}
           {tab === 'stats' && !statsLoading && stats && stats.hidden && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#6B8CAE'}}>Este usuario tiene sus estadisticas privadas.</div>}
           {tab === 'stats' && !statsLoading && stats && !stats.hidden && (
