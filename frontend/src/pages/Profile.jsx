@@ -8,6 +8,7 @@ import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
 import LoginPrompt from '../components/LoginPrompt.jsx'
 import LevelBadge from '../components/LevelBadge.jsx'
+import AdventureDetailModal from '../components/AdventureDetailModal.jsx'
 
 const MOOD_EMOJIS = {
   increible: '🤩',
@@ -44,6 +45,7 @@ function Profile() {
   const [bioValue, setBioValue] = useState('')
   const [savingBio, setSavingBio] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
+  const [selectedCompletion, setSelectedCompletion] = useState(null)
 
   const isOwnProfile = currentUser?.username === username
 
@@ -258,7 +260,7 @@ function Profile() {
           ))}
           {tab === 'completions' && completions.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha completado rutas todavia.</div>}
           {tab === 'completions' && completions.map((completion) => (
-  <div key={completion.id} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #f43f5e', borderRadius: '14px', overflow: 'hidden'}}>
+  <div key={completion.id} onClick={() => setSelectedCompletion(completion)} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #f43f5e', borderRadius: '14px', overflow: 'hidden', cursor: 'pointer'}}>
     {completion.photos && completion.photos.length > 0 && (
       <img src={completion.photos[0].url} alt="" style={{width: '100%', height: '160px', objectFit: 'cover'}} />
     )}
@@ -282,7 +284,7 @@ function Profile() {
       {completion.notes && (
         <p style={{color: '#6B8CAE', fontSize: '13px', fontStyle: 'italic', margin: '0 0 10px', lineHeight: '1.5'}}>"{completion.notes}"</p>
       )}
-      <Link to={'/routes/' + completion.route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
+      <Link to={'/routes/' + completion.route.id} onClick={(e) => e.stopPropagation()} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
     </div>
   </div>
 ))}
@@ -367,6 +369,7 @@ function Profile() {
                 <span>por {route.user.username}</span>
               </div>
               <Link to={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
+              {selectedCompletion && <AdventureDetailModal completion={selectedCompletion} onClose={() => setSelectedCompletion(null)} />}
             </div>
           ))}
         </div>
