@@ -9,6 +9,7 @@ import Navbar from '../components/Navbar.jsx'
 import LoginPrompt from '../components/LoginPrompt.jsx'
 import LevelBadge from '../components/LevelBadge.jsx'
 import AdventureDetailModal from '../components/AdventureDetailModal.jsx'
+import AdventureMap from '../components/AdventureMap.jsx'
 
 const MOOD_EMOJIS = {
   increible: '🤩',
@@ -46,6 +47,7 @@ function Profile() {
   const [savingBio, setSavingBio] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const [selectedCompletion, setSelectedCompletion] = useState(null)
+  const [completionsView, setCompletionsView] = useState('list')
 
   const isOwnProfile = currentUser?.username === username
 
@@ -235,12 +237,18 @@ function Profile() {
           </div>
         </div>
 
-        <div style={{display: 'flex', gap: '8px', marginBottom: '20px'}}>
+        <div style={{display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap'}}>
           {['routes', 'completions', 'favorites', 'stats', 'activity'].map((t) => (
             <button key={t} onClick={() => setTab(t)} style={{background: tab === t ? '#f97316' : '#0D1F35', color: tab === t ? 'white' : '#6B8CAE', border: tab === t ? 'none' : '1px solid #1A3050', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: '500', cursor: 'pointer'}}>
               {t === 'routes' ? 'Publicadas (' + routes.length + ')' : t === 'completions' ? 'Completadas (' + completions.length + ')' : t === 'favorites' ? 'Guardadas (' + favorites.length + ')' : t === 'stats' ? '📊 Stats' : '📈 Actividad'}
             </button>
           ))}
+          {tab === 'completions' && (
+            <div style={{display: 'flex', gap: '4px', marginLeft: 'auto'}}>
+              <button onClick={() => setCompletionsView('list')} style={{background: completionsView === 'list' ? '#1A3050' : 'transparent', color: completionsView === 'list' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>📋 Lista</button>
+              <button onClick={() => setCompletionsView('map')} style={{background: completionsView === 'map' ? '#1A3050' : 'transparent', color: completionsView === 'map' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>🗺️ Mapa</button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col gap-3">
@@ -259,7 +267,10 @@ function Profile() {
             </div>
           ))}
           {tab === 'completions' && completions.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha completado rutas todavia.</div>}
-          {tab === 'completions' && completions.map((completion) => (
+          {tab === 'completions' && completionsView === 'map' && completions.length > 0 && (
+            <AdventureMap completions={completions} onSelect={setSelectedCompletion} />
+          )}
+          {tab === 'completions' && completionsView === 'list' && completions.map((completion) => (
   <div key={completion.id} onClick={() => setSelectedCompletion(completion)} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #f43f5e', borderRadius: '14px', overflow: 'hidden', cursor: 'pointer'}}>
     {completion.photos && completion.photos.length > 0 && (
       <img src={completion.photos[0].url} alt="" style={{width: '100%', height: '160px', objectFit: 'cover'}} />
