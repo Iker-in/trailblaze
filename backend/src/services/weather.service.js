@@ -9,7 +9,7 @@ export async function getRouteWeather(lat, lng) {
   }
 
   const apiKey = process.env.OPENWEATHER_API_KEY
-  const url = \`https://api.openweathermap.org/data/2.5/forecast?lat=\${lat}&lon=\${lng}&appid=\${apiKey}&units=metric&lang=es\`
+  const url = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + lat + '&lon=' + lng + '&appid=' + apiKey + '&units=metric&lang=es'
 
   const response = await fetch(url)
   if (!response.ok) throw new Error("Error al obtener el clima")
