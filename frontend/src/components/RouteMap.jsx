@@ -21,9 +21,9 @@ function RouteMap({ latitude, longitude, title, trackPoints }) {
         style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+  attribution='&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  url={`https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${import.meta.env.VITE_THUNDERFOREST_API_KEY}`}
+/>
         {trackPoints && trackPoints.length > 1 && <Polyline positions={trackPoints} color="#f97316" weight={4} />}
         <Marker position={[latitude, longitude]}>
           <Popup>{title}</Popup>

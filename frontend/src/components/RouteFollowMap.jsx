@@ -72,7 +72,7 @@ function RouteFollowMap({ route, onClose, onComplete }) {
 
       <div style={{flex: 1}}>
         <MapContainer center={startPos} zoom={14} style={{height: "100%", width: "100%"}}>
-          <TileLayer attribution="&copy; OpenStreetMap" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <TileLayer attribution='&copy; Thunderforest, &copy; OpenStreetMap' url={`https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${import.meta.env.VITE_THUNDERFOREST_API_KEY}`} />
           {trackPoints.length > 1 && <Polyline positions={trackPoints} color="#f97316" weight={4} />}
           <Marker position={startPos} />
           {userPos && (
