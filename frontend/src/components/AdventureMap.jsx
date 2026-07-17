@@ -1,7 +1,9 @@
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet"
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
+import { Link } from "react-router-dom"
 import { useEffect } from "react"
+
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -41,11 +43,23 @@ function AdventureMap({ completions, onSelect }) {
         />
         <FitBounds points={points} />
         {withCoords.map((c) => (
-          <Marker
-            key={c.id}
-            position={[c.route.latitudeStart, c.route.longitudeStart]}
-            eventHandlers={{ click: () => onSelect(c) }}
-          />
+          <Marker key={c.id} position={[c.route.latitudeStart, c.route.longitudeStart]}>
+            <Popup>
+              <div style={{minWidth: "180px"}}>
+                {c.photos && c.photos.length > 0 && (
+                  <img src={c.photos[0].url} alt="" style={{width: "100%", height: "90px", objectFit: "cover", borderRadius: "6px", marginBottom: "6px"}} />
+                )}
+                <p style={{fontWeight: 600, margin: "0 0 4px", fontSize: "13px"}}>{c.title || c.route.title}</p>
+                <p style={{fontSize: "11px", opacity: 0.7, margin: "0 0 8px"}}>
+                  {new Date(c.createdAt).toLocaleDateString("es-MX", { day: "numeric", month: "short", year: "numeric" })}
+                </p>
+                <div style={{display: "flex", gap: "6px"}}>
+                  <button onClick={() => onSelect(c)} style={{background: "#f97316", color: "white", border: "none", borderRadius: "6px", padding: "5px 10px", fontSize: "11px", cursor: "pointer"}}>Ver recuerdo</button>
+                  <Link to={"/routes/" + c.route.id} style={{background: "#1A3050", color: "white", borderRadius: "6px", padding: "5px 10px", fontSize: "11px", textDecoration: "none"}}>Ver ruta</Link>
+                </div>
+              </div>
+            </Popup>
+          </Marker>
         ))}
       </MapContainer>
     </div>

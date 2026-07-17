@@ -30,3 +30,8 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: #0D1F35;
+  color: white;
+}
