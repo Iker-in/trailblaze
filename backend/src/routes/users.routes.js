@@ -3,11 +3,13 @@ import { body } from 'express-validator'
 import { authenticate } from '../middleware/auth.middleware.js'
 import prisma from '../config/prisma.js'
 import { getUserFavorites } from '../controllers/favorites.controller.js'
-import { getProfile, getUserRoutes, getUserCompletions, updateProfile, searchUsers, updateAvatar } from '../controllers/users.controller.js'
+import { getProfile, getUserRoutes, getUserCompletions, updateProfile, searchUsers, updateAvatar, deleteAccount } from '../controllers/users.controller.js'
 import { upload } from '../config/cloudinary.js'
 
 const router = Router()
 router.get('/search', searchUsers)
+router.delete('/me/account', authenticate, deleteAccount)
+router.delete('/me', authenticate, deleteAccount)
 
 router.get('/me/following-ranking', authenticate, async (req, res) => {
   try {

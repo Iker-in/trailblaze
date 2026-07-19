@@ -10,6 +10,7 @@ import LoginPrompt from '../components/LoginPrompt.jsx'
 import LevelBadge from '../components/LevelBadge.jsx'
 import AdventureDetailModal from '../components/AdventureDetailModal.jsx'
 import AdventureMap from '../components/AdventureMap.jsx'
+import DeleteAccountModal from '../components/DeleteAccountModal.jsx'
 
 const MOOD_EMOJIS = {
   increible: '🤩',
@@ -48,6 +49,7 @@ function Profile() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const [selectedCompletion, setSelectedCompletion] = useState(null)
   const [completionsView, setCompletionsView] = useState('list')
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false)
 
   const isOwnProfile = currentUser?.username === username
 
@@ -237,7 +239,16 @@ function Profile() {
           </div>
         </div>
 
+        {isOwnProfile && (
+          <div style={{textAlign: 'right', marginBottom: '12px'}}>
+            <button onClick={() => setShowDeleteAccount(true)} style={{background: 'none', border: 'none', color: '#4A6480', fontSize: '12px', cursor: 'pointer', textDecoration: 'underline'}}>
+              Eliminar mi cuenta
+            </button>
+          </div>
+        )}
+
         <div style={{display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap'}}>
+
           {['routes', 'completions', 'favorites', 'stats', 'activity'].map((t) => (
             <button key={t} onClick={() => setTab(t)} style={{background: tab === t ? '#f97316' : '#0D1F35', color: tab === t ? 'white' : '#6B8CAE', border: tab === t ? 'none' : '1px solid #1A3050', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: '500', cursor: 'pointer'}}>
               {t === 'routes' ? 'Publicadas (' + routes.length + ')' : t === 'completions' ? 'Completadas (' + completions.length + ')' : t === 'favorites' ? 'Guardadas (' + favorites.length + ')' : t === 'stats' ? '📊 Stats' : '📈 Actividad'}
@@ -383,6 +394,7 @@ function Profile() {
             </div>
           ))}
           {selectedCompletion && <AdventureDetailModal completion={selectedCompletion} onClose={() => setSelectedCompletion(null)} />}
+            {showDeleteAccount && <DeleteAccountModal onClose={() => setShowDeleteAccount(false)} />}
         </div>
       </div>
     </div>

@@ -181,3 +181,14 @@ export const updateAvatar = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' })
   }
 }
+
+export const deleteAccount = async (req, res) => {
+  try {
+    await prisma.user.delete({ where: { id: req.userId } })
+    res.clearCookie('refreshToken')
+    res.json({ message: 'Cuenta eliminada correctamente' })
+  } catch (error) {
+    console.error('Error al eliminar cuenta:', error)
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+}
