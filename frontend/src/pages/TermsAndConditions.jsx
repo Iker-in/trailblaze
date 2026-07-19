@@ -55,7 +55,7 @@ function TermsAndConditions() {
           }
         ].map((section) => (
           <div key={section.title} style={{marginBottom: "32px"}}>
-            <h2 style={{color: "#fb923c", fontSize: "16px", fontWeight: "500", marginBottom: "12px"}}>{section.title}</h2>
+            <h2 style={{color: "#FFB88A", fontSize: "16px", fontWeight: "500", marginBottom: "12px"}}>{section.title}</h2>
             <p style={{color: "#6B8CAE", fontSize: "14px", lineHeight: "1.7", whiteSpace: "pre-line", margin: 0}}>{section.content}</p>
           </div>
         ))}

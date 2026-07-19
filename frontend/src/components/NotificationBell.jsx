@@ -48,20 +48,20 @@ function NotificationBell() {
   }
 
   const getTypeColor = (type) => {
-    if (type === "follow") return "#f97316"
-    if (type === "completion") return "#f43f5e"
-    return "#fb923c"
+    if (type === "follow") return "#FFB88A"
+    if (type === "completion") return "#7BC47F"
+    return "#FFB88A"
   }
 
   return (
     <div ref={ref} style={{position: "relative"}}>
       <button onClick={handleOpen} style={{background: "none", border: "none", cursor: "pointer", position: "relative", padding: "4px"}}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={unreadCount > 0 ? "#fb923c" : "#4A6480"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={unreadCount > 0 ? "#FFB88A" : "#4A6480"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
           <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
         {unreadCount > 0 && (
-          <span style={{position: "absolute", top: "0", right: "0", background: "#f43f5e", color: "white", fontSize: "10px", fontWeight: "bold", borderRadius: "50%", width: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center"}}>
+          <span style={{position: "absolute", top: "0", right: "0", background: "#4F9F55", color: "white", fontSize: "10px", fontWeight: "bold", borderRadius: "50%", width: "16px", height: "16px", display: "flex", alignItems: "center", justifyContent: "center"}}>
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}

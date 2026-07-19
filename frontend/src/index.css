@@ -2,9 +2,9 @@
 @import "tailwindcss";
 
 :root {
-  --tb-purple: #f97316;
-  --tb-yellow: #fb923c;
-  --tb-pink: #f43f5e;
+  --tb-purple: #FFB88A;
+  --tb-yellow: #FFB88A;
+  --tb-pink: #7BC47F;
   --tb-dark: #050B18;
   --tb-surface: #0D1F35;
   --tb-border: #1A3050;

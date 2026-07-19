@@ -24,7 +24,7 @@ function RouteMap({ latitude, longitude, title, trackPoints }) {
   attribution='&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   url={`https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${import.meta.env.VITE_THUNDERFOREST_API_KEY}`}
 />
-        {trackPoints && trackPoints.length > 1 && <Polyline positions={trackPoints} color="#f97316" weight={4} />}
+        {trackPoints && trackPoints.length > 1 && <Polyline positions={trackPoints} color="#F2854D" weight={4} />}
         <Marker position={[latitude, longitude]}>
           <Popup>{title}</Popup>
         </Marker>

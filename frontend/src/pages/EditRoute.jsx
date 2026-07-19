@@ -95,7 +95,7 @@ function EditRoute() {
             </div>
           </div>
           <div style={{display: 'flex', gap: '12px'}}>
-            <button type="submit" disabled={loading} style={{flex: 1, background: '#f97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', opacity: loading ? 0.6 : 1}}>
+            <button type="submit" disabled={loading} style={{flex: 1, background: '#F2854D', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', opacity: loading ? 0.6 : 1}}>
               {loading ? 'Guardando...' : 'Guardar cambios'}
             </button>
             <button type="button" onClick={() => navigate('/routes/' + id)} style={{background: 'transparent', color: '#6B8CAE', border: '1px solid #1A3050', borderRadius: '12px', padding: '14px 20px', fontSize: '15px', cursor: 'pointer'}}>

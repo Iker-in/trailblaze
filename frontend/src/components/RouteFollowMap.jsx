@@ -73,7 +73,7 @@ function RouteFollowMap({ route, onClose, onComplete }) {
       <div style={{flex: 1}}>
         <MapContainer center={startPos} zoom={14} style={{height: "100%", width: "100%"}}>
           <TileLayer attribution='&copy; Thunderforest, &copy; OpenStreetMap' url={`https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${import.meta.env.VITE_THUNDERFOREST_API_KEY}`} />
-          {trackPoints.length > 1 && <Polyline positions={trackPoints} color="#f97316" weight={4} />}
+          {trackPoints.length > 1 && <Polyline positions={trackPoints} color="#F2854D" weight={4} />}
           <Marker position={startPos} />
           {userPos && (
             <>
@@ -96,7 +96,7 @@ function RouteFollowMap({ route, onClose, onComplete }) {
               </p>
             </div>
             {(nearStart || nearEnd) && onComplete && (
-                <button onClick={() => onComplete(recordedPointsRef.current)} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '8px', width: '100%'}}>
+                <button onClick={() => onComplete(recordedPointsRef.current)} style={{background: '#F2854D', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', marginTop: '8px', width: '100%'}}>
                   ✅ Marcar como completada
                 </button>
               )}

@@ -33,7 +33,7 @@ function UserSearch() {
         style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '10px', padding: '6px 12px', color: 'white', fontSize: '13px', outline: 'none', width: '160px'}}
       />
       {open && (
-        <div style={{position: 'absolute', left: 0, top: '36px', width: '240px', background: '#0D1F35', border: '1px solid #f43f5e', borderRadius: '12px', zIndex: 100, overflow: 'hidden'}}>
+        <div style={{position: 'absolute', left: 0, top: '36px', width: '240px', background: '#0D1F35', border: '1px solid #4F9F55', borderRadius: '12px', zIndex: 100, overflow: 'hidden'}}>
           {results.length === 0 && (
             <p style={{color: '#2A4A6A', fontSize: '13px', textAlign: 'center', padding: '16px'}}>Sin resultados</p>
           )}
@@ -43,7 +43,7 @@ function UserSearch() {
                 {u.avatarUrl ? (
                   <img src={u.avatarUrl} alt={u.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
                 ) : (
-                  <div style={{width: '100%', height: '100%', background: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '500', color: 'white'}}>
+                  <div style={{width: '100%', height: '100%', background: '#F2854D', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '500', color: 'white'}}>
                     {u.username[0].toUpperCase()}
                   </div>
                 )}

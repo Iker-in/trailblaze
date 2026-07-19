@@ -9,15 +9,15 @@ import LevelBadge from "../components/LevelBadge.jsx"
 
 function RankingEntry({ entry, currentUser }) {
   return (
-    <Link to={"/profile/" + entry.username} style={{background: currentUser && currentUser.id === entry.id ? "#0A1F3A" : "#0D1F35", border: currentUser && currentUser.id === entry.id ? "1px solid #f97316" : "1px solid #1A3050", borderRadius: "14px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "14px", textDecoration: "none"}}>
+    <Link to={"/profile/" + entry.username} style={{background: currentUser && currentUser.id === entry.id ? "#0A1F3A" : "#0D1F35", border: currentUser && currentUser.id === entry.id ? "1px solid #F2854D" : "1px solid #1A3050", borderRadius: "14px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "14px", textDecoration: "none"}}>
       <div style={{width: "36px", textAlign: "center"}}>
-        <span style={{color: entry.position === 1 ? "#fb923c" : entry.position === 2 ? "#6B8CAE" : entry.position === 3 ? "#b45309" : "#2A4A6A", fontWeight: "500", fontSize: "15px"}}>#{entry.position}</span>
+        <span style={{color: entry.position === 1 ? "#FFB88A" : entry.position === 2 ? "#6B8CAE" : entry.position === 3 ? "#b45309" : "#2A4A6A", fontWeight: "500", fontSize: "15px"}}>#{entry.position}</span>
       </div>
       <div style={{width: "38px", height: "38px", borderRadius: "50%", overflow: "hidden", border: "2px solid #1A3050", flexShrink: 0}}>
         {entry.avatarUrl ? (
           <img src={entry.avatarUrl} alt={entry.username} style={{width: "100%", height: "100%", objectFit: "cover"}} />
         ) : (
-          <div style={{width: "100%", height: "100%", background: "#f97316", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "500", color: "white", fontSize: "15px"}}>
+          <div style={{width: "100%", height: "100%", background: "#F2854D", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "500", color: "white", fontSize: "15px"}}>
             {entry.username[0].toUpperCase()}
           </div>
         )}
@@ -30,7 +30,7 @@ function RankingEntry({ entry, currentUser }) {
         <p style={{color: "#4A6480", fontSize: "12px", margin: 0}}>{entry._count?.routes ?? entry.routes} rutas · {entry._count?.completions ?? entry.completions} completadas</p>
       </div>
       <div style={{textAlign: "right"}}>
-        <p style={{color: "#fb923c", fontWeight: "500", margin: 0, fontSize: "18px"}}>{entry.points}</p>
+        <p style={{color: "#FFB88A", fontWeight: "500", margin: 0, fontSize: "18px"}}>{entry.points}</p>
         <p style={{color: "#4A6480", fontSize: "12px", margin: 0}}>puntos</p>
       </div>
     </Link>
@@ -85,7 +85,7 @@ function Ranking() {
     cursor: "pointer",
     fontSize: "14px",
     fontWeight: "500",
-    background: tab === t ? "#f97316" : "#0D1F35",
+    background: tab === t ? "#F2854D" : "#0D1F35",
     color: tab === t ? "white" : "#6B8CAE"
   })
 
@@ -145,7 +145,7 @@ function Ranking() {
             {!loadingFriends && friendsRanking.length === 0 && (
               <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", padding: "40px", textAlign: "center"}}>
                 <p style={{color: "#6B8CAE", fontSize: "15px", margin: "0 0 16px"}}>Aun no sigues a nadie.</p>
-                <Link to="/ranking" onClick={() => setTab("global")} style={{color: "#f97316", fontSize: "14px"}}>Ver ranking global</Link>
+                <Link to="/ranking" onClick={() => setTab("global")} style={{color: "#FFB88A", fontSize: "14px"}}>Ver ranking global</Link>
               </div>
             )}
             <div className="flex flex-col gap-3">

@@ -1,9 +1,9 @@
 ﻿import { useState } from "react"
 
 const slides = [
-  { emoji: "🏔️", title: "Bienvenido a ARVENTRA", desc: "La comunidad de senderistas hispanohablantes. Descubre, graba y comparte tus aventuras en la naturaleza.", color: "#f97316" },
-  { emoji: "📍", title: "Graba tus rutas", desc: "GPS en tiempo real con mapa en vivo. Pausa, reanuda y guarda tu recorrido completo con distancia y elevacion.", color: "#fb923c" },
-  { emoji: "🏆", title: "Explora y compite", desc: "Sube en el ranking, gana logros y compite con tus amigos. Se el Primer Explorador de rutas nuevas.", color: "#f43f5e" }
+  { emoji: "🏔️", title: "Bienvenido a ARVENTRA", desc: "La comunidad de senderistas hispanohablantes. Descubre, graba y comparte tus aventuras en la naturaleza.", color: "#FFB88A" },
+  { emoji: "📍", title: "Graba tus rutas", desc: "GPS en tiempo real con mapa en vivo. Pausa, reanuda y guarda tu recorrido completo con distancia y elevacion.", color: "#FFB88A" },
+  { emoji: "🏆", title: "Explora y compite", desc: "Sube en el ranking, gana logros y compite con tus amigos. Se el Primer Explorador de rutas nuevas.", color: "#7BC47F" }
 ]
 
 function Onboarding({ onFinish }) {

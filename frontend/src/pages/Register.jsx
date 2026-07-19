@@ -31,7 +31,7 @@ function Register() {
   return (
     <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
       <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '16px', padding: '40px', width: '100%', maxWidth: '400px'}}>
-        <Link to="/" style={{color: '#fb923c', fontWeight: 'bold', fontSize: '20px', display: 'block', marginBottom: '28px'}}>ARVENTRA</Link>
+        <Link to="/" style={{color: '#FFB88A', fontWeight: 'bold', fontSize: '20px', display: 'block', marginBottom: '28px'}}>ARVENTRA</Link>
         <h2 style={{color: 'white', fontSize: '22px', fontWeight: '500', marginBottom: '24px'}}>Crear cuenta</h2>
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
         <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
@@ -50,16 +50,16 @@ function Register() {
           <label style={{display: 'flex', alignItems: 'flex-start', gap: '8px', color: '#6B8CAE', fontSize: '12px', lineHeight: '1.5', cursor: 'pointer'}}>
   <input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} style={{marginTop: '2px'}} required />
   <span>
-    Acepto los <Link to="/terms" target="_blank" style={{color: '#f97316'}}>Términos y Condiciones</Link> y la <Link to="/privacy" target="_blank" style={{color: '#f97316'}}>Política de Privacidad</Link>
+    Acepto los <Link to="/terms" target="_blank" style={{color: '#FFB88A'}}>Términos y Condiciones</Link> y la <Link to="/privacy" target="_blank" style={{color: '#FFB88A'}}>Política de Privacidad</Link>
   </span>
 </label>
-<button type="submit" disabled={loading || !acceptedTerms} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: (loading || !acceptedTerms) ? 0.6 : 1}}>
+<button type="submit" disabled={loading || !acceptedTerms} style={{background: '#F2854D', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: (loading || !acceptedTerms) ? 0.6 : 1}}>
   {loading ? 'Creando cuenta...' : 'Registrarse'}
 </button>
         </form>
         <p style={{color: '#4A6480', fontSize: '13px', textAlign: 'center', marginTop: '20px'}}>
           Ya tienes cuenta?{' '}
-          <Link to="/login" style={{color: '#f97316'}}>Inicia sesion</Link>
+          <Link to="/login" style={{color: '#FFB88A'}}>Inicia sesion</Link>
         </p>
       </div>
     </div>

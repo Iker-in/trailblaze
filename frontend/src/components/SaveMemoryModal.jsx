@@ -74,9 +74,9 @@ function SaveMemoryModal({ completionId, onClose }) {
               key={m.value}
               onClick={() => setMood(mood === m.value ? null : m.value)}
               style={{
-                background: mood === m.value ? "#f97316" : "#050B18",
+                background: mood === m.value ? "#F2854D" : "#050B18",
                 color: mood === m.value ? "white" : "#6B8CAE",
-                border: "1px solid " + (mood === m.value ? "#f97316" : "#1A3050"),
+                border: "1px solid " + (mood === m.value ? "#F2854D" : "#1A3050"),
                 borderRadius: "20px", padding: "8px 14px", fontSize: "13px", cursor: "pointer"
               }}
             >
@@ -94,7 +94,7 @@ function SaveMemoryModal({ completionId, onClose }) {
           <button onClick={onClose} disabled={saving} style={{background: "none", border: "1px solid #1A3050", color: "#6B8CAE", borderRadius: "10px", padding: "10px 20px", fontSize: "14px", cursor: "pointer"}}>
             Omitir
           </button>
-          <button onClick={handleSave} disabled={saving} style={{background: "#f97316", color: "white", border: "none", borderRadius: "10px", padding: "10px 20px", fontWeight: "500", fontSize: "14px", cursor: "pointer", opacity: saving ? 0.6 : 1}}>
+          <button onClick={handleSave} disabled={saving} style={{background: "#F2854D", color: "white", border: "none", borderRadius: "10px", padding: "10px 20px", fontWeight: "500", fontSize: "14px", cursor: "pointer", opacity: saving ? 0.6 : 1}}>
             {saving ? "Guardando..." : "Guardar recuerdo"}
           </button>
         </div>

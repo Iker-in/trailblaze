@@ -253,7 +253,7 @@ setTimeout(() => setShowMemoryModal(true), 900)
     <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
       <div style={{textAlign: 'center'}}>
         <p style={{color: '#fca5a5', fontSize: '18px', marginBottom: '16px'}}>{error}</p>
-        <Link to="/routes" style={{color: '#f97316'}}>Volver a rutas</Link>
+        <Link to="/routes" style={{color: '#FFB88A'}}>Volver a rutas</Link>
       </div>
     </div>
   )
@@ -281,14 +281,14 @@ setTimeout(() => setShowMemoryModal(true), 900)
               {route.photos.length > 1 && (
               <div style={{display: 'flex', gap: '8px', padding: '8px', overflowX: 'auto', background: '#050B18'}}>
                 {route.photos.map((photo, i) => (
-                  <img key={i} src={photo.url} alt={route.title + ' foto ' + (i+1)} onClick={() => setCurrentPhoto(i)} style={{width: '60px', height: '60px', objectFit: 'cover', borderRadius: '6px', cursor: 'pointer', border: i === currentPhoto ? '2px solid #f97316' : '2px solid transparent', flexShrink: 0}} />
+                  <img key={i} src={photo.url} alt={route.title + ' foto ' + (i+1)} onClick={() => setCurrentPhoto(i)} style={{width: '60px', height: '60px', objectFit: 'cover', borderRadius: '6px', cursor: 'pointer', border: i === currentPhoto ? '2px solid #F2854D' : '2px solid transparent', flexShrink: 0}} />
                 ))}
               </div>
             )}
             {route.photos.length > 1 && (
                 <div style={{position: 'absolute', bottom: '12px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '6px'}}>
                   {route.photos.map((_, i) => (
-                    <button key={i} onClick={() => setCurrentPhoto(i)} style={{width: '8px', height: '8px', borderRadius: '50%', border: 'none', background: i === currentPhoto ? '#fb923c' : 'rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0}} />
+                    <button key={i} onClick={() => setCurrentPhoto(i)} style={{width: '8px', height: '8px', borderRadius: '50%', border: 'none', background: i === currentPhoto ? '#FFB88A' : 'rgba(255,255,255,0.3)', cursor: 'pointer', padding: 0}} />
                   ))}
                 </div>
               )}
@@ -313,13 +313,13 @@ setTimeout(() => setShowMemoryModal(true), 900)
 
             <p style={{color: '#4A6480', fontSize: '14px', marginBottom: '20px'}}>
               Publicada por{' '}
-              <Link to={'/profile/' + route.user.username} style={{color: '#f43f5e', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</Link>
+              <Link to={'/profile/' + route.user.username} style={{color: '#7BC47F', textDecoration: 'none', fontWeight: '500'}}>{route.user.username}</Link>
             </p>
 
             {route.completions && route.completions.length > 0 && (
-  <p style={{color: '#fb923c', fontSize: '13px', margin: '4px 0 0'}}>
+  <p style={{color: '#FFB88A', fontSize: '13px', margin: '4px 0 0'}}>
     🏆 Primer explorador:{' '}
-    <Link to={'/profile/' + route.completions[0].user.username} style={{color: '#fb923c', textDecoration: 'none', fontWeight: '500'}}>
+    <Link to={'/profile/' + route.completions[0].user.username} style={{color: '#FFB88A', textDecoration: 'none', fontWeight: '500'}}>
       {route.completions[0].user.username}
     </Link>
   </p>
@@ -332,7 +332,7 @@ setTimeout(() => setShowMemoryModal(true), 900)
                 route.estimatedTime ? { value: route.estimatedTime, label: 'minutos' } : null
               ].filter(Boolean).map((stat) => (
                 <div key={stat.label} style={{background: '#050B18', borderRadius: '12px', padding: '14px', textAlign: 'center', border: '1px solid #0D1F35'}}>
-                  <p style={{color: '#fb923c', fontSize: '22px', fontWeight: '500', margin: 0}}>{stat.value}</p>
+                  <p style={{color: '#FFB88A', fontSize: '22px', fontWeight: '500', margin: 0}}>{stat.value}</p>
                   <p style={{color: '#4A6480', fontSize: '13px', margin: 0}}>{stat.label}</p>
                 </div>
               ))}
@@ -345,17 +345,17 @@ setTimeout(() => setShowMemoryModal(true), 900)
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '20px', borderTop: '1px solid #1A3050'}}>
               <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                 <p style={{color: '#2A4A6A', fontSize: '14px', margin: 0}}>Completada {route._count.completions} veces</p>
-                <button onClick={handleFavorite} disabled={favoriteLoading} style={{background: 'transparent', color: isFavorite ? '#fb923c' : '#2A4A6A', border: '1px solid ' + (isFavorite ? '#fb923c' : '#1A3050'), borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>
+                <button onClick={handleFavorite} disabled={favoriteLoading} style={{background: 'transparent', color: isFavorite ? '#FFB88A' : '#2A4A6A', border: '1px solid ' + (isFavorite ? '#FFB88A' : '#1A3050'), borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>
                   {isFavorite ? 'Guardado' : 'Guardar'}
                 </button>
               </div>
               {route.trackPoints && route.trackPoints.length > 1 && (
-                <button onClick={() => setShowFollowMap(true)} style={{background: '#0D1F35', color: '#fb923c', border: '1px solid #fb923c', borderRadius: '10px', padding: '10px 20px', fontWeight: '500', fontSize: '14px', cursor: 'pointer'}}>
+                <button onClick={() => setShowFollowMap(true)} style={{background: '#0D1F35', color: '#FFB88A', border: '1px solid #FFB88A', borderRadius: '10px', padding: '10px 20px', fontWeight: '500', fontSize: '14px', cursor: 'pointer'}}>
                   🗺️ Seguir ruta
                 </button>
               )}
               {isAuthenticated && route.userId !== user?.id && !(route.trackPoints && route.trackPoints.length > 1) && (
-                <button onClick={() => handleComplete()} disabled={completing} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
+                <button onClick={() => handleComplete()} disabled={completing} style={{background: '#F2854D', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
                   {completing ? 'Guardando...' : completionCount > 0 ? 'Completar nuevamente (' + completionCount + ')' : 'Marcar como completada'}
                 </button>
               )}
@@ -416,7 +416,7 @@ setTimeout(() => setShowMemoryModal(true), 900)
           {isAuthenticated && !replyingTo && (
   <form onSubmit={handleComment} style={{display: 'flex', gap: '10px', marginBottom: '20px'}}>
               <input type="text" value={commentText} onChange={(e) => setCommentText(e.target.value)} placeholder="Escribe un comentario..." maxLength={500} style={{flex: 1, background: '#050B18', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none'}} />
-              <button type="submit" disabled={sendingComment || !commentText.trim()} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 18px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: sendingComment ? 0.6 : 1}}>
+              <button type="submit" disabled={sendingComment || !commentText.trim()} style={{background: '#F2854D', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 18px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: sendingComment ? 0.6 : 1}}>
                 {sendingComment ? '...' : 'Enviar'}
               </button>
             </form>
@@ -437,14 +437,14 @@ setTimeout(() => setShowMemoryModal(true), 900)
         {comment.user.avatarUrl ? (
           <img src={comment.user.avatarUrl} alt={comment.user.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
         ) : (
-          <div style={{width: '100%', height: '100%', background: '#f97316', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '500', color: 'white'}}>
+          <div style={{width: '100%', height: '100%', background: '#F2854D', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '500', color: 'white'}}>
             {comment.user.username[0].toUpperCase()}
           </div>
         )}
       </div>
       <div style={{flex: 1, background: '#050B18', borderRadius: '10px', padding: '10px 14px'}}>
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
-          <Link to={'/profile/' + comment.user.username} style={{color: '#f43f5e', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</Link>
+          <Link to={'/profile/' + comment.user.username} style={{color: '#7BC47F', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>{comment.user.username}</Link>
           <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
             <span style={{color: '#2A4A6A', fontSize: '11px'}}>{new Date(comment.createdAt).toLocaleDateString()}</span>
             {user && user.id === comment.user.id && (
@@ -454,7 +454,7 @@ setTimeout(() => setShowMemoryModal(true), 900)
         </div>
         <p style={{color: '#6B8CAE', fontSize: '14px', margin: '0 0 6px'}}>{comment.content}</p>
         {isAuthenticated && (
-          <button onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)} style={{color: '#f97316', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', padding: 0}}>
+          <button onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)} style={{color: '#F2854D', background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', padding: 0}}>
             {replyingTo === comment.id ? 'Cancelar' : 'Responder'}
           </button>
         )}
@@ -469,14 +469,14 @@ setTimeout(() => setShowMemoryModal(true), 900)
               {reply.user.avatarUrl ? (
                 <img src={reply.user.avatarUrl} alt={reply.user.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
               ) : (
-                <div style={{width: '100%', height: '100%', background: '#f43f5e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '500', color: 'white'}}>
+                <div style={{width: '100%', height: '100%', background: '#4F9F55', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '500', color: 'white'}}>
                   {reply.user.username[0].toUpperCase()}
                 </div>
               )}
             </div>
             <div style={{flex: 1, background: '#0D1F35', borderRadius: '10px', padding: '8px 12px'}}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px'}}>
-                <Link to={'/profile/' + reply.user.username} style={{color: '#f43f5e', fontSize: '12px', fontWeight: '500', textDecoration: 'none'}}>{reply.user.username}</Link>
+                <Link to={'/profile/' + reply.user.username} style={{color: '#7BC47F', fontSize: '12px', fontWeight: '500', textDecoration: 'none'}}>{reply.user.username}</Link>
                 {user && user.id === reply.user.id && (
                   <button onClick={() => handleDeleteComment(reply.id)} style={{color: '#2A4A6A', background: 'none', border: 'none', cursor: 'pointer', fontSize: '11px', padding: 0}}>eliminar</button>
                 )}
@@ -499,7 +499,7 @@ setTimeout(() => setShowMemoryModal(true), 900)
           autoFocus
           style={{flex: 1, background: '#050B18', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 12px', color: 'white', fontSize: '13px', outline: 'none'}}
         />
-        <button type="submit" disabled={sendingComment || !commentText.trim()} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '8px 14px', fontWeight: '500', fontSize: '13px', cursor: 'pointer', opacity: sendingComment ? 0.6 : 1}}>
+        <button type="submit" disabled={sendingComment || !commentText.trim()} style={{background: '#F2854D', color: 'white', border: 'none', borderRadius: '10px', padding: '8px 14px', fontWeight: '500', fontSize: '13px', cursor: 'pointer', opacity: sendingComment ? 0.6 : 1}}>
           {sendingComment ? '...' : 'Enviar'}
         </button>
       </form>
@@ -507,7 +507,7 @@ setTimeout(() => setShowMemoryModal(true), 900)
   </div>
 ))}
             {commentsPage < commentsTotalPages && (
-  <button onClick={loadMoreComments} disabled={loadingMore} style={{background: 'transparent', color: '#f97316', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px', fontSize: '13px', cursor: 'pointer', marginTop: '12px', width: '100%'}}>
+  <button onClick={loadMoreComments} disabled={loadingMore} style={{background: 'transparent', color: '#F2854D', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px', fontSize: '13px', cursor: 'pointer', marginTop: '12px', width: '100%'}}>
     {loadingMore ? 'Cargando...' : 'Cargar mas comentarios'}
   </button>
 )}

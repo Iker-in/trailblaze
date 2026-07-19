@@ -31,7 +31,7 @@ function AdventureDetailModal({ completion, onClose }) {
             {photos.length > 1 && (
               <div style={{display: "flex", gap: "8px", padding: "8px", overflowX: "auto", background: "#050B18"}}>
                 {photos.map((photo, i) => (
-                  <img key={i} src={photo.url} alt="" onClick={() => setCurrentPhoto(i)} style={{width: "56px", height: "56px", objectFit: "cover", borderRadius: "6px", cursor: "pointer", border: i === currentPhoto ? "2px solid #f97316" : "2px solid transparent", flexShrink: 0}} />
+                  <img key={i} src={photo.url} alt="" onClick={() => setCurrentPhoto(i)} style={{width: "56px", height: "56px", objectFit: "cover", borderRadius: "6px", cursor: "pointer", border: i === currentPhoto ? "2px solid #F2854D" : "2px solid transparent", flexShrink: 0}} />
                 ))}
               </div>
             )}
@@ -61,7 +61,7 @@ function AdventureDetailModal({ completion, onClose }) {
             </p>
           )}
 
-          <Link to={"/routes/" + completion.route.id} style={{color: "#f97316", fontSize: "13px", fontWeight: "500", textDecoration: "none"}}>Ver ruta →</Link>
+          <Link to={"/routes/" + completion.route.id} style={{color: "#FFB88A", fontSize: "13px", fontWeight: "500", textDecoration: "none"}}>Ver ruta →</Link>
         </div>
       </div>
     </div>

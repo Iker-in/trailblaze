@@ -39,7 +39,7 @@ function Achievements() {
           {achievements.map((achievement) => {
             const earned = earnedIds.has(achievement.id)
             return (
-              <div key={achievement.id} style={{background: earned ? '#0D1F35' : '#050B18', border: earned ? '1px solid #1A3050' : '1px solid #0D1F35', borderLeft: earned ? '3px solid #f43f5e' : '3px solid #0D1F35', borderRadius: '14px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px', opacity: earned ? 1 : 0.5}}>
+              <div key={achievement.id} style={{background: earned ? '#0D1F35' : '#050B18', border: earned ? '1px solid #1A3050' : '1px solid #0D1F35', borderLeft: earned ? '3px solid #4F9F55' : '3px solid #0D1F35', borderRadius: '14px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px', opacity: earned ? 1 : 0.5}}>
                 <div style={{width: '42px', height: '42px', borderRadius: '10px', background: earned ? '#4c1d95' : '#0D1F35', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '500', color: earned ? '#c4b5fd' : '#2A4A6A'}}>
                   {earned ? 'ok' : '?'}
                 </div>
@@ -48,7 +48,7 @@ function Achievements() {
                   <p style={{color: '#4A6480', fontSize: '13px', margin: 0}}>{achievement.description}</p>
                 </div>
                 <div style={{textAlign: 'right'}}>
-                  <p style={{color: earned ? '#f43f5e' : '#2A4A6A', fontWeight: '500', margin: 0}}>+{achievement.points}</p>
+                  <p style={{color: earned ? '#7BC47F' : '#2A4A6A', fontWeight: '500', margin: 0}}>+{achievement.points}</p>
                   <p style={{color: '#2A4A6A', fontSize: '12px', margin: 0}}>puntos</p>
                 </div>
               </div>

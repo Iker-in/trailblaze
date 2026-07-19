@@ -40,7 +40,7 @@ function ResetPassword() {
           {done ? (
             <>
               <p style={{color: '#86efac', fontSize: '14px', textAlign: 'center', marginBottom: '20px'}}>Contrasena actualizada correctamente.</p>
-              <Link to="/login" style={{display: 'block', textAlign: 'center', background: '#f97316', color: 'white', padding: '12px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: '500'}}>Ir al login</Link>
+              <Link to="/login" style={{display: 'block', textAlign: 'center', background: '#F2854D', color: 'white', padding: '12px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', fontWeight: '500'}}>Ir al login</Link>
             </>
           ) : (
             <form onSubmit={handleSubmit}>
@@ -64,7 +64,7 @@ function ResetPassword() {
               <button
                 type="submit"
                 disabled={loading}
-                style={{width: '100%', background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontSize: '15px', fontWeight: '500', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1}}
+                style={{width: '100%', background: '#F2854D', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontSize: '15px', fontWeight: '500', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1}}
               >
                 {loading ? 'Guardando...' : 'Cambiar contrasena'}
               </button>
@@ -72,7 +72,7 @@ function ResetPassword() {
           )}
 
           <p style={{textAlign: 'center', marginTop: '20px', fontSize: '13px'}}>
-            <Link to="/login" style={{color: '#f97316', textDecoration: 'none'}}>Volver al login</Link>
+            <Link to="/login" style={{color: '#FFB88A', textDecoration: 'none'}}>Volver al login</Link>
           </p>
         </div>
       </div>

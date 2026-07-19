@@ -54,7 +54,7 @@ function AdventureMap({ completions, onSelect }) {
                   {new Date(c.createdAt).toLocaleDateString("es-MX", { day: "numeric", month: "short", year: "numeric" })}
                 </p>
                 <div style={{display: "flex", gap: "6px"}}>
-                  <button onClick={() => onSelect(c)} style={{background: "#f97316", color: "white", border: "none", borderRadius: "6px", padding: "5px 10px", fontSize: "11px", cursor: "pointer"}}>Ver recuerdo</button>
+                  <button onClick={() => onSelect(c)} style={{background: "#F2854D", color: "white", border: "none", borderRadius: "6px", padding: "5px 10px", fontSize: "11px", cursor: "pointer"}}>Ver recuerdo</button>
                   <Link to={"/routes/" + c.route.id} style={{background: "#1A3050", color: "white", borderRadius: "6px", padding: "5px 10px", fontSize: "11px", textDecoration: "none"}}>Ver ruta</Link>
                 </div>
               </div>

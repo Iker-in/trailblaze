@@ -25,7 +25,7 @@ function DeleteAccountModal({ onClose }) {
 
   return (
     <div style={{position: "fixed", inset: 0, background: "rgba(5,11,24,0.9)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px"}}>
-      <div style={{background: "#0D1F35", border: "1px solid #f43f5e", borderRadius: "16px", padding: "24px", maxWidth: "420px", width: "100%"}}>
+      <div style={{background: "#0D1F35", border: "1px solid #991b1b", borderRadius: "16px", padding: "24px", maxWidth: "420px", width: "100%"}}>
         <h2 style={{color: "white", fontSize: "18px", fontWeight: "500", margin: "0 0 12px"}}>⚠️ Eliminar cuenta</h2>
         <p style={{color: "#6B8CAE", fontSize: "14px", lineHeight: "1.6", margin: "0 0 16px"}}>
           Esta accion es irreversible. Se eliminaran permanentemente tu perfil, tus rutas, tus completaciones, tus fotos, tus seguidores y todo tu historial de aventuras.
@@ -47,7 +47,7 @@ function DeleteAccountModal({ onClose }) {
           <button
             onClick={handleDelete}
             disabled={deleting || confirmText !== "ELIMINAR"}
-            style={{background: "#f43f5e", color: "white", border: "none", borderRadius: "10px", padding: "10px 20px", fontWeight: "500", fontSize: "14px", cursor: "pointer", opacity: (deleting || confirmText !== "ELIMINAR") ? 0.5 : 1}}
+            style={{background: "#450a0a", color: "#fca5a5", border: "1px solid #991b1b", borderRadius: "10px", padding: "10px 20px", fontWeight: "500", fontSize: "14px", cursor: "pointer", opacity: (deleting || confirmText !== "ELIMINAR") ? 0.5 : 1}}
           >
             {deleting ? "Eliminando..." : "Eliminar mi cuenta"}
           </button>

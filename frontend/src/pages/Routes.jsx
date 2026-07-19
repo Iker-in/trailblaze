@@ -123,11 +123,11 @@ const getRoutesWithDistance = () => {
             <option value="20">Hasta 20 km</option>
             <option value="50">Hasta 50 km</option>
           </select>
-          <button onClick={handleFindNearby} disabled={locating} style={{background: sortByDistance ? '#f97316' : 'transparent', color: sortByDistance ? 'white' : '#f97316', border: '1px solid #f97316', borderRadius: '10px', padding: '9px 16px', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
+          <button onClick={handleFindNearby} disabled={locating} style={{background: sortByDistance ? '#F2854D' : 'transparent', color: sortByDistance ? 'white' : '#F2854D', border: '1px solid #F2854D', borderRadius: '10px', padding: '9px 16px', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
   {locating ? 'Localizando...' : 'Cerca de mi'}
 </button>
           {(search || difficulty || maxDistance) && (
-            <button onClick={() => { setSearch(''); setDifficulty(''); setMaxDistance('') }} style={{background: 'transparent', color: '#f43f5e', border: '1px solid #f43f5e', borderRadius: '10px', padding: '9px 16px', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
+            <button onClick={() => { setSearch(''); setDifficulty(''); setMaxDistance('') }} style={{background: 'transparent', color: '#4F9F55', border: '1px solid #4F9F55', borderRadius: '10px', padding: '9px 16px', fontSize: '13px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
               Limpiar
             </button>
           )}
@@ -147,7 +147,7 @@ const getRoutesWithDistance = () => {
           {getRoutesWithDistance().map((route) => (
             <Link key={route.id} to={"/routes/" + route.id} style={{textDecoration: 'none', display: 'block'}}>
               <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', overflow: 'hidden', transition: 'border-color 0.2s'}}
-                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#f97316'}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = '#F2854D'}
                 onMouseLeave={(e) => e.currentTarget.style.borderColor = '#1A3050'}
               >
                 {route.photos && route.photos.length > 0 ? (
@@ -169,12 +169,12 @@ const getRoutesWithDistance = () => {
                     {route.estimatedTime && <span>{route.estimatedTime} min</span>}
                   </div>
                   {route.distanceFromUser !== null && route.distanceFromUser !== undefined && (
-  <p style={{color: '#f97316', fontSize: '12px', margin: '0 0 8px', fontWeight: '500'}}>
+  <p style={{color: '#FFB88A', fontSize: '12px', margin: '0 0 8px', fontWeight: '500'}}>
     📍 {route.distanceFromUser.toFixed(1)} km de ti
   </p>
 )}
                   <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px solid #050B18'}}>
-                    <span style={{color: '#2A4A6A', fontSize: '12px'}}>por <span style={{color: '#f43f5e'}}>{route.user.username}</span></span>
+                    <span style={{color: '#2A4A6A', fontSize: '12px'}}>por <span style={{color: '#7BC47F'}}>{route.user.username}</span></span>
                     <div style={{display: 'flex', gap: '10px', fontSize: '12px', color: '#2A4A6A'}}>
                       <span>{route._count.completions} completaciones</span>
                       <span>{route._count.comments} comentarios</span>

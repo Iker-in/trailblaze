@@ -207,7 +207,7 @@ const resumeRecording = () => {
       {accuracy <= 15 ? 'GPS buena' : accuracy <= 30 ? 'GPS regular' : 'GPS debil'} (±{Math.round(accuracy)}m)
     </p>
     {speed !== null && speed >= 0 && (
-      <p style={{color: '#fb923c', fontSize: '12px', margin: 0}}>
+      <p style={{color: '#FFB88A', fontSize: '12px', margin: 0}}>
         🚀 {(speed * 3.6).toFixed(1)} km/h
       </p>
     )}
@@ -215,22 +215,22 @@ const resumeRecording = () => {
 )}
 
         {!isOnline && (
-          <div style={{background: '#422006', border: '1px solid #f97316', color: '#fdba74', borderRadius: '10px', padding: '10px 14px', marginBottom: '12px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px'}}>
+          <div style={{background: '#422006', border: '1px solid #F2854D', color: '#fdba74', borderRadius: '10px', padding: '10px 14px', marginBottom: '12px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px'}}>
             <span>📵</span>
             <span>Modo offline — el GPS sigue grabando, los mapas pueden no cargar</span>
           </div>
         )}
 
         {savedSession && !recording && (
-          <div style={{background: '#071428', border: '1px solid #f43f5e', borderRadius: '12px', padding: '14px', marginBottom: '16px'}}>
-            <p style={{color: '#f43f5e', fontSize: '14px', fontWeight: '500', margin: '0 0 8px'}}>Grabacion interrumpida detectada</p>
+          <div style={{background: '#071428', border: '1px solid #4F9F55', borderRadius: '12px', padding: '14px', marginBottom: '16px'}}>
+            <p style={{color: '#7BC47F', fontSize: '14px', fontWeight: '500', margin: '0 0 8px'}}>Grabacion interrumpida detectada</p>
             <p style={{color: '#6B8CAE', fontSize: '13px', margin: '0 0 12px'}}>{savedSession.points.length} puntos guardados</p>
             <div style={{display: 'flex', gap: '8px'}}>
               <button onClick={() => {
                 setPoints(savedSession.points)
                 setElapsedSeconds(savedSession.elapsedSeconds || 0)
                 setSavedSession(null)
-              }} style={{flex: 1, background: '#f43f5e', color: 'white', border: 'none', borderRadius: '8px', padding: '8px', fontSize: '13px', cursor: 'pointer'}}>
+              }} style={{flex: 1, background: '#4F9F55', color: 'white', border: 'none', borderRadius: '8px', padding: '8px', fontSize: '13px', cursor: 'pointer'}}>
                 Recuperar
               </button>
               <button onClick={() => {
@@ -252,24 +252,24 @@ const resumeRecording = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {points.length > 0 && <MapAutoCenter position={points[points.length - 1]} />}
-            {points.length > 1 && <Polyline positions={points} color="#f97316" weight={4} />}
+            {points.length > 1 && <Polyline positions={points} color="#F2854D" weight={4} />}
             {points.length > 0 && <Marker position={points[points.length - 1]} />}
           </MapContainer>
         </div>
 
         <div style={{display: 'flex', gap: '12px'}}>
   {!recording ? (
-    <button onClick={startRecording} style={{flex: 1, background: '#f97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
+    <button onClick={startRecording} style={{flex: 1, background: '#F2854D', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
       Iniciar grabacion
     </button>
   ) : (
     <>
       {!paused ? (
-        <button onClick={pauseRecording} style={{flex: 1, background: '#0D1F35', color: '#fb923c', border: '1px solid #1A3050', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
+        <button onClick={pauseRecording} style={{flex: 1, background: '#0D1F35', color: '#FFB88A', border: '1px solid #1A3050', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
           Pausar
         </button>
       ) : (
-        <button onClick={resumeRecording} style={{flex: 1, background: '#f97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
+        <button onClick={resumeRecording} style={{flex: 1, background: '#F2854D', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
           Reanudar
         </button>
       )}
@@ -296,7 +296,7 @@ const resumeRecording = () => {
               }, 30000)
             } catch {}
           }
-        }} style={{width: '100%', background: '#f43f5e', color: 'white', border: 'none', borderRadius: '10px', padding: '10px', fontSize: '14px', fontWeight: '500', cursor: 'pointer'}}>
+        }} style={{width: '100%', background: '#4F9F55', color: 'white', border: 'none', borderRadius: '10px', padding: '10px', fontSize: '14px', fontWeight: '500', cursor: 'pointer'}}>
           🛡️ Activar seguimiento de seguridad
         </button>
       ) : (
@@ -304,13 +304,13 @@ const resumeRecording = () => {
           <p style={{color: '#86efac', fontSize: '13px', margin: '0 0 8px'}}>✅ Seguimiento activo</p>
           <p style={{color: '#6B8CAE', fontSize: '12px', margin: '0 0 10px'}}>Comparte este link con tu contacto de emergencia:</p>
           <div style={{background: '#050B18', borderRadius: '8px', padding: '8px 10px', marginBottom: '10px'}}>
-            <p style={{color: '#fb923c', fontSize: '11px', margin: 0, wordBreak: 'break-all'}}>
+            <p style={{color: '#FFB88A', fontSize: '11px', margin: 0, wordBreak: 'break-all'}}>
               {window.location.origin + '/#/track/' + trackingSessionId}
             </p>
           </div>
           <button onClick={() => {
             navigator.clipboard.writeText(window.location.origin + '/#/track/' + trackingSessionId)
-          }} style={{width: '100%', background: '#0D1F35', color: '#fb923c', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px', fontSize: '13px', cursor: 'pointer'}}>
+          }} style={{width: '100%', background: '#0D1F35', color: '#FFB88A', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px', fontSize: '13px', cursor: 'pointer'}}>
             Copiar link
           </button>
         </div>
@@ -319,7 +319,7 @@ const resumeRecording = () => {
   )}
 
   {!recording && points.length > 1 && (
-    <button onClick={handleContinue} style={{flex: 1, background: '#f43f5e', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
+    <button onClick={handleContinue} style={{flex: 1, background: '#4F9F55', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer'}}>
       Continuar y publicar
     </button>
   )}

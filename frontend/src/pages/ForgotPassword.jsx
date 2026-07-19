@@ -49,7 +49,7 @@ function ForgotPassword() {
               <button
                 type="submit"
                 disabled={loading}
-                style={{width: '100%', background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontSize: '15px', fontWeight: '500', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1}}
+                style={{width: '100%', background: '#F2854D', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontSize: '15px', fontWeight: '500', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1}}
               >
                 {loading ? 'Enviando...' : 'Enviar enlace'}
               </button>
@@ -57,7 +57,7 @@ function ForgotPassword() {
           )}
 
           <p style={{textAlign: 'center', marginTop: '20px', fontSize: '13px'}}>
-            <Link to="/login" style={{color: '#f97316', textDecoration: 'none'}}>Volver al login</Link>
+            <Link to="/login" style={{color: '#FFB88A', textDecoration: 'none'}}>Volver al login</Link>
           </p>
         </div>
       </div>

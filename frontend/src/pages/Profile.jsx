@@ -177,14 +177,14 @@ function Profile() {
             <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
               <div style={{position: 'relative', width: '56px', height: '56px'}}>
   {profile.avatarUrl ? (
-    <img src={profile.avatarUrl} alt={profile.username} style={{width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #f43f5e'}} />
+    <img src={profile.avatarUrl} alt={profile.username} style={{width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #7BC47F'}} />
   ) : (
-    <div style={{width: '56px', height: '56px', borderRadius: '50%', background: '#f97316', border: '2px solid #f43f5e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: '500', color: 'white'}}>
+    <div style={{width: '56px', height: '56px', borderRadius: '50%', background: '#F2854D', border: '2px solid #4F9F55', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', fontWeight: '500', color: 'white'}}>
       {profile.username[0].toUpperCase()}
     </div>
   )}
   {isOwnProfile && (
-    <label style={{position: 'absolute', bottom: 0, right: 0, background: '#fb923c', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '10px'}}>
+    <label style={{position: 'absolute', bottom: 0, right: 0, background: '#FFB88A', borderRadius: '50%', width: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '10px'}}>
       {uploadingAvatar ? '...' : '+'}
       <input type="file" accept="image/*" onChange={handleAvatarChange} style={{display: 'none'}} />
     </label>
@@ -202,15 +202,15 @@ function Profile() {
                       : <p style={{color: '#2A4A6A', fontSize: '13px', margin: 0}}>Sin bio todavia</p>
                     }
                     {isOwnProfile && (
-                      <button onClick={() => setEditingBio(true)} style={{color: '#f97316', fontSize: '12px', background: 'none', border: 'none', cursor: 'pointer', padding: '0'}}>Editar</button>
+                      <button onClick={() => setEditingBio(true)} style={{color: '#F2854D', fontSize: '12px', background: 'none', border: 'none', cursor: 'pointer', padding: '0'}}>Editar</button>
                     )}
                   </div>
                 )}
                 {editingBio && (
                   <div style={{marginTop: '8px', display: 'flex', gap: '8px', alignItems: 'flex-start'}}>
-                    <textarea value={bioValue} onChange={(e) => setBioValue(e.target.value)} maxLength={300} rows={2} placeholder="Escribe algo sobre ti..." style={{background: '#050B18', border: '1px solid #f43f5e', borderRadius: '8px', padding: '8px 12px', color: 'white', fontSize: '13px', outline: 'none', resize: 'none', width: '220px'}} />
+                    <textarea value={bioValue} onChange={(e) => setBioValue(e.target.value)} maxLength={300} rows={2} placeholder="Escribe algo sobre ti..." style={{background: '#050B18', border: '1px solid #4F9F55', borderRadius: '8px', padding: '8px 12px', color: 'white', fontSize: '13px', outline: 'none', resize: 'none', width: '220px'}} />
                     <div style={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
-                      <button onClick={handleSaveBio} disabled={savingBio} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', opacity: savingBio ? 0.6 : 1}}>{savingBio ? '...' : 'Guardar'}</button>
+                      <button onClick={handleSaveBio} disabled={savingBio} style={{background: '#F2854D', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', opacity: savingBio ? 0.6 : 1}}>{savingBio ? '...' : 'Guardar'}</button>
                       <button onClick={() => setEditingBio(false)} style={{background: 'transparent', color: '#4A6480', border: '1px solid #1A3050', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer'}}>Cancelar</button>
                     </div>
                   </div>
@@ -218,7 +218,7 @@ function Profile() {
               </div>
             </div>
             {currentUser && !isOwnProfile && (
-              <button onClick={() => { if (!isAuthenticated) { setShowLoginPrompt(true) } else { handleFollow() } }} disabled={followLoading} style={{background: isFollowing ? 'transparent' : '#f97316', color: isFollowing ? '#6B8CAE' : 'white', border: isFollowing ? '1px solid #1A3050' : 'none', borderRadius: '10px', padding: '8px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', opacity: followLoading ? 0.6 : 1}}>
+              <button onClick={() => { if (!isAuthenticated) { setShowLoginPrompt(true) } else { handleFollow() } }} disabled={followLoading} style={{background: isFollowing ? 'transparent' : '#F2854D', color: isFollowing ? '#6B8CAE' : 'white', border: isFollowing ? '1px solid #1A3050' : 'none', borderRadius: '10px', padding: '8px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', opacity: followLoading ? 0.6 : 1}}>
                 {followLoading ? '...' : isFollowing ? 'Siguiendo' : 'Seguir'}
               </button>
             )}
@@ -226,9 +226,9 @@ function Profile() {
 
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px'}}>
             {[
-              { value: profile.points, label: 'puntos', color: '#fb923c' },
-              { value: profile._count.routes, label: 'rutas', color: '#f97316' },
-              { value: profile._count.completions, label: 'completadas', color: '#f43f5e' },
+              { value: profile.points, label: 'puntos', color: '#FFB88A' },
+              { value: profile._count.routes, label: 'rutas', color: '#FFB88A' },
+              { value: profile._count.completions, label: 'completadas', color: '#7BC47F' },
               { value: profile._count.followers, label: 'seguidores', color: '#6B8CAE' }
             ].map((stat) => (
               <div key={stat.label} style={{background: '#050B18', borderRadius: '12px', padding: '14px', textAlign: 'center', border: '1px solid #0D1F35'}}>
@@ -250,7 +250,7 @@ function Profile() {
         <div style={{display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap'}}>
 
           {['routes', 'completions', 'favorites', 'stats', 'activity'].map((t) => (
-            <button key={t} onClick={() => setTab(t)} style={{background: tab === t ? '#f97316' : '#0D1F35', color: tab === t ? 'white' : '#6B8CAE', border: tab === t ? 'none' : '1px solid #1A3050', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: '500', cursor: 'pointer'}}>
+            <button key={t} onClick={() => setTab(t)} style={{background: tab === t ? '#F2854D' : '#0D1F35', color: tab === t ? 'white' : '#6B8CAE', border: tab === t ? 'none' : '1px solid #1A3050', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: '500', cursor: 'pointer'}}>
               {t === 'routes' ? 'Publicadas (' + routes.length + ')' : t === 'completions' ? 'Completadas (' + completions.length + ')' : t === 'favorites' ? 'Guardadas (' + favorites.length + ')' : t === 'stats' ? '📊 Stats' : '📈 Actividad'}
             </button>
           ))}
@@ -274,7 +274,7 @@ function Profile() {
                 <span>{route.distanceKm} km</span>
                 <span>completada {route._count.completions} veces</span>
               </div>
-              <Link to={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
+              <Link to={'/routes/' + route.id} style={{color: '#FFB88A', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
             </div>
           ))}
           {tab === 'completions' && completions.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha completado rutas todavia.</div>}
@@ -282,7 +282,7 @@ function Profile() {
             <AdventureMap completions={completions} onSelect={setSelectedCompletion} />
           )}
           {tab === 'completions' && completionsView === 'list' && completions.map((completion) => (
-  <div key={completion.id} onClick={() => setSelectedCompletion(completion)} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #f43f5e', borderRadius: '14px', overflow: 'hidden', cursor: 'pointer'}}>
+  <div key={completion.id} onClick={() => setSelectedCompletion(completion)} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #4F9F55', borderRadius: '14px', overflow: 'hidden', cursor: 'pointer'}}>
     {completion.photos && completion.photos.length > 0 && (
       <img src={completion.photos[0].url} alt="" style={{width: '100%', height: '160px', objectFit: 'cover'}} />
     )}
@@ -306,7 +306,7 @@ function Profile() {
       {completion.notes && (
         <p style={{color: '#6B8CAE', fontSize: '13px', fontStyle: 'italic', margin: '0 0 10px', lineHeight: '1.5'}}>"{completion.notes}"</p>
       )}
-      <Link to={'/routes/' + completion.route.id} onClick={(e) => e.stopPropagation()} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
+      <Link to={'/routes/' + completion.route.id} onClick={(e) => e.stopPropagation()} style={{color: '#FFB88A', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
     </div>
   </div>
 ))}
@@ -321,16 +321,16 @@ function Profile() {
                     api.patch('/users/me/stats-visibility', { statsPublic: !stats.statsPublic })
                       .then(() => setStats(s => ({...s, statsPublic: !s.statsPublic})))
                       .catch(() => {})
-                  }} style={{background: stats.statsPublic ? '#f97316' : '#1A3050', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', fontWeight: '500'}}>
+                  }} style={{background: stats.statsPublic ? '#F2854D' : '#1A3050', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', fontWeight: '500'}}>
                     {stats.statsPublic ? 'Publicas' : 'Privadas'}
                   </button>
                 </div>
               )}
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
                 {[
-                  { label: 'km totales', value: stats.totalKm, color: '#f97316' },
-                  { label: 'metros subidos', value: stats.totalElevation + 'm', color: '#fb923c' },
-                  { label: 'rutas completadas', value: stats.totalCompletions, color: '#f43f5e' },
+                  { label: 'km totales', value: stats.totalKm, color: '#FFB88A' },
+                  { label: 'metros subidos', value: stats.totalElevation + 'm', color: '#FFB88A' },
+                  { label: 'rutas completadas', value: stats.totalCompletions, color: '#7BC47F' },
                   { label: 'rutas faciles', value: stats.byDifficulty?.facil || 0, color: '#86efac' },
                   { label: 'rutas moderadas', value: stats.byDifficulty?.moderado || 0, color: '#fde68a' },
                   { label: 'rutas expertas', value: (stats.byDifficulty?.dificil || 0) + (stats.byDifficulty?.experto || 0), color: '#fca5a5' }
@@ -345,14 +345,14 @@ function Profile() {
                 <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '16px'}}>
                   <p style={{color: '#6B8CAE', fontSize: '12px', margin: '0 0 4px'}}>Ruta mas larga</p>
                   <p style={{color: 'white', fontSize: '15px', fontWeight: '500', margin: '0 0 2px'}}>{stats.longestRoute.title}</p>
-                  <p style={{color: '#f97316', fontSize: '13px', margin: 0}}>{stats.longestRoute.distanceKm} km</p>
+                  <p style={{color: '#FFB88A', fontSize: '13px', margin: 0}}>{stats.longestRoute.distanceKm} km</p>
                 </div>
               )}
               {stats.highestElevation && (
                 <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '16px'}}>
                   <p style={{color: '#6B8CAE', fontSize: '12px', margin: '0 0 4px'}}>Mayor elevacion</p>
                   <p style={{color: 'white', fontSize: '15px', fontWeight: '500', margin: '0 0 2px'}}>{stats.highestElevation.title}</p>
-                  <p style={{color: '#fb923c', fontSize: '13px', margin: 0}}>{stats.highestElevation.elevationM} m</p>
+                  <p style={{color: '#FFB88A', fontSize: '13px', margin: 0}}>{stats.highestElevation.elevationM} m</p>
                 </div>
               )}
             </div>
@@ -375,13 +375,13 @@ function Profile() {
                 </p>
               </div>
               {(item.type === 'completion' || item.type === 'route') && (
-                <Link to={'/routes/' + item.routeId} style={{color: '#f97316', fontSize: '12px', textDecoration: 'none'}}>Ver</Link>
+                <Link to={'/routes/' + item.routeId} style={{color: '#FFB88A', fontSize: '12px', textDecoration: 'none'}}>Ver</Link>
               )}
             </div>
           ))}
           {tab === 'favorites' && favorites.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No hay rutas guardadas todavia.</div>}
           {tab === 'favorites' && favorites.map((route) => (
-            <div key={route.id} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #fb923c', borderRadius: '14px', padding: '16px 20px'}}>
+            <div key={route.id} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #FFB88A', borderRadius: '14px', padding: '16px 20px'}}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
                 <p style={{color: 'white', fontWeight: '500', margin: 0}}>{route.title}</p>
                 <span style={{...DIFFICULTY_STYLES[route.difficulty], fontSize: '11px', padding: '3px 10px', borderRadius: '20px', fontWeight: '500'}}>{route.difficulty}</span>
@@ -390,7 +390,7 @@ function Profile() {
                 <span>{route.distanceKm} km</span>
                 <span>por {route.user.username}</span>
               </div>
-              <Link to={'/routes/' + route.id} style={{color: '#f97316', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
+              <Link to={'/routes/' + route.id} style={{color: '#FFB88A', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
             </div>
           ))}
           {selectedCompletion && <AdventureDetailModal completion={selectedCompletion} onClose={() => setSelectedCompletion(null)} />}

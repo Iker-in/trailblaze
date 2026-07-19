@@ -80,12 +80,12 @@ const data = await createRoute(payload)
         <h1 style={{color: 'white', marginBottom: '24px'}} className="text-2xl font-bold">Publicar nueva ruta</h1>
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
         {!trackData && (
-  <Link to="/routes/record" style={{display: 'block', background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '14px', marginBottom: '16px', textDecoration: 'none', textAlign: 'center', color: '#f97316', fontSize: '14px', fontWeight: '500'}}>
+  <Link to="/routes/record" style={{display: 'block', background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '12px', padding: '14px', marginBottom: '16px', textDecoration: 'none', textAlign: 'center', color: '#F2854D', fontSize: '14px', fontWeight: '500'}}>
     📍 Grabar ruta con GPS en vivo
   </Link>
 )}
 {trackData && (
-  <div style={{background: '#0D1F35', border: '1px solid #f43f5e', borderRadius: '12px', padding: '12px', marginBottom: '16px', textAlign: 'center', color: '#f43f5e', fontSize: '13px'}}>
+  <div style={{background: '#0D1F35', border: '1px solid #4F9F55', borderRadius: '12px', padding: '12px', marginBottom: '16px', textAlign: 'center', color: '#4F9F55', fontSize: '13px'}}>
     Ruta grabada con {trackData.length} puntos GPS ({formData.distanceKm} km)
   </div>
 )}
@@ -143,7 +143,7 @@ const data = await createRoute(payload)
               </div>
             )}
           </div>
-          <button type="submit" disabled={loading} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: loading ? 0.6 : 1}}>
+          <button type="submit" disabled={loading} style={{background: '#F2854D', color: 'white', border: 'none', borderRadius: '12px', padding: '14px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: loading ? 0.6 : 1}}>
             {loading ? 'Publicando...' : 'Publicar ruta'}
           </button>
         </form>

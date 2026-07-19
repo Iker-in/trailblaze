@@ -91,7 +91,7 @@ function Home() {
           <div style={{marginBottom: "60px"}}>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px"}}>
               <h2 style={{color: "white", fontSize: "20px", fontWeight: "500", margin: 0}}>Tu feed</h2>
-              <Link to="/routes" style={{color: "#f97316", fontSize: "14px", textDecoration: "none"}}>Explorar todas</Link>
+              <Link to="/routes" style={{color: "#FFB88A", fontSize: "14px", textDecoration: "none"}}>Explorar todas</Link>
             </div>
             {feedLoading ? (
               <div style={{textAlign: "center", padding: "40px", color: "#2A4A6A"}}>Cargando...</div>
@@ -102,7 +102,7 @@ function Home() {
             ) : (
               <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", padding: "40px", textAlign: "center"}}>
                 <p style={{color: "#6B8CAE", fontSize: "15px", margin: "0 0 16px"}}>Aun no sigues a ningun senderista.</p>
-                <Link to="/ranking" style={{background: "#f97316", color: "white", padding: "10px 24px", borderRadius: "10px", fontSize: "14px", textDecoration: "none", fontWeight: "500"}}>Descubrir senderistas</Link>
+                <Link to="/ranking" style={{background: "#F2854D", color: "white", padding: "10px 24px", borderRadius: "10px", fontSize: "14px", textDecoration: "none", fontWeight: "500"}}>Descubrir senderistas</Link>
               </div>
             )}
           </div>
@@ -127,14 +127,14 @@ function Home() {
           <div style={{marginBottom: "60px"}}>
             <h2 style={{color: "white", fontSize: "20px", fontWeight: "500", margin: "0 0 16px"}}>⭐ Ruta destacada de la semana</h2>
             <Link to={"/routes/" + featured.route.id} style={{textDecoration: "none", display: "block"}}>
-              <div style={{background: "#0D1F35", border: "1px solid #f97316", borderRadius: "14px", overflow: "hidden"}}>
+              <div style={{background: "#0D1F35", border: "1px solid #F2854D", borderRadius: "14px", overflow: "hidden"}}>
                 {featured.route.photos && featured.route.photos.length > 0 && (
                   <img src={featured.route.photos[0].url} alt={featured.route.title} style={{width: "100%", height: "200px", objectFit: "cover"}} />
                 )}
                 <div style={{padding: "16px"}}>
                   <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px"}}>
                     <h3 style={{color: "white", fontSize: "18px", fontWeight: "500", margin: 0}}>{featured.route.title}</h3>
-                    <span style={{background: "#f97316", color: "white", fontSize: "11px", padding: "3px 10px", borderRadius: "20px", fontWeight: "500"}}>DESTACADA</span>
+                    <span style={{background: "#F2854D", color: "white", fontSize: "11px", padding: "3px 10px", borderRadius: "20px", fontWeight: "500"}}>DESTACADA</span>
                   </div>
                   <p style={{color: "#6B8CAE", fontSize: "13px", margin: "0 0 8px"}}>por {featured.route.user.username}</p>
                   <div style={{display: "flex", gap: "16px", fontSize: "12px", color: "#4A6480"}}>
@@ -152,7 +152,7 @@ function Home() {
           <div style={{marginBottom: "60px"}}>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px"}}>
               <h2 style={{color: "white", fontSize: "20px", fontWeight: "500", margin: 0}}>Rutas populares</h2>
-              <Link to="/routes" style={{color: "#f97316", fontSize: "14px", textDecoration: "none"}}>Ver todas</Link>
+              <Link to="/routes" style={{color: "#FFB88A", fontSize: "14px", textDecoration: "none"}}>Ver todas</Link>
             </div>
             <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px"}}>
               {popular.map((route) => <RouteCard key={route.id} route={route} />)}
@@ -164,13 +164,13 @@ function Home() {
           <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", padding: "20px"}}>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px"}}>
               <h2 style={{color: "white", fontSize: "16px", fontWeight: "500", margin: 0}}>Top senderistas</h2>
-              <Link to="/ranking" style={{color: "#f97316", fontSize: "13px", textDecoration: "none"}}>Ver ranking</Link>
+              <Link to="/ranking" style={{color: "#FFB88A", fontSize: "13px", textDecoration: "none"}}>Ver ranking</Link>
             </div>
             <div style={{display: "flex", flexDirection: "column", gap: "10px"}}>
               {topUsers.map((u) => (
                 <Link key={u.id} to={"/profile/" + u.username} style={{display: "flex", alignItems: "center", gap: "10px", textDecoration: "none"}}>
                   <span style={{color: u.position === 1 ? "#eab308" : "#2A4A6A", fontSize: "13px", fontWeight: "500", minWidth: "24px"}}>#{u.position}</span>
-                  <div style={{width: "32px", height: "32px", borderRadius: "50%", background: "#f97316", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: "500", color: "white"}}>{u.username[0].toUpperCase()}</div>
+                  <div style={{width: "32px", height: "32px", borderRadius: "50%", background: "#F2854D", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px", fontWeight: "500", color: "white"}}>{u.username[0].toUpperCase()}</div>
                   <span style={{color: "#6B8CAE", fontSize: "14px", flex: 1}}>{u.username}</span>
                   <span style={{color: "#eab308", fontSize: "13px", fontWeight: "500"}}>{u.points} pts</span>
                 </Link>
@@ -181,8 +181,8 @@ function Home() {
             <h2 style={{color: "white", fontSize: "16px", fontWeight: "500", margin: "0 0 16px"}}>Por que ARVENTRA?</h2>
             <div style={{display: "flex", flexDirection: "column", gap: "12px"}}>
               {[
-                { title: "Mapas interactivos", desc: "Ve exactamente donde empieza cada ruta", color: "#f97316" },
-                { title: "Sistema de puntos", desc: "Compite y sube en el ranking global", color: "#f43f5e" },
+                { title: "Mapas interactivos", desc: "Ve exactamente donde empieza cada ruta", color: "#FFB88A" },
+                { title: "Sistema de puntos", desc: "Compite y sube en el ranking global", color: "#7BC47F" },
                 { title: "Comunidad activa", desc: "Conecta con senderistas de todo el mundo", color: "#eab308" }
               ].map((f) => (
                 <div key={f.title} style={{display: "flex", gap: "12px", alignItems: "flex-start"}}>
