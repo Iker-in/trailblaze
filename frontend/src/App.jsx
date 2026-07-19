@@ -19,6 +19,7 @@ import LiveTrack from './pages/LiveTrack.jsx'
 import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
 import Onboarding from './components/Onboarding.jsx'
 import OfflineBanner from './components/OfflineBanner.jsx'
+import TermsAndConditions from './pages/TermsAndConditions.jsx'
 
 function App() {
   const [showOnboarding, setShowOnboarding] = useState(!localStorage.getItem('arventra_onboarding_done'))
@@ -44,8 +45,9 @@ function App() {
         <Route path="/routes/:id/edit" element={<ProtectedRoute><EditRoute /></ProtectedRoute>} />
         <Route path="/achievements" element={<Achievements />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/track/:sessionId" element={<LiveTrack />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
+<Route path="/terms" element={<TermsAndConditions />} />
+<Route path="/track/:sessionId" element={<LiveTrack />} />
+        
       </Routes>
     </HashRouter>
   )

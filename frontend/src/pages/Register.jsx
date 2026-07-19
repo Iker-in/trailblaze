@@ -9,6 +9,7 @@ function Register() {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
@@ -46,9 +47,15 @@ function Register() {
             <label style={{color: '#6B8CAE', fontSize: '13px', display: 'block', marginBottom: '6px'}}>Contrasena</label>
             <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="minimo 8 caracteres" style={{width: '100%', background: '#050B18', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box'}} required />
           </div>
-          <button type="submit" disabled={loading} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: loading ? 0.6 : 1}}>
-            {loading ? 'Creando cuenta...' : 'Registrarse'}
-          </button>
+          <label style={{display: 'flex', alignItems: 'flex-start', gap: '8px', color: '#6B8CAE', fontSize: '12px', lineHeight: '1.5', cursor: 'pointer'}}>
+  <input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} style={{marginTop: '2px'}} required />
+  <span>
+    Acepto los <Link to="/terms" target="_blank" style={{color: '#f97316'}}>Términos y Condiciones</Link> y la <Link to="/privacy" target="_blank" style={{color: '#f97316'}}>Política de Privacidad</Link>
+  </span>
+</label>
+<button type="submit" disabled={loading || !acceptedTerms} style={{background: '#f97316', color: 'white', border: 'none', borderRadius: '10px', padding: '12px', fontWeight: '500', fontSize: '15px', cursor: 'pointer', marginTop: '8px', opacity: (loading || !acceptedTerms) ? 0.6 : 1}}>
+  {loading ? 'Creando cuenta...' : 'Registrarse'}
+</button>
         </form>
         <p style={{color: '#4A6480', fontSize: '13px', textAlign: 'center', marginTop: '20px'}}>
           Ya tienes cuenta?{' '}

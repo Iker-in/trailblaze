@@ -26,13 +26,15 @@ function PrivacyPolicy() {
 - Calcular tu posición en el ranking y otorgar logros.`
           },
           {
-            title: "3. Compartir información con terceros",
-            content: `Compartimos datos limitados con los siguientes servicios:
+  title: "3. Compartir información con terceros",
+  content: `Compartimos datos limitados con los siguientes servicios:
 - Cloudinary: almacenamiento de imágenes de perfil y rutas.
 - Resend: envío de correos electrónicos de recuperación de contraseña.
 - Railway y Supabase: infraestructura de servidores y base de datos.
+- Vercel: alojamiento de la aplicación web.
+- OpenWeatherMap: datos de clima mostrados en cada ruta (no recibe información personal tuya, solo la ubicación de la ruta).
 No vendemos ni compartimos tu información personal con terceros con fines publicitarios.`
-          },
+},
           {
             title: "4. Ubicación GPS",
             content: `ARVENTRA solicita acceso a tu ubicación GPS únicamente cuando estás grabando una ruta o usando el seguimiento de seguridad en tiempo real. Puedes desactivar el acceso a la ubicación en la configuración de tu dispositivo en cualquier momento. El seguimiento de seguridad en tiempo real es completamente opcional y solo se activa si tú lo inicias.`
@@ -46,13 +48,14 @@ No vendemos ni compartimos tu información personal con terceros con fines publi
 - Rate limiting para prevenir ataques de fuerza bruta.`
           },
           {
-            title: "6. Tus derechos",
-            content: `Tienes derecho a:
+  title: "6. Tus derechos",
+  content: `Tienes derecho a:
 - Acceder a tu información personal en cualquier momento desde tu perfil.
 - Editar tu información de perfil y bio.
 - Eliminar tus rutas y comentarios.
-- Solicitar la eliminación de tu cuenta enviando un correo a: privacidad@arventra.app`
-          },
+- Eliminar tu cuenta permanentemente en cualquier momento desde Perfil > Eliminar mi cuenta, sin necesidad de contactarnos.
+Para cualquier otra solicitud relacionada con tus datos, escríbenos a: soporte.arventra@gmail.com (correo temporal, se actualizará cuando el dominio arventra.app esté activo)`
+},
           {
             title: "7. Menores de edad",
             content: `ARVENTRA no está dirigida a menores de 13 años. No recopilamos intencionalmente información de menores de 13 años. Si eres padre o tutor y crees que tu hijo nos ha proporcionado información personal, contáctanos.`
