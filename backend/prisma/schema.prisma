@@ -194,7 +194,7 @@ model LiveSession {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 model Favorite {
   id        String   @id @default(uuid())
@@ -215,8 +215,8 @@ model RouteRating {
   updatedAt DateTime @updatedAt
   userId    String
   routeId   String
-  user      User     @relation(fields: [userId], references: [id])
-  route     Route    @relation(fields: [routeId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
 
   @@unique([userId, routeId])
 }
@@ -227,10 +227,9 @@ model RouteCondition {
   createdAt DateTime @default(now())
   userId    String
   routeId   String
-  user      User     @relation(fields: [userId], references: [id])
-  route     Route    @relation(fields: [routeId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  route     Route    @relation(fields: [routeId], references: [id], onDelete: Cascade)
 }
-
 model CompletionPhoto {
   id           String   @id @default(uuid())
   url          String
