@@ -157,22 +157,39 @@ function Profile() {
 }
 
   if (loading) return (
-    <div style={{minHeight: '100vh', background: '#050B18'}}>
-      <div style={{maxWidth: '900px', margin: '0 auto', padding: '24px'}}>
-        <div style={{display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '24px'}}>
-          <Skeleton width="80px" height="80px" borderRadius="50%" />
+  <div style={{minHeight: '100vh', background: '#050B18'}}>
+    <Navbar />
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '16px', padding: '24px', marginBottom: '20px'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px'}}>
+          <Skeleton width="56px" height="56px" borderRadius="50%" />
           <div style={{flex: 1}}>
-            <Skeleton height="22px" width="40%" style={{marginBottom: '8px'}} />
-            <Skeleton height="14px" width="60%" />
+            <Skeleton height="20px" width="140px" style={{marginBottom: '8px'}} />
+            <Skeleton height="14px" width="90px" style={{marginBottom: '8px'}} />
+            <Skeleton height="14px" width="200px" />
           </div>
         </div>
-        <Skeleton height="40px" style={{marginBottom: '20px'}} />
-        <Skeleton height="90px" borderRadius="14px" style={{marginBottom: '12px'}} />
+        <div style={{display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px'}}>
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} style={{background: '#050B18', borderRadius: '12px', padding: '14px', border: '1px solid #0D1F35'}}>
+              <Skeleton height="22px" width="40px" style={{margin: '0 auto 6px'}} />
+              <Skeleton height="11px" width="50px" style={{margin: '0 auto'}} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{display: 'flex', gap: '8px', marginBottom: '20px'}}>
+        {[0, 1, 2, 3, 4].map((i) => <Skeleton key={i} width="100px" height="36px" borderRadius="10px" />)}
+      </div>
+      <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+        <Skeleton height="90px" borderRadius="14px" />
+        <Skeleton height="90px" borderRadius="14px" />
         <Skeleton height="90px" borderRadius="14px" />
       </div>
     </div>
-  )
-  
+  </div>
+)
+
   if (error) return <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#fca5a5'}}>{error}</p></div>
 
 

@@ -258,17 +258,31 @@ setTimeout(() => setShowMemoryModal(true), 900)
     }
   }
 
-  if (loading) return (
-    <div style={{minHeight: '100vh', background: '#050B18'}}>
-      <div style={{maxWidth: '900px', margin: '0 auto', padding: '24px'}}>
-        <Skeleton height="240px" borderRadius="16px" style={{marginBottom: '20px'}} />
-        <Skeleton height="28px" width="60%" style={{marginBottom: '12px'}} />
-        <Skeleton height="16px" width="40%" style={{marginBottom: '24px'}} />
-        <Skeleton height="100px" borderRadius="14px" style={{marginBottom: '16px'}} />
-        <Skeleton height="100px" borderRadius="14px" />
+ if (loading) return (
+  <div style={{minHeight: '100vh', background: '#050B18'}}>
+    <Navbar />
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px'}}>
+        <Skeleton height="280px" borderRadius="0px" />
+        <div style={{padding: '28px'}}>
+          <Skeleton height="26px" width="70%" style={{marginBottom: '12px'}} />
+          <Skeleton height="14px" width="140px" style={{marginBottom: '20px'}} />
+          <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px'}}>
+            {[0, 1, 2].map((i) => (
+              <div key={i} style={{background: '#050B18', borderRadius: '12px', padding: '14px', border: '1px solid #0D1F35'}}>
+                <Skeleton height="22px" width="36px" style={{margin: '0 auto 6px'}} />
+                <Skeleton height="11px" width="40px" style={{margin: '0 auto'}} />
+              </div>
+            ))}
+          </div>
+          <Skeleton height="14px" style={{marginBottom: '8px'}} />
+          <Skeleton height="14px" width="80%" style={{marginBottom: '8px'}} />
+          <Skeleton height="14px" width="60%" />
+        </div>
       </div>
     </div>
-  )
+  </div>
+)
 
   if (error && !route) return (
     <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -292,8 +306,6 @@ setTimeout(() => setShowMemoryModal(true), 900)
       </Helmet>
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 py-8">
-        {successMsg && <div style={{background: '#14532d', border: '1px solid #16a34a', color: '#86efac', borderRadius: '12px', padding: '14px', marginBottom: '20px', fontWeight: '500'}}>{successMsg}</div>}
-        {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '12px', padding: '14px', marginBottom: '20px'}}>{error}</div>}
 
         <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '16px', overflow: 'hidden', marginBottom: '20px'}}>
           {route.photos && route.photos.length > 0 && (
