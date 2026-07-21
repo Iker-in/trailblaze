@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import api from "../services/api.js"
 import useAuthStore from "../store/authStore.js"
 import Navbar from "../components/Navbar.jsx"
+import Skeleton from "../components/Skeleton.jsx"
 
 const DIFFICULTY_STYLES = {
   facil: { background: "#14532d", color: "#86efac" },
@@ -34,6 +35,18 @@ function RouteCard({ route }) {
         </div>
       </div>
     </Link>
+  )
+}
+
+function RouteCardSkeleton() {
+  return (
+    <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", overflow: "hidden"}}>
+      <Skeleton height="140px" borderRadius="0" />
+      <div style={{padding: "14px"}}>
+        <Skeleton height="14px" width="68%" style={{marginBottom: "12px"}} />
+        <Skeleton height="12px" width="92%" />
+      </div>
+    </div>
   )
 }
 
@@ -94,7 +107,9 @@ function Home() {
               <Link to="/routes" style={{color: "#FFB88A", fontSize: "14px", textDecoration: "none"}}>Explorar todas</Link>
             </div>
             {feedLoading ? (
-              <div style={{textAlign: "center", padding: "40px", color: "#2A4A6A"}}>Cargando...</div>
+              <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px"}}>
+                {[0, 1, 2].map((index) => <RouteCardSkeleton key={index} />)}
+              </div>
             ) : feed.length > 0 ? (
               <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px"}}>
                 {feed.map((route) => <RouteCard key={route.id} route={route} />)}

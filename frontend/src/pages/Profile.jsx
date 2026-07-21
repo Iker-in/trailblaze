@@ -346,7 +346,11 @@ function Profile() {
     </div>
   </div>
 ))}
-          {tab === 'stats' && statsLoading && <div style={{textAlign: 'center', padding: '40px', color: '#6B8CAE'}}>Cargando estadisticas...</div>}
+          {tab === 'stats' && statsLoading && (
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
+              {[0, 1, 2, 3, 4, 5].map((index) => <Skeleton key={index} height="88px" borderRadius="12px" />)}
+            </div>
+          )}
           {tab === 'stats' && !statsLoading && stats && stats.hidden && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#6B8CAE'}}>Este usuario tiene sus estadisticas privadas.</div>}
           {tab === 'stats' && !statsLoading && stats && !stats.hidden && (
             <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
@@ -393,7 +397,11 @@ function Profile() {
               )}
             </div>
           )}
-          {tab === 'activity' && activityLoading && <div style={{textAlign: 'center', padding: '40px', color: '#6B8CAE'}}>Cargando actividad...</div>}
+          {tab === 'activity' && activityLoading && (
+            <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+              {[0, 1, 2].map((index) => <Skeleton key={index} height="64px" borderRadius="12px" />)}
+            </div>
+          )}
           {tab === 'activity' && !activityLoading && activity.length === 0 && (
             <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#4A6480'}}>Sin actividad reciente.</div>
           )}
