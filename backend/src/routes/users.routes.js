@@ -78,7 +78,7 @@ router.get('/:username/achievements', async (req, res) => {
 })
 
 
-router.get('/:username/favorites', getUserFavorites)
+router.get('/:username/favorites', authenticate, getUserFavorites)
 
 router.get('/:username/activity', async (req, res) => {
   try {

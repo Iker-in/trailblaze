@@ -31,7 +31,7 @@ const DIFFICULTY_STYLES = {
 
 function Profile() {
   const { username } = useParams()
-  const { user: currentUser } = useAuthStore()
+  const { user: currentUser, isAuthenticated } = useAuthStore()
   const [profile, setProfile] = useState(null)
   const [routes, setRoutes] = useState([])
   const [completions, setCompletions] = useState([])
@@ -61,7 +61,7 @@ function Profile() {
     if (currentUser && profile && !isOwnProfile) {
       getFollowStatus(username).then((data) => setIsFollowing(data.isFollowing)).catch(() => {})
     }
-  }, [profile])
+  }, [currentUser, isOwnProfile, username])
 
   useEffect(() => {
     if (tab === 'stats' && !stats) {
@@ -95,8 +95,12 @@ function Profile() {
       setBioValue(profileData.user.bio || '')
       setRoutes(routesData.routes)
       setCompletions(completionsData.completions)
-      const favRes = await api.get('/users/' + username + '/favorites').catch(() => ({ data: { favorites: [] } }))
-      setFavorites(favRes.data.favorites || [])
+      if (isOwnProfile) {
+        const favRes = await api.get('/users/' + username + '/favorites')
+        setFavorites(favRes.data.favorites || [])
+      } else {
+        setFavorites([])
+      }
     } catch (err) {
       setError('Usuario no encontrado')
     } finally {
@@ -285,7 +289,7 @@ function Profile() {
 
         <div style={{display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap'}}>
 
-          {['routes', 'completions', 'favorites', 'stats', 'activity'].map((t) => (
+          {['routes', 'completions', ...(isOwnProfile ? ['favorites'] : []), 'stats', 'activity'].map((t) => (
             <button key={t} onClick={() => setTab(t)} style={{background: tab === t ? '#F2854D' : '#0D1F35', color: tab === t ? 'white' : '#6B8CAE', border: tab === t ? 'none' : '1px solid #1A3050', borderRadius: '10px', padding: '8px 18px', fontSize: '13px', fontWeight: '500', cursor: 'pointer'}}>
               {t === 'routes' ? 'Publicadas (' + routes.length + ')' : t === 'completions' ? 'Completadas (' + completions.length + ')' : t === 'favorites' ? 'Guardadas (' + favorites.length + ')' : t === 'stats' ? '📊 Stats' : '📈 Actividad'}
             </button>
