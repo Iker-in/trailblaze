@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../services/api.js'
 import Navbar from '../components/Navbar.jsx'
+import Skeleton from '../components/Skeleton.jsx'
 
 function EditRoute() {
   const { id } = useParams()
@@ -47,7 +48,28 @@ function EditRoute() {
   const inputStyle = { width: '100%', background: '#050B18', border: '1px solid #1A3050', borderRadius: '10px', padding: '10px 14px', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }
   const labelStyle = { color: '#6B8CAE', fontSize: '13px', display: 'block', marginBottom: '6px' }
 
-  if (fetching) return <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#6B8CAE'}}>Cargando...</p></div>
+  if (fetching) return (
+    <div style={{minHeight: '100vh', background: '#050B18'}}>
+      <Navbar />
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <Skeleton height="24px" width="140px" style={{marginBottom: '24px'}} />
+        <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '16px', padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px'}}>
+          <div>
+            <Skeleton height="13px" width="60px" style={{marginBottom: '6px'}} />
+            <Skeleton height="42px" borderRadius="10px" />
+          </div>
+          <div>
+            <Skeleton height="13px" width="90px" style={{marginBottom: '6px'}} />
+            <Skeleton height="90px" borderRadius="10px" />
+          </div>
+          <div>
+            <Skeleton height="13px" width="70px" style={{marginBottom: '6px'}} />
+            <Skeleton height="42px" borderRadius="10px" />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 
   return (
     <div style={{minHeight: '100vh', background: '#050B18'}}>

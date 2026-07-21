@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
+import { toast } from 'sonner'
 
 function Achievements() {
   const { user } = useAuthStore()
@@ -20,11 +21,10 @@ function Achievements() {
       setAchievements(allRes.data.achievements)
       setUserAchievements(userRes.data.achievements || [])
     } catch (err) {
-      console.error(err)
+      toast.error('No se pudieron cargar los logros. Intenta de nuevo.')
     } finally {
       setLoading(false)
     }
-  }
 
   const earnedIds = new Set(userAchievements.map((ua) => ua.achievementId))
 

@@ -12,6 +12,7 @@ import AdventureDetailModal from '../components/AdventureDetailModal.jsx'
 import AdventureMap from '../components/AdventureMap.jsx'
 import DeleteAccountModal from '../components/DeleteAccountModal.jsx'
 import Skeleton from '../components/Skeleton.jsx'
+import { toast } from 'sonner'
 
 const MOOD_EMOJIS = {
   increible: '🤩',
@@ -118,7 +119,7 @@ function Profile() {
         setProfile((prev) => ({ ...prev, _count: { ...prev._count, followers: prev._count.followers + 1 } }))
       }
     } catch (err) {
-      console.error(err)
+      toast.error('No se pudo actualizar el seguimiento. Intenta de nuevo.')
     } finally {
       setFollowLoading(false)
     }
@@ -130,8 +131,9 @@ function Profile() {
       const data = await updateProfile({ bio: bioValue })
       setProfile((prev) => ({ ...prev, bio: data.user.bio }))
       setEditingBio(false)
+      toast.success('Bio actualizada')
     } catch (err) {
-      console.error(err)
+      toast.error('No se pudo guardar la bio. Intenta de nuevo.')
     } finally {
       setSavingBio(false)
     }
@@ -148,13 +150,12 @@ function Profile() {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
     setProfile((prev) => ({ ...prev, avatarUrl: res.data.user.avatarUrl }))
+    toast.success('Foto de perfil actualizada')
   } catch (err) {
-    alert(err.response?.data?.error || 'Error al subir la imagen')
-    console.error(err)
+    toast.error(err.response?.data?.error || 'Error al subir la imagen')
   } finally {
     setUploadingAvatar(false)
   }
-}
 
   if (loading) return (
   <div style={{minHeight: '100vh', background: '#050B18'}}>

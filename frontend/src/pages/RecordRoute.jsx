@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css'
 import Navbar from '../components/Navbar.jsx'
 import { useState, useRef, useEffect } from 'react'
 import { MapContainer, TileLayer, Polyline, Marker, useMap } from 'react-leaflet'
+import { toast } from 'sonner'
 
 function MapAutoCenter({ position }) {
   const map = useMap()
@@ -288,13 +289,16 @@ const resumeRecording = () => {
               const res = await startTracking(lat, lng)
               setTrackingSessionId(res.data.sessionId)
               setTrackingEnabled(true)
+              toast.success('Seguimiento de seguridad activado')
               trackingIntervalRef.current = setInterval(() => {
                 if (points.length > 0) {
                   const [la, lo] = points[points.length - 1]
                   updateTracking(la, lo).catch(() => {})
                 }
               }, 30000)
-            } catch {}
+            } catch {
+              toast.error('No se pudo activar el seguimiento de seguridad.')
+            }
           }
         }} style={{width: '100%', background: '#4F9F55', color: 'white', border: 'none', borderRadius: '10px', padding: '10px', fontSize: '14px', fontWeight: '500', cursor: 'pointer'}}>
           🛡️ Activar seguimiento de seguridad
