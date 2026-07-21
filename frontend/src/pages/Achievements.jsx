@@ -20,11 +20,12 @@ function Achievements() {
       ])
       setAchievements(allRes.data.achievements)
       setUserAchievements(userRes.data.achievements || [])
-    } catch (err) {
+   } catch (err) {
       toast.error('No se pudieron cargar los logros. Intenta de nuevo.')
     } finally {
       setLoading(false)
     }
+  }
 
   const earnedIds = new Set(userAchievements.map((ua) => ua.achievementId))
 

@@ -156,6 +156,7 @@ function Profile() {
   } finally {
     setUploadingAvatar(false)
   }
+  }
 
   if (loading) return (
   <div style={{minHeight: '100vh', background: '#050B18'}}>
