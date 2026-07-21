@@ -11,6 +11,7 @@ import LevelBadge from '../components/LevelBadge.jsx'
 import AdventureDetailModal from '../components/AdventureDetailModal.jsx'
 import AdventureMap from '../components/AdventureMap.jsx'
 import DeleteAccountModal from '../components/DeleteAccountModal.jsx'
+import Skeleton from '../components/Skeleton.jsx'
 
 const MOOD_EMOJIS = {
   increible: '🤩',
@@ -155,7 +156,23 @@ function Profile() {
   }
 }
 
-  if (loading) return <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#6B8CAE'}}>Cargando perfil...</p></div>
+  if (loading) return (
+    <div style={{minHeight: '100vh', background: '#050B18'}}>
+      <div style={{maxWidth: '900px', margin: '0 auto', padding: '24px'}}>
+        <div style={{display: 'flex', gap: '16px', alignItems: 'center', marginBottom: '24px'}}>
+          <Skeleton width="80px" height="80px" borderRadius="50%" />
+          <div style={{flex: 1}}>
+            <Skeleton height="22px" width="40%" style={{marginBottom: '8px'}} />
+            <Skeleton height="14px" width="60%" />
+          </div>
+        </div>
+        <Skeleton height="40px" style={{marginBottom: '20px'}} />
+        <Skeleton height="90px" borderRadius="14px" style={{marginBottom: '12px'}} />
+        <Skeleton height="90px" borderRadius="14px" />
+      </div>
+    </div>
+  )
+  
   if (error) return <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#fca5a5'}}>{error}</p></div>
 
 

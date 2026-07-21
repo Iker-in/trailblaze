@@ -20,15 +20,19 @@ import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
 import Onboarding from './components/Onboarding.jsx'
 import OfflineBanner from './components/OfflineBanner.jsx'
 import TermsAndConditions from './pages/TermsAndConditions.jsx'
+import { Toaster } from 'sonner'
 
 function App() {
   const [showOnboarding, setShowOnboarding] = useState(!localStorage.getItem('arventra_onboarding_done'))
   return (
     <HashRouter>
+      <Toaster
+        theme="dark"
+        position="top-center"
+        toastOptions={{ style: { background: '#0D1F35', border: '1px solid #1A3050', color: 'white' } }}
+      />
       <OfflineBanner />
       {showOnboarding && <Onboarding onFinish={() => setShowOnboarding(false)} />}
-      {showOnboarding && <Onboarding onFinish={() => setShowOnboarding(false)} />}
-      <OfflineBanner />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

@@ -9,6 +9,8 @@ import LoginPrompt from '../components/LoginPrompt.jsx'
 import RouteMap from '../components/RouteMap.jsx'
 import RouteFollowMap from '../components/RouteFollowMap.jsx'
 import SaveMemoryModal from '../components/SaveMemoryModal.jsx'
+import { toast } from 'sonner'
+import Skeleton from '../components/Skeleton.jsx'
 
 const DIFFICULTY_STYLES = {
   facil: { background: '#14532d', color: '#86efac' },
@@ -101,15 +103,16 @@ const loadMoreComments = async () => {
     try {
       const data = await completeRoute(id, { recordedPoints })
   setCompletionCount(prev => prev + 1)
-  setSuccessMsg(data.message)
+ toast.success(data.message)
   setRoute((prev) => ({ ...prev, _count: { completions: prev._count.completions + 1 } }))
   setLastCompletionId(data.completion.id)
 setTimeout(() => setShowMemoryModal(true), 900)
-      } catch (err) {
-        setError(err.response?.data?.error || 'Error al completar la ruta')
-      } finally {
-        setCompleting(false)
-      }
+
+     } catch (err) {
+  toast.error(err.response?.data?.error || 'Error al completar la ruta')
+} finally {
+  setCompleting(false)
+}
     }
     if (!route.latitudeStart || !route.longitudeStart || !navigator.geolocation) {
       await doComplete(); return
@@ -127,12 +130,12 @@ setTimeout(() => setShowMemoryModal(true), 900)
       const last = tp.length > 0 ? tp[tp.length-1] : null
       const dEnd = last ? distM(uLat, uLng, last[0], last[1]) : Infinity
       if (dStart > 500 && dEnd > 500) {
-        setError('Debes estar cerca del inicio o final de la ruta para completarla (radio 500m)')
+        toast.error('Debes estar cerca del inicio o final de la ruta para completarla (radio 500m)')
         setCompleting(false); return
       }
       await doComplete()
     }, async () => {
-      setError('No se pudo obtener tu GPS. Activa la ubicacion e intenta de nuevo.')
+      toast.error('No se pudo obtener tu GPS. Activa la ubicacion e intenta de nuevo.')
       setCompleting(false)
     }, { enableHighAccuracy: true, timeout: 10000 })
   }
@@ -149,7 +152,7 @@ setTimeout(() => setShowMemoryModal(true), 900)
         setIsFavorite(true)
       }
     } catch (err) {
-      console.error(err)
+      toast.error('No se pudo actualizar favoritos. Intenta de nuevo.')
     } finally {
       setFavoriteLoading(false)
     }
@@ -167,10 +170,10 @@ setTimeout(() => setShowMemoryModal(true), 900)
       setComments((prev) => [res.data.comment, ...prev])
       setCommentsTotal((prev) => prev + 1)
     }
-    setCommentText('')
+   setCommentText('')
     setReplyingTo(null)
   } catch (err) {
-    console.error(err)
+    toast.error('No se pudo enviar el comentario. Intenta de nuevo.')
   } finally {
     setSendingComment(false)
   }
@@ -180,17 +183,21 @@ setTimeout(() => setShowMemoryModal(true), 900)
     try {
       await api.delete('/routes/' + id + '/comments/' + commentId)
       setComments((prev) => prev.filter((c) => c.id !== commentId))
-    } catch (err) {}
+    } catch (err) {
+      toast.error('No se pudo eliminar el comentario.')
+    }
   }
 
-  const handleRate = async (value) => {
+ const handleRate = async (value) => {
     if (!isAuthenticated) return
     setRatingLoading(true)
     try {
       await api.post('/routes/' + id + '/rate', { rating: value })
       const res = await api.get('/routes/' + id + '/rating')
       setRatings(res.data)
-    } catch {}
+    } catch {
+      toast.error('No se pudo guardar tu valoracion.')
+    }
     setRatingLoading(false)
   }
 
@@ -209,9 +216,13 @@ setTimeout(() => setShowMemoryModal(true), 900)
       const res = await api.get('/routes/' + id + '/condition')
       setCondition(res.data)
       setShowConditionForm(false)
-    } catch {}
+      toast.success('Gracias por reportar el estado del sendero')
+    } catch {
+      toast.error('No se pudo reportar el estado del sendero.')
+    }
     setSubmittingCondition(false)
   }
+
   const getFreshnessColor = (date) => {
     if (!date) return '#4A6480'
     const days = (Date.now() - new Date(date)) / (1000 * 60 * 60 * 24)
@@ -227,11 +238,11 @@ setTimeout(() => setShowMemoryModal(true), 900)
   }
   const handleShare = () => {
     const url = window.location.origin + '/#/routes/' + id
-    if (navigator.share) {
+   if (navigator.share) {
       navigator.share({ title: route.title, text: 'Mira esta ruta en ARVENTRA: ' + route.title, url })
     } else {
       navigator.clipboard.writeText(url)
-      alert('Link copiado al portapapeles')
+      toast.success('Link copiado al portapapeles')
     }
   }
 
@@ -242,12 +253,22 @@ setTimeout(() => setShowMemoryModal(true), 900)
       await api.delete('/routes/' + id)
       navigate('/routes')
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al eliminar la ruta')
+      toast.error(err.response?.data?.error || 'Error al eliminar la ruta')
       setDeleting(false)
     }
   }
 
-  if (loading) return <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}><p style={{color: '#6B8CAE'}}>Cargando...</p></div>
+  if (loading) return (
+    <div style={{minHeight: '100vh', background: '#050B18'}}>
+      <div style={{maxWidth: '900px', margin: '0 auto', padding: '24px'}}>
+        <Skeleton height="240px" borderRadius="16px" style={{marginBottom: '20px'}} />
+        <Skeleton height="28px" width="60%" style={{marginBottom: '12px'}} />
+        <Skeleton height="16px" width="40%" style={{marginBottom: '24px'}} />
+        <Skeleton height="100px" borderRadius="14px" style={{marginBottom: '16px'}} />
+        <Skeleton height="100px" borderRadius="14px" />
+      </div>
+    </div>
+  )
 
   if (error && !route) return (
     <div style={{minHeight: '100vh', background: '#050B18', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>

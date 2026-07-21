@@ -35,3 +35,14 @@ body {
   background: #0D1F35;
   color: white;
 }
+
+.arv-skeleton {
+  background: linear-gradient(90deg, #0D1F35 25%, #1A3050 37%, #0D1F35 63%);
+  background-size: 400% 100%;
+  animation: arv-shimmer 1.4s ease infinite;
+}
+
+@keyframes arv-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
