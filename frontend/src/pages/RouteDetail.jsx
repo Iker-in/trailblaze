@@ -378,8 +378,16 @@ setTimeout(() => setShowMemoryModal(true), 900)
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '20px', borderTop: '1px solid #1A3050'}}>
               <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                 <p style={{color: '#2A4A6A', fontSize: '14px', margin: 0}}>Completada {route._count.completions} veces</p>
-                <button onClick={handleFavorite} disabled={favoriteLoading} style={{background: 'transparent', color: isFavorite ? '#FFB88A' : '#2A4A6A', border: '1px solid ' + (isFavorite ? '#FFB88A' : '#1A3050'), borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>
-                  {isFavorite ? 'Guardado' : 'Guardar'}
+                <button
+                  onClick={handleFavorite}
+                  disabled={favoriteLoading}
+                  aria-label={isFavorite ? 'Quitar de guardados' : 'Guardar ruta'}
+                  title={isFavorite ? 'Quitar de guardados' : 'Guardar ruta'}
+                  style={{background: 'transparent', color: isFavorite ? '#FFB88A' : '#6B8CAE', border: 'none', borderRadius: '8px', width: '36px', height: '36px', padding: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: favoriteLoading ? 'wait' : 'pointer', opacity: favoriteLoading ? 0.55 : 1}}
+                >
+                  <svg width="21" height="21" viewBox="0 0 24 24" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M6 3.75A1.75 1.75 0 0 1 7.75 2h8.5A1.75 1.75 0 0 1 18 3.75V22l-6-3.75L6 22V3.75Z" />
+                  </svg>
                 </button>
               </div>
               {route.trackPoints && route.trackPoints.length > 1 && (

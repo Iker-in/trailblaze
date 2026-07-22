@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
+import Skeleton from "../components/Skeleton.jsx"
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -54,7 +55,13 @@ function LiveTrack() {
             <p style={{margin: 0}}>{error}</p>
           </div>
         ) : !session ? (
-          <div style={{textAlign: "center", padding: "60px", color: "#6B8CAE"}}>Cargando ubicacion...</div>
+          <>
+            <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", padding: "16px", marginBottom: "16px"}}>
+              <Skeleton height="16px" width="45%" style={{marginBottom: "10px"}} />
+              <Skeleton height="12px" width="30%" />
+            </div>
+            <Skeleton height="400px" borderRadius="14px" />
+          </>
         ) : (
           <>
             <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", padding: "16px", marginBottom: "16px"}}>

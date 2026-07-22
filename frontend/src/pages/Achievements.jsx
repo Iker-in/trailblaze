@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import api from '../services/api.js'
 import useAuthStore from '../store/authStore.js'
 import Navbar from '../components/Navbar.jsx'
+import Skeleton from '../components/Skeleton.jsx'
 import { toast } from 'sonner'
 
 function Achievements() {
@@ -35,8 +36,21 @@ function Achievements() {
       <div className="max-w-3xl mx-auto px-4 py-8">
         <h1 style={{color: 'white'}} className="text-2xl font-bold mb-2">Logros</h1>
         <p style={{color: '#4A6480', fontSize: '14px', marginBottom: '24px'}}>{earnedIds.size} de {achievements.length} logros obtenidos</p>
-        {loading && <div style={{color: '#6B8CAE'}} className="text-center py-16">Cargando logros...</div>}
-        <div className="flex flex-col gap-3">
+        {loading && (
+          <div className="flex flex-col gap-3">
+            {[0, 1, 2, 3, 4, 5].map((index) => (
+              <div key={index} style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '14px'}}>
+                <Skeleton width="42px" height="42px" borderRadius="10px" />
+                <div style={{flex: 1}}>
+                  <Skeleton height="15px" width="38%" style={{marginBottom: '8px'}} />
+                  <Skeleton height="13px" width="72%" />
+                </div>
+                <Skeleton height="16px" width="36px" />
+              </div>
+            ))}
+          </div>
+        )}
+        {!loading && <div className="flex flex-col gap-3">
           {achievements.map((achievement) => {
             const earned = earnedIds.has(achievement.id)
             return (
@@ -55,7 +69,7 @@ function Achievements() {
               </div>
             )
           })}
-        </div>
+        </div>}
       </div>
     </div>
   )

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getRoutes } from '../services/routes.service.js'
 import Navbar from '../components/Navbar.jsx'
+import Skeleton from '../components/Skeleton.jsx'
 
 const DIFFICULTY_STYLES = {
   facil: { background: '#14532d', color: '#86efac' },
@@ -133,7 +134,21 @@ const getRoutesWithDistance = () => {
           )}
         </div>
 
-        {loading && <div style={{color: '#6B8CAE', textAlign: 'center', padding: '48px'}}>Cargando rutas...</div>}
+        {loading && (
+          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px', marginBottom: '28px'}}>
+            {[0, 1, 2, 3, 4, 5].map((index) => (
+              <div key={index} style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', overflow: 'hidden'}}>
+                <Skeleton height="160px" borderRadius="0" />
+                <div style={{padding: '16px'}}>
+                  <Skeleton height="16px" width="72%" style={{marginBottom: '12px'}} />
+                  <Skeleton height="13px" width="100%" style={{marginBottom: '8px'}} />
+                  <Skeleton height="13px" width="58%" style={{marginBottom: '16px'}} />
+                  <Skeleton height="12px" width="82%" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px'}}>{error}</div>}
 
         {!loading && routes.length === 0 && (
@@ -143,7 +158,7 @@ const getRoutesWithDistance = () => {
           </div>
         )}
 
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px', marginBottom: '28px'}}>
+        {!loading && <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px', marginBottom: '28px'}}>
           {getRoutesWithDistance().map((route) => (
             <Link key={route.id} to={"/routes/" + route.id} style={{textDecoration: 'none', display: 'block'}}>
               <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', overflow: 'hidden', transition: 'border-color 0.2s'}}
@@ -184,7 +199,7 @@ const getRoutesWithDistance = () => {
               </div>
             </Link>
           ))}
-        </div>
+        </div>}
 
         {totalPages > 1 && (
           <div style={{display: 'flex', justifyContent: 'center', gap: '8px'}}>

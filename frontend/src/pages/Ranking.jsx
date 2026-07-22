@@ -6,6 +6,25 @@ import api from "../services/api.js"
 import useAuthStore from "../store/authStore.js"
 import Navbar from "../components/Navbar.jsx"
 import LevelBadge from "../components/LevelBadge.jsx"
+import Skeleton from "../components/Skeleton.jsx"
+
+function RankingSkeleton({ count = 5 }) {
+  return (
+    <div className="flex flex-col gap-3">
+      {Array.from({ length: count }, (_, index) => (
+        <div key={index} style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", padding: "16px 20px", display: "flex", alignItems: "center", gap: "14px"}}>
+          <Skeleton width="36px" height="18px" />
+          <Skeleton width="38px" height="38px" borderRadius="50%" />
+          <div style={{flex: 1}}>
+            <Skeleton height="15px" width="42%" style={{marginBottom: "8px"}} />
+            <Skeleton height="12px" width="58%" />
+          </div>
+          <Skeleton height="18px" width="42px" />
+        </div>
+      ))}
+    </div>
+  )
+}
 
 function RankingEntry({ entry, currentUser }) {
   return (
@@ -111,11 +130,10 @@ function Ranking() {
         {tab === "global" && (
           <>
             <p style={{color: "#4A6480", fontSize: "14px", marginBottom: "24px"}}>{ranking.length} senderistas en la comunidad</p>
-            {loading && <div style={{color: "#6B8CAE", textAlign: "center", padding: "48px"}}>Cargando ranking...</div>}
-            <div className="flex flex-col gap-3">
+            {loading ? <RankingSkeleton /> : <div className="flex flex-col gap-3">
               {filtered.map((entry) => <RankingEntry key={entry.id} entry={entry} currentUser={currentUser} />)}
               {filtered.length === 0 && !loading && <div style={{color: "#2A4A6A", textAlign: "center", padding: "32px"}}>No se encontro ese usuario</div>}
-            </div>
+            </div>}
           </>
         )}
 
@@ -123,8 +141,7 @@ function Ranking() {
         {tab === "anual" && isAuthenticated && (
           <>
             <p style={{color: "#6B8CAE", fontSize: "14px", marginBottom: "24px"}}>Top exploradores de {currentYear} — por rutas completadas</p>
-            {loadingAnnual && <div style={{color: "#6B8CAE", textAlign: "center", padding: "48px"}}>Cargando...</div>}
-            <div className="flex flex-col gap-3">
+            {loadingAnnual ? <RankingSkeleton /> : <div className="flex flex-col gap-3">
               {annualRanking.map((entry) => (
                 <RankingEntry key={entry.id} entry={entry} currentUser={currentUser} />
               ))}
@@ -133,7 +150,7 @@ function Ranking() {
                   <p style={{color: "#6B8CAE", fontSize: "15px", margin: 0}}>Nadie ha completado rutas este año todavia.</p>
                 </div>
               )}
-            </div>
+            </div>}
           </>
         )}
 
@@ -141,18 +158,18 @@ function Ranking() {
         {tab === "amigos" && isAuthenticated && (
           <>
             <p style={{color: "#4A6480", fontSize: "14px", marginBottom: "24px"}}>Ranking entre los senderistas que sigues</p>
-            {loadingFriends && <div style={{color: "#6B8CAE", textAlign: "center", padding: "48px"}}>Cargando...</div>}
+            {loadingFriends && <RankingSkeleton />}
             {!loadingFriends && friendsRanking.length === 0 && (
               <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "14px", padding: "40px", textAlign: "center"}}>
                 <p style={{color: "#6B8CAE", fontSize: "15px", margin: "0 0 16px"}}>Aun no sigues a nadie.</p>
                 <Link to="/ranking" onClick={() => setTab("global")} style={{color: "#FFB88A", fontSize: "14px"}}>Ver ranking global</Link>
               </div>
             )}
-            <div className="flex flex-col gap-3">
+            {!loadingFriends && <div className="flex flex-col gap-3">
               {friendsRanking.map((entry, i) => (
                 <RankingEntry key={entry.id} entry={{...entry, position: i + 1}} currentUser={currentUser} />
               ))}
-            </div>
+            </div>}
           </>
         )}
       </div>

@@ -45,6 +45,7 @@ export const getUserFavorites = async (req, res) => {
     const { username } = req.params
     const user = await prisma.user.findUnique({ where: { username } })
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado' })
+    if (user.id !== req.userId) return res.status(403).json({ error: 'Los guardados de este usuario son privados' })
 
     const favorites = await prisma.favorite.findMany({
       where: { userId: user.id },
