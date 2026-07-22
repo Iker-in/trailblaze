@@ -159,6 +159,7 @@ function Home() {
                 </Link>
               ))}
             </div>
+          </div>
 
           <div style={{background: '#1e293b', border: '1px solid #334155', borderRadius: '14px', padding: '20px'}}>
             <h2 style={{color: 'white', fontSize: '16px', fontWeight: '500', margin: '0 0 16px'}}>Por que TrailBlaze?</h2>
@@ -186,4 +187,4 @@ function Home() {
   )
 }
 
-export default Home></div>
+export default Home
