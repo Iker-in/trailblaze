@@ -142,19 +142,17 @@ setTimeout(() => setShowMemoryModal(true), 900)
 
   const handleFavorite = async () => {
     if (!isAuthenticated) { navigate('/login'); return }
-    setFavoriteLoading(true)
+    const wasFavorite = isFavorite
+    setIsFavorite(!wasFavorite)
     try {
-      if (isFavorite) {
+      if (wasFavorite) {
         await api.delete('/routes/' + id + '/favorite')
-        setIsFavorite(false)
       } else {
         await api.post('/routes/' + id + '/favorite')
-        setIsFavorite(true)
       }
     } catch (err) {
+      setIsFavorite(wasFavorite)
       toast.error('No se pudo actualizar favoritos. Intenta de nuevo.')
-    } finally {
-      setFavoriteLoading(false)
     }
   }
 
@@ -190,15 +188,29 @@ setTimeout(() => setShowMemoryModal(true), 900)
 
  const handleRate = async (value) => {
     if (!isAuthenticated) return
-    setRatingLoading(true)
+    const previous = { ...ratings }
+    let { thumbsUp, thumbsDown, userRating } = ratings
+
+    if (userRating === value) {
+      userRating = null
+      if (value === 1) thumbsUp -= 1
+      else thumbsDown -= 1
+    } else {
+      if (userRating === 1) thumbsUp -= 1
+      if (userRating === -1) thumbsDown -= 1
+      if (value === 1) thumbsUp += 1
+      else thumbsDown += 1
+      userRating = value
+    }
+
+    setRatings({ thumbsUp, thumbsDown, userRating })
+
     try {
       await api.post('/routes/' + id + '/rate', { rating: value })
-      const res = await api.get('/routes/' + id + '/rating')
-      setRatings(res.data)
     } catch {
+      setRatings(previous)
       toast.error('No se pudo guardar tu valoracion.')
     }
-    setRatingLoading(false)
   }
 
   const CONDITIONS = [
@@ -380,10 +392,11 @@ setTimeout(() => setShowMemoryModal(true), 900)
                 <p style={{color: '#2A4A6A', fontSize: '14px', margin: 0}}>Completada {route._count.completions} veces</p>
                 <button
                   onClick={handleFavorite}
-                  disabled={favoriteLoading}
                   aria-label={isFavorite ? 'Quitar de guardados' : 'Guardar ruta'}
                   title={isFavorite ? 'Quitar de guardados' : 'Guardar ruta'}
-                  style={{background: 'transparent', color: isFavorite ? '#FFB88A' : '#6B8CAE', border: 'none', borderRadius: '8px', width: '36px', height: '36px', padding: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: favoriteLoading ? 'wait' : 'pointer', opacity: favoriteLoading ? 0.55 : 1}}
+                  style={{background: 'transparent', color: isFavorite ? '#FFB88A' : '#6B8CAE', border: 'none', borderRadius: '8px', width: '36px', height: '36px', padding: 0, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'transform 0.15s ease, color 0.15s ease'}}
+                  onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.85)' }}
+                  onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
                 >
                   <svg width="21" height="21" viewBox="0 0 24 24" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M6 3.75A1.75 1.75 0 0 1 7.75 2h8.5A1.75 1.75 0 0 1 18 3.75V22l-6-3.75L6 22V3.75Z" />
