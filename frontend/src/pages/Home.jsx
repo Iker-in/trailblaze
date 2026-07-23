@@ -130,11 +130,14 @@ function Home() {
               </>
             )}
 
-            {isAuthenticated && feed.length > 0 && (
-              <a href="#feed" style={{marginLeft: "auto", background: "rgba(13,31,53,0.85)", border: "1px solid #1A3050", borderRadius: "12px", padding: "10px 18px", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px"}}>
+           {isAuthenticated && feed.length > 0 && (
+              <button
+                onClick={() => document.getElementById('feed')?.scrollIntoView({ behavior: 'smooth' })}
+                style={{marginLeft: "auto", background: "rgba(13,31,53,0.85)", border: "1px solid #1A3050", borderRadius: "12px", padding: "10px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: "8px"}}
+              >
                 <span style={{fontSize: "18px"}}>🗺️</span>
                 <span style={{color: "white", fontSize: "13px"}}>{feed.length} ruta{feed.length !== 1 ? "s" : ""} nueva{feed.length !== 1 ? "s" : ""} de gente que sigues</span>
-              </a>
+              </button>
             )}
           </div>
 
