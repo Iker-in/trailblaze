@@ -261,8 +261,8 @@ useEffect(() => {
                 )}
               </div>
             </div>
-            {currentUser && !isOwnProfile && (
-             {isFollowing === null ? (
+           {currentUser && !isOwnProfile && (
+              isFollowing === null ? (
                 <Skeleton width="88px" height="36px" borderRadius="10px" />
               ) : (
                 <button onClick={() => { if (!isAuthenticated) { setShowLoginPrompt(true) } else { handleFollow() } }} style={{background: isFollowing ? 'transparent' : '#F2854D', color: isFollowing ? '#6B8CAE' : 'white', border: isFollowing ? '1px solid #1A3050' : 'none', borderRadius: '10px', padding: '8px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', transition: 'transform 0.15s ease'}}
@@ -271,7 +271,7 @@ useEffect(() => {
                 >
                   {isFollowing ? 'Siguiendo' : 'Seguir'}
                 </button>
-              )}
+              )
             )}
           </div>
 
