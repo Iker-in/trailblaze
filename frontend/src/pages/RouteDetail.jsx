@@ -143,7 +143,7 @@ setTimeout(() => setShowMemoryModal(true), 900)
     }, { enableHighAccuracy: true, timeout: 10000 })
   }
 
-  const handleFavorite = async () => {
+    const handleFavorite = async () => {
     if (!isAuthenticated) { navigate('/login'); return }
     if (favoriteRequestRef.current) return
     favoriteRequestRef.current = true
@@ -158,11 +158,9 @@ setTimeout(() => setShowMemoryModal(true), 900)
     } catch (err) {
       setIsFavorite(wasFavorite)
       toast.error('No se pudo actualizar favoritos. Intenta de nuevo.')
-      } finally {
+    } finally {
       favoriteRequestRef.current = false
     }
-    }
-    
   }
 
   const handleComment = async (e) => {
@@ -221,10 +219,10 @@ setTimeout(() => setShowMemoryModal(true), 900)
     } catch {
       setRatings(previous)
       toast.error('No se pudo guardar tu valoracion.')
-      } finally {
+    } finally {
       rateRequestRef.current = false
     }
-    }
+  }
   
 
   const CONDITIONS = [
