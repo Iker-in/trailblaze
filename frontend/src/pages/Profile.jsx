@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { getProfile, getUserRoutes, getUserCompletions, followUser, unfollowUser, getFollowStatus, updateProfile } from '../services/users.service.js'
@@ -13,6 +13,7 @@ import AdventureMap from '../components/AdventureMap.jsx'
 import DeleteAccountModal from '../components/DeleteAccountModal.jsx'
 import Skeleton from '../components/Skeleton.jsx'
 import { toast } from 'sonner'
+
 
 const MOOD_EMOJIS = {
   increible: '🤩',
@@ -52,6 +53,7 @@ function Profile() {
   const [selectedCompletion, setSelectedCompletion] = useState(null)
   const [completionsView, setCompletionsView] = useState('list')
   const [showDeleteAccount, setShowDeleteAccount] = useState(false)
+  const followRequestRef = useRef(false)
 
   const isOwnProfile = currentUser?.username === username
 
@@ -110,7 +112,9 @@ function Profile() {
 
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
 
-  const handleFollow = async () => {
+ const handleFollow = async () => {
+    if (followRequestRef.current) return
+    followRequestRef.current = true
     const wasFollowing = isFollowing
     setIsFollowing(!wasFollowing)
     setProfile((prev) => ({ ...prev, _count: { ...prev._count, followers: prev._count.followers + (wasFollowing ? -1 : 1) } }))
@@ -124,6 +128,8 @@ function Profile() {
       setIsFollowing(wasFollowing)
       setProfile((prev) => ({ ...prev, _count: { ...prev._count, followers: prev._count.followers + (wasFollowing ? 1 : -1) } }))
       toast.error('No se pudo actualizar el seguimiento. Intenta de nuevo.')
+    } finally {
+      followRequestRef.current = false
     }
   }
 

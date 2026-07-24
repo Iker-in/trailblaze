@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { getRoute, completeRoute } from '../services/routes.service.js'
@@ -11,6 +11,7 @@ import RouteFollowMap from '../components/RouteFollowMap.jsx'
 import SaveMemoryModal from '../components/SaveMemoryModal.jsx'
 import { toast } from 'sonner'
 import Skeleton from '../components/Skeleton.jsx'
+
 
 const DIFFICULTY_STYLES = {
   facil: { background: '#14532d', color: '#86efac' },
@@ -50,6 +51,8 @@ const [loadingMore, setLoadingMore] = useState(false)
   const [weather, setWeather] = useState(null)
   const [showMemoryModal, setShowMemoryModal] = useState(false)
 const [lastCompletionId, setLastCompletionId] = useState(null)
+const favoriteRequestRef = useRef(false)
+const rateRequestRef = useRef(false)
   
 
   useEffect(() => { loadRoute(); loadComments() }, [id])
@@ -142,6 +145,8 @@ setTimeout(() => setShowMemoryModal(true), 900)
 
   const handleFavorite = async () => {
     if (!isAuthenticated) { navigate('/login'); return }
+    if (favoriteRequestRef.current) return
+    favoriteRequestRef.current = true
     const wasFavorite = isFavorite
     setIsFavorite(!wasFavorite)
     try {
@@ -153,7 +158,11 @@ setTimeout(() => setShowMemoryModal(true), 900)
     } catch (err) {
       setIsFavorite(wasFavorite)
       toast.error('No se pudo actualizar favoritos. Intenta de nuevo.')
+      } finally {
+      favoriteRequestRef.current = false
     }
+    }
+    
   }
 
   const handleComment = async (e) => {
@@ -188,6 +197,8 @@ setTimeout(() => setShowMemoryModal(true), 900)
 
  const handleRate = async (value) => {
     if (!isAuthenticated) return
+    if (rateRequestRef.current) return
+    rateRequestRef.current = true
     const previous = { ...ratings }
     let { thumbsUp, thumbsDown, userRating } = ratings
 
@@ -210,8 +221,11 @@ setTimeout(() => setShowMemoryModal(true), 900)
     } catch {
       setRatings(previous)
       toast.error('No se pudo guardar tu valoracion.')
+      } finally {
+      rateRequestRef.current = false
     }
-  }
+    }
+  
 
   const CONDITIONS = [
     { value: 'excelente', label: 'Excelente condicion', emoji: '🟢' },
