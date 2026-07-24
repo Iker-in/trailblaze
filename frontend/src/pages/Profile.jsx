@@ -44,7 +44,7 @@ function Profile() {
   const [statsLoading, setStatsLoading] = useState(false)
   const [activity, setActivity] = useState([])
   const [activityLoading, setActivityLoading] = useState(false)
-  const [isFollowing, setIsFollowing] = useState(false)
+  const [isFollowing, setIsFollowing] = useState(null)
   const [followLoading, setFollowLoading] = useState(false)
   const [editingBio, setEditingBio] = useState(false)
   const [bioValue, setBioValue] = useState('')
@@ -113,7 +113,7 @@ useEffect(() => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false)
 
  const handleFollow = async () => {
-    if (followRequestRef.current) return
+    if (followRequestRef.current || isFollowing === null) return
     followRequestRef.current = true
     const wasFollowing = isFollowing
     setIsFollowing(!wasFollowing)
@@ -262,12 +262,16 @@ useEffect(() => {
               </div>
             </div>
             {currentUser && !isOwnProfile && (
-              <button onClick={() => { if (!isAuthenticated) { setShowLoginPrompt(true) } else { handleFollow() } }} style={{background: isFollowing ? 'transparent' : '#F2854D', color: isFollowing ? '#6B8CAE' : 'white', border: isFollowing ? '1px solid #1A3050' : 'none', borderRadius: '10px', padding: '8px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', transition: 'transform 0.15s ease'}}
-                onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.95)' }}
-                onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
-              >
-                {isFollowing ? 'Siguiendo' : 'Seguir'}
-              </button>
+             {isFollowing === null ? (
+                <Skeleton width="88px" height="36px" borderRadius="10px" />
+              ) : (
+                <button onClick={() => { if (!isAuthenticated) { setShowLoginPrompt(true) } else { handleFollow() } }} style={{background: isFollowing ? 'transparent' : '#F2854D', color: isFollowing ? '#6B8CAE' : 'white', border: isFollowing ? '1px solid #1A3050' : 'none', borderRadius: '10px', padding: '8px 20px', fontSize: '14px', fontWeight: '500', cursor: 'pointer', transition: 'transform 0.15s ease'}}
+                  onMouseDown={(e) => { e.currentTarget.style.transform = 'scale(0.95)' }}
+                  onMouseUp={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
+                >
+                  {isFollowing ? 'Siguiendo' : 'Seguir'}
+                </button>
+              )}
             )}
           </div>
 
