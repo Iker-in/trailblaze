@@ -59,11 +59,11 @@ function Profile() {
 
   useEffect(() => { loadProfile() }, [username])
 
-  useEffect(() => {
+useEffect(() => {
     if (currentUser && profile && !isOwnProfile) {
       getFollowStatus(username).then((data) => setIsFollowing(data.isFollowing)).catch(() => {})
     }
-  }, [currentUser, profile, isOwnProfile, username])
+  }, [currentUser, Boolean(profile), isOwnProfile, username])
 
   useEffect(() => {
     if (tab === 'stats' && !stats) {
