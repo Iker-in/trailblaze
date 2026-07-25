@@ -38,6 +38,7 @@ function SaveMemoryModal({ completionId, onClose }) {
       for (const file of photos) {
         await uploadCompletionPhoto(completionId, file)
       }
+      localStorage.setItem("arventra_seen_memory_tip", "true")
       onClose()
     } catch (err) {
       setError(err.response?.data?.error || "Error al guardar tu aventura")
@@ -49,7 +50,14 @@ function SaveMemoryModal({ completionId, onClose }) {
     <div style={{position: "fixed", inset: 0, background: "rgba(5,11,24,0.85)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "20px", opacity: visible ? 1 : 0, transition: "opacity 0.3s ease"}}>
       <div style={{background: "#0D1F35", border: "1px solid #1A3050", borderRadius: "16px", padding: "24px", maxWidth: "480px", width: "100%", maxHeight: "90vh", overflowY: "auto"}}>
         <h2 style={{color: "white", fontSize: "18px", fontWeight: "500", margin: "0 0 4px"}}>✨ Guarda este momento</h2>
-        <p style={{color: "#6B8CAE", fontSize: "13px", margin: "0 0 20px"}}>¿Como fue tu aventura? (opcional)</p>
+        <p style={{color: "#6B8CAE", fontSize: "13px", margin: "0 0 12px"}}>¿Como fue tu aventura? (opcional)</p>
+        {!localStorage.getItem("arventra_seen_memory_tip") && (
+          <div style={{background: "rgba(123,196,127,0.12)", border: "1px solid #7BC47F", borderRadius: "10px", padding: "10px 14px", marginBottom: "16px"}}>
+            <p style={{color: "#7BC47F", fontSize: "12px", margin: 0, lineHeight: "1.5"}}>
+              💡 Esto se guarda en tu Diario de Aventuras. Podras revivirlo despues en tu perfil, con fotos y todo.
+            </p>
+          </div>
+        )}
 
         <input
           type="text"
@@ -91,7 +99,7 @@ function SaveMemoryModal({ completionId, onClose }) {
         {error && <p style={{color: "#fca5a5", fontSize: "13px", margin: "0 0 12px"}}>{error}</p>}
 
         <div style={{display: "flex", gap: "10px", justifyContent: "flex-end"}}>
-          <button onClick={onClose} disabled={saving} style={{background: "none", border: "1px solid #1A3050", color: "#6B8CAE", borderRadius: "10px", padding: "10px 20px", fontSize: "14px", cursor: "pointer"}}>
+          <button onClick={() => { localStorage.setItem("arventra_seen_memory_tip", "true"); onClose() }} disabled={saving} style={{background: "none", border: "1px solid #1A3050", color: "#6B8CAE", borderRadius: "10px", padding: "10px 20px", fontSize: "14px", cursor: "pointer"}}>
             Omitir
           </button>
           <button onClick={handleSave} disabled={saving} style={{background: "#F2854D", color: "white", border: "none", borderRadius: "10px", padding: "10px 20px", fontWeight: "500", fontSize: "14px", cursor: "pointer", opacity: saving ? 0.6 : 1}}>

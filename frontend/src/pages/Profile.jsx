@@ -13,6 +13,7 @@ import AdventureMap from '../components/AdventureMap.jsx'
 import DeleteAccountModal from '../components/DeleteAccountModal.jsx'
 import Skeleton from '../components/Skeleton.jsx'
 import { toast } from 'sonner'
+import Coachmark from '../components/Coachmark.jsx'
 
 
 const MOOD_EMOJIS = {
@@ -308,7 +309,9 @@ useEffect(() => {
           {tab === 'completions' && (
             <div style={{display: 'flex', gap: '4px', marginLeft: 'auto'}}>
               <button onClick={() => setCompletionsView('list')} style={{background: completionsView === 'list' ? '#1A3050' : 'transparent', color: completionsView === 'list' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>📋 Lista</button>
-              <button onClick={() => setCompletionsView('map')} style={{background: completionsView === 'map' ? '#1A3050' : 'transparent', color: completionsView === 'map' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>🗺️ Mapa</button>
+              <Coachmark id="mapa_recuerdos" text="Mira todas tus aventuras en un mapa interactivo">
+                <button onClick={() => setCompletionsView('map')} style={{background: completionsView === 'map' ? '#1A3050' : 'transparent', color: completionsView === 'map' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>🗺️ Mapa</button>
+              </Coachmark>
             </div>
           )}
         </div>
