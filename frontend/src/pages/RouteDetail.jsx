@@ -11,6 +11,7 @@ import RouteFollowMap from '../components/RouteFollowMap.jsx'
 import SaveMemoryModal from '../components/SaveMemoryModal.jsx'
 import { toast } from 'sonner'
 import Skeleton from '../components/Skeleton.jsx'
+import Coachmark from '../components/Coachmark.jsx'
 
 
 const DIFFICULTY_STYLES = {
@@ -416,9 +417,11 @@ setTimeout(() => setShowMemoryModal(true), 900)
                 </button>
               </div>
               {route.trackPoints && route.trackPoints.length > 1 && (
-                <button onClick={() => setShowFollowMap(true)} style={{background: '#0D1F35', color: '#FFB88A', border: '1px solid #FFB88A', borderRadius: '10px', padding: '10px 20px', fontWeight: '500', fontSize: '14px', cursor: 'pointer'}}>
-                  🗺️ Seguir ruta
-                </button>
+                <Coachmark id="seguir_ruta" text="Toca aqui para grabar tu recorrido en vivo mientras exploras esta ruta">
+                  <button onClick={() => setShowFollowMap(true)} style={{background: '#0D1F35', color: '#FFB88A', border: '1px solid #FFB88A', borderRadius: '10px', padding: '10px 20px', fontWeight: '500', fontSize: '14px', cursor: 'pointer'}}>
+                    🗺️ Seguir ruta
+                  </button>
+                </Coachmark>
               )}
               {isAuthenticated && route.userId !== user?.id && !(route.trackPoints && route.trackPoints.length > 1) && (
                 <button onClick={() => handleComplete()} disabled={completing} style={{background: '#F2854D', color: 'white', border: 'none', borderRadius: '10px', padding: '10px 24px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', opacity: completing ? 0.6 : 1}}>
