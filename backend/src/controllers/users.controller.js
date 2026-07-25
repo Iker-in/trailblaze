@@ -71,6 +71,20 @@ export const getUserCompletions = async (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' })
     }
 
+    let isOwner = false
+    if (req.headers.authorization) {
+      try {
+        const { default: jwt } = await import('jsonwebtoken')
+        const token = req.headers.authorization.split(' ')[1]
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        isOwner = decoded.userId === user.id
+      } catch {}
+    }
+
+    if (!user.completionsPublic && !isOwner) {
+      return res.json({ hidden: true, completions: [] })
+    }
+
     const completions = await prisma.routeCompletion.findMany({
   where: { userId: user.id },
   orderBy: { createdAt: 'desc' },
@@ -90,7 +104,7 @@ export const getUserCompletions = async (req, res) => {
   }
 })
 
-    res.json({ completions })
+    res.json({ completions, hidden: false })
 
   } catch (error) {
     console.error('Error al obtener completaciones:', error)

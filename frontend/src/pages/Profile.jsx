@@ -55,6 +55,8 @@ function Profile() {
   const [completionsView, setCompletionsView] = useState('list')
   const [showDeleteAccount, setShowDeleteAccount] = useState(false)
   const followRequestRef = useRef(false)
+  const [completionsHidden, setCompletionsHidden] = useState(false)
+const [activityHidden, setActivityHidden] = useState(false)
 
   const isOwnProfile = currentUser?.username === username
 
@@ -80,7 +82,10 @@ useEffect(() => {
     if (tab === 'activity' && activity.length === 0) {
       setActivityLoading(true)
       api.get('/users/' + username + '/activity')
-        .then(res => setActivity(res.data.activity))
+        .then(res => {
+          if (res.data.hidden) { setActivityHidden(true); return }
+          setActivity(res.data.activity)
+        })
         .catch(() => {})
         .finally(() => setActivityLoading(false))
     }
@@ -97,7 +102,8 @@ useEffect(() => {
       setProfile(profileData.user)
       setBioValue(profileData.user.bio || '')
       setRoutes(routesData.routes)
-      setCompletions(completionsData.completions)
+      setCompletions(completionsData.hidden ? [] : completionsData.completions)
+      setCompletionsHidden(!!completionsData.hidden)
       if (isOwnProfile) {
         const favRes = await api.get('/users/' + username + '/favorites')
         setFavorites(favRes.data.favorites || [])
@@ -307,12 +313,28 @@ useEffect(() => {
             </button>
           ))}
           {tab === 'completions' && (
-            <div style={{display: 'flex', gap: '4px', marginLeft: 'auto'}}>
+            <div style={{display: 'flex', gap: '4px', marginLeft: 'auto', alignItems: 'center'}}>
               <button onClick={() => setCompletionsView('list')} style={{background: completionsView === 'list' ? '#1A3050' : 'transparent', color: completionsView === 'list' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>📋 Lista</button>
               <Coachmark id="mapa_recuerdos" text="Mira todas tus aventuras en un mapa interactivo">
                 <button onClick={() => setCompletionsView('map')} style={{background: completionsView === 'map' ? '#1A3050' : 'transparent', color: completionsView === 'map' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>🗺️ Mapa</button>
               </Coachmark>
+              {isOwnProfile && (
+                <button onClick={() => {
+                  api.patch('/users/me/completions-visibility', { completionsPublic: completionsHidden })
+                    .then(() => setCompletionsHidden(!completionsHidden))
+                }} style={{background: completionsHidden ? '#1A3050' : '#F2854D', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer'}}>
+                  {completionsHidden ? '🔒 Privadas' : '🔓 Publicas'}
+                </button>
+              )}
             </div>
+          )}
+          {tab === 'activity' && isOwnProfile && (
+            <button onClick={() => {
+              api.patch('/users/me/activity-visibility', { activityPublic: activityHidden })
+                .then(() => setActivityHidden(!activityHidden))
+            }} style={{marginLeft: 'auto', background: activityHidden ? '#1A3050' : '#F2854D', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer'}}>
+              {activityHidden ? '🔒 Privada' : '🔓 Publica'}
+            </button>
           )}
         </div>
 
@@ -331,7 +353,8 @@ useEffect(() => {
               <Link to={'/routes/' + route.id} style={{color: '#FFB88A', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
             </div>
           ))}
-          {tab === 'completions' && completions.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha completado rutas todavia.</div>}
+         {tab === 'completions' && completionsHidden && !isOwnProfile && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>🔒 Este usuario mantiene sus completaciones privadas.</div>}
+          {tab === 'completions' && !completionsHidden && completions.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha completado rutas todavia.</div>}
           {tab === 'completions' && completionsView === 'map' && completions.length > 0 && (
             <AdventureMap completions={completions} onSelect={setSelectedCompletion} />
           )}
@@ -420,7 +443,10 @@ useEffect(() => {
               {[0, 1, 2].map((index) => <Skeleton key={index} height="64px" borderRadius="12px" />)}
             </div>
           )}
-          {tab === 'activity' && !activityLoading && activity.length === 0 && (
+          {tab === 'activity' && !activityLoading && activityHidden && !isOwnProfile && (
+            <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>🔒 Este usuario mantiene su actividad privada.</div>
+          )}
+          {tab === 'activity' && !activityLoading && !activityHidden && activity.length === 0 && (
             <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#4A6480'}}>Sin actividad reciente.</div>
           )}
           {tab === 'activity' && !activityLoading && activity.map((item, i) => (

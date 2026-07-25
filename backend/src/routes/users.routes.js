@@ -86,6 +86,20 @@ router.get('/:username/activity', async (req, res) => {
     const user = await prisma.user.findUnique({ where: { username } })
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado' })
 
+    let isOwner = false
+    if (req.headers.authorization) {
+      try {
+        const { default: jwt } = await import('jsonwebtoken')
+        const token = req.headers.authorization.split(' ')[1]
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        isOwner = decoded.userId === user.id
+      } catch {}
+    }
+
+    if (!user.activityPublic && !isOwner) {
+      return res.json({ hidden: true, activity: [] })
+    }
+
     const [completions, achievements, routes] = await Promise.all([
       prisma.routeCompletion.findMany({
         where: { userId: user.id },
@@ -113,7 +127,7 @@ router.get('/:username/activity', async (req, res) => {
       ...routes.map(r => ({ type: 'route', date: r.createdAt, routeId: r.id, routeTitle: r.title }))
     ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 15)
 
-    res.json({ activity })
+    res.json({ activity, hidden: false })
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Error interno del servidor' })
@@ -183,5 +197,32 @@ router.patch('/me/avatar', authenticate, (req, res, next) => {
     next()
   })
 }, updateAvatar)
+
+
+router.patch('/me/completions-visibility', authenticate, async (req, res) => {
+  try {
+    const { completionsPublic } = req.body
+    await prisma.user.update({
+      where: { id: req.userId },
+      data: { completionsPublic: Boolean(completionsPublic) }
+    })
+    res.json({ ok: true, completionsPublic: Boolean(completionsPublic) })
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+})
+
+router.patch('/me/activity-visibility', authenticate, async (req, res) => {
+  try {
+    const { activityPublic } = req.body
+    await prisma.user.update({
+      where: { id: req.userId },
+      data: { activityPublic: Boolean(activityPublic) }
+    })
+    res.json({ ok: true, activityPublic: Boolean(activityPublic) })
+  } catch (error) {
+    res.status(500).json({ error: 'Error interno del servidor' })
+  }
+})
 
 export default router
