@@ -1,9 +1,9 @@
 ﻿import { useState } from "react"
 
 const slides = [
-  { emoji: "🏔️", title: "Bienvenido a ARVENTRA", desc: "La comunidad de senderistas hispanohablantes. Descubre, graba y comparte tus aventuras en la naturaleza.", color: "#FFB88A" },
-  { emoji: "📍", title: "Graba tus rutas", desc: "GPS en tiempo real con mapa en vivo. Pausa, reanuda y guarda tu recorrido completo con distancia y elevacion.", color: "#FFB88A" },
-  { emoji: "🏆", title: "Explora y compite", desc: "Sube en el ranking, gana logros y compite con tus amigos. Se el Primer Explorador de rutas nuevas.", color: "#7BC47F" }
+  { emoji: "🏔️", title: "Revive cada aventura", desc: "ARVENTRA es tu bitacora personal de exploracion. Guarda tus rutas, tus fotos y los momentos que quieres recordar para siempre.", color: "#FFB88A" },
+  { emoji: "📖", title: "Nunca olvides un momento", desc: "Cada ruta completada se convierte en un recuerdo: titulo, notas, fotos, el clima de ese dia. Todo queda guardado para revivirlo cuando quieras.", color: "#7BC47F" },
+  { emoji: "🧭", title: "Explora sin perderte", desc: "Graba tu recorrido en tiempo real, comparte tu ubicacion con quien confies, y descubre rutas de otros senderistas cerca de ti.", color: "#FFB88A" }
 ]
 
 function Onboarding({ onFinish }) {
@@ -35,7 +35,7 @@ function Onboarding({ onFinish }) {
           ))}
         </div>
         <button onClick={handleNext} style={{width: "100%", background: slide.color, color: "white", border: "none", borderRadius: "14px", padding: "16px", fontSize: "16px", fontWeight: "500", cursor: "pointer"}}>
-          {current < slides.length - 1 ? "Siguiente" : "Comenzar aventura"}
+          {current < slides.length - 1 ? "Siguiente" : "Comenzar mi bitacora"}
         </button>
       </div>
     </div>

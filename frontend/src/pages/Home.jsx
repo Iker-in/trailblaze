@@ -5,6 +5,8 @@ import useAuthStore from "../store/authStore.js"
 import Navbar from "../components/Navbar.jsx"
 import Skeleton from "../components/Skeleton.jsx"
 import Reveal from "../components/Reveal.jsx"
+import ActivationChecklist from "../components/ActivationChecklist.jsx"
+import { getProfile } from "../services/users.service.js"
 
 const DIFFICULTY_STYLES = {
   facil: { background: "#14532d", color: "#86efac" },
@@ -62,6 +64,8 @@ function Home() {
   const [feed, setFeed] = useState([])
   const [feedLoading, setFeedLoading] = useState(false)
   const [featured, setFeatured] = useState(null)
+  const [myProfile, setMyProfile] = useState(null)
+  const [checklistDismissed, setChecklistDismissed] = useState(localStorage.getItem("arventra_checklist_dismissed") === "true")
 
   useEffect(() => {
     api.get("/stats").then((res) => setStats(res.data)).catch(() => {})
@@ -76,6 +80,11 @@ function Home() {
     api.get("/routes/feed").then((res) => setFeed(res.data.routes)).catch(() => {}).finally(() => setFeedLoading(false))
   }, [isAuthenticated])
 
+  useEffect(() => {
+    if (!isAuthenticated || !user) return
+    getProfile(user.username).then((data) => setMyProfile(data.user)).catch(() => {})
+  }, [isAuthenticated, user])
+
   const heroImage = featured && featured.route && featured.route.photos && featured.route.photos.length > 0
     ? featured.route.photos[0].url
     : null
@@ -83,6 +92,20 @@ function Home() {
   return (
     <div style={{minHeight: "100vh", background: "#050B18"}}>
       <Navbar />
+
+      {isAuthenticated && myProfile && !checklistDismissed && (
+        myProfile._count.following === 0 || myProfile._count.routes === 0 || myProfile._count.completions === 0 || !myProfile.bio
+      ) && (
+        <div className="max-w-5xl mx-auto px-4" style={{paddingTop: "20px"}}>
+          <ActivationChecklist
+            profile={myProfile}
+            onDismiss={() => {
+              localStorage.setItem("arventra_checklist_dismissed", "true")
+              setChecklistDismissed(true)
+            }}
+          />
+        </div>
+      )}
 
       <div style={{
         position: "relative",
