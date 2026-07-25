@@ -142,7 +142,7 @@ export const completeRoute = async (req, res) => {
   const coverage = calculateRouteCoverage(recordedPoints, route.trackPoints, 50)
   if (coverage < 70) {
     return res.status(400).json({
-      error: `Solo recorriste el ${Math.round(coverage)}% de la ruta. Necesitas al menos 70% para completarla.`,
+      error: `Solo recorriste el ${Math.round(coverage)}% de la ruta. Necesitas al menos 70% para completarla. Intenta seguir el trazado oficial mas de cerca.`,
       coverage: Math.round(coverage)
     })
   }

@@ -54,6 +54,7 @@ const [loadingMore, setLoadingMore] = useState(false)
 const [lastCompletionId, setLastCompletionId] = useState(null)
 const favoriteRequestRef = useRef(false)
 const rateRequestRef = useRef(false)
+const [completeError, setCompleteError] = useState('')
   
 
   useEffect(() => { loadRoute(); loadComments() }, [id])
@@ -102,18 +103,19 @@ const loadMoreComments = async () => {
   const handleComplete = async (recordedPoints) => {
   if (!isAuthenticated) { navigate('/login'); return }
   setCompleting(true)
+  setCompleteError('')
 
   const doComplete = async () => {
     try {
       const data = await completeRoute(id, { recordedPoints })
   setCompletionCount(prev => prev + 1)
- toast.success(data.message)
+  toast.success(data.message)
   setRoute((prev) => ({ ...prev, _count: { completions: prev._count.completions + 1 } }))
   setLastCompletionId(data.completion.id)
 setTimeout(() => setShowMemoryModal(true), 900)
 
      } catch (err) {
-  toast.error(err.response?.data?.error || 'Error al completar la ruta')
+  setCompleteError(err.response?.data?.error || 'No se pudo completar la ruta. Verifica tu conexion e intenta de nuevo.')
 } finally {
   setCompleting(false)
 }
@@ -134,12 +136,12 @@ setTimeout(() => setShowMemoryModal(true), 900)
       const last = tp.length > 0 ? tp[tp.length-1] : null
       const dEnd = last ? distM(uLat, uLng, last[0], last[1]) : Infinity
       if (dStart > 500 && dEnd > 500) {
-        toast.error('Debes estar cerca del inicio o final de la ruta para completarla (radio 500m)')
+        setCompleteError('No estas lo suficientemente cerca. Acercate al inicio o final de la ruta (dentro de 500m) e intenta de nuevo.')
         setCompleting(false); return
       }
       await doComplete()
     }, async () => {
-      toast.error('No se pudo obtener tu GPS. Activa la ubicacion e intenta de nuevo.')
+      setCompleteError('No se pudo obtener tu ubicacion GPS. Activa la ubicacion en tu dispositivo e intenta de nuevo.')
       setCompleting(false)
     }, { enableHighAccuracy: true, timeout: 10000 })
   }
@@ -416,6 +418,11 @@ setTimeout(() => setShowMemoryModal(true), 900)
                   </svg>
                 </button>
               </div>
+              {completeError && (
+                <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px 16px', marginBottom: '12px', fontSize: '13px', lineHeight: '1.5', width: '100%'}}>
+                  ⚠️ {completeError}
+                </div>
+              )}
               {route.trackPoints && route.trackPoints.length > 1 && (
                 <Coachmark id="seguir_ruta" text="Toca aqui para grabar tu recorrido en vivo mientras exploras esta ruta">
                   <button onClick={() => setShowFollowMap(true)} style={{background: '#0D1F35', color: '#FFB88A', border: '1px solid #FFB88A', borderRadius: '10px', padding: '10px 20px', fontWeight: '500', fontSize: '14px', cursor: 'pointer'}}>
