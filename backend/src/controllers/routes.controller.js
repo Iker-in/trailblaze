@@ -3,7 +3,7 @@ import prisma from '../config/prisma.js'
 import { validationResult } from 'express-validator'
 import { checkAndGrantAchievements } from '../services/achievements.service.js'
 import { createNotification } from '../services/notifications.service.js'
-import { calculateRouteCoverage } from '../utils/routeCoverage.js'
+import { calculateRouteCoverage, calculateTrackDistance, calculateTrackElevationGain } from '../utils/routeCoverage.js'
 
 export const createRoute = async (req, res) => {
   try {
@@ -12,23 +12,42 @@ export const createRoute = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { title, description, difficulty, distanceKm, elevationM, estimatedTime, latitudeStart, longitudeStart, trackPoints } = req.body
+    const { title, description, difficulty, estimatedTime, trackPoints } = req.body
     const safeTitle = xss(title)
-const safeDescription = xss(description)
+    const safeDescription = xss(description)
 
-   const route = await prisma.route.create({
-  data: {
-    title: safeTitle,
-    description: safeDescription,
-    difficulty,
-    distanceKm: parseFloat(distanceKm),
-    elevationM: elevationM && elevationM > 0 ? parseInt(elevationM) : null,
-    estimatedTime: estimatedTime && estimatedTime > 0 ? parseInt(estimatedTime) : null,
-    latitudeStart: latitudeStart ? parseFloat(latitudeStart) : null,
-    longitudeStart: longitudeStart ? parseFloat(longitudeStart) : null,
-    trackPoints: trackPoints ? JSON.parse(trackPoints) : undefined,
-    userId: req.userId
-  },
+    if (!trackPoints) {
+      return res.status(400).json({ error: 'Debes grabar la ruta con GPS antes de publicarla.' })
+    }
+
+    let parsedTrackPoints
+    try {
+      parsedTrackPoints = JSON.parse(trackPoints)
+    } catch {
+      return res.status(400).json({ error: 'Trazado GPS invalido.' })
+    }
+
+    if (!Array.isArray(parsedTrackPoints) || parsedTrackPoints.length < 2) {
+      return res.status(400).json({ error: 'Debes grabar al menos 2 puntos GPS para publicar una ruta.' })
+    }
+
+    const distanceKm = calculateTrackDistance(parsedTrackPoints)
+    const elevationM = calculateTrackElevationGain(parsedTrackPoints)
+    const [latitudeStart, longitudeStart] = parsedTrackPoints[0]
+
+    const route = await prisma.route.create({
+      data: {
+        title: safeTitle,
+        description: safeDescription,
+        difficulty,
+        distanceKm,
+        elevationM: elevationM > 0 ? elevationM : null,
+        estimatedTime: estimatedTime && estimatedTime > 0 ? parseInt(estimatedTime) : null,
+        latitudeStart,
+        longitudeStart,
+        trackPoints: parsedTrackPoints,
+        userId: req.userId
+      },
       include: {
         user: {
           select: { id: true, username: true, avatarUrl: true }
@@ -315,19 +334,14 @@ export const updateRoute = async (req, res) => {
     if (!route) return res.status(404).json({ error: 'Ruta no encontrada' })
     if (route.userId !== req.userId) return res.status(403).json({ error: 'No tienes permiso para editar esta ruta' })
 
-    const { title, description, difficulty, distanceKm, elevationM, estimatedTime, latitudeStart, longitudeStart } = req.body
+    const { title, description, difficulty } = req.body
 
     const updated = await prisma.route.update({
       where: { id },
       data: {
         title: title ? xss(title) : undefined,
         description: description ? xss(description) : undefined,
-        difficulty: difficulty || undefined,
-        distanceKm: distanceKm ? parseFloat(distanceKm) : undefined,
-        elevationM: elevationM !== undefined ? (elevationM > 0 ? parseInt(elevationM) : null) : undefined,
-        estimatedTime: estimatedTime !== undefined ? (estimatedTime > 0 ? parseInt(estimatedTime) : null) : undefined,
-        latitudeStart: latitudeStart ? parseFloat(latitudeStart) : undefined,
-        longitudeStart: longitudeStart ? parseFloat(longitudeStart) : undefined,
+        difficulty: difficulty || undefined
       }
     })
 

@@ -18,19 +18,7 @@ const routeValidation = [
     .withMessage('La descripcion debe tener entre 20 y 2000 caracteres'),
   body('difficulty')
     .isIn(['facil', 'moderado', 'dificil', 'experto'])
-    .withMessage('Dificultad invalida'),
-  body('distanceKm')
-    .isFloat({ min: 0.1, max: 500 })
-    .withMessage('La distancia debe ser entre 0.1 y 500 km')
-    ,
-  body('elevationM')
-  .optional()
-  .isInt({ min: 0 })
-  .withMessage('La elevacion no puede ser negativa'),
-body('estimatedTime')
-  .optional()
-  .isInt({ min: 0 })
-  .withMessage('El tiempo no puede ser negativo'),
+    .withMessage('Dificultad invalida')
 ]
 
 router.get('/featured', async (req, res) => {

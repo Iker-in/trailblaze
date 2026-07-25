@@ -188,7 +188,7 @@ const resumeRecording = () => {
   const elevationM = calculateElevationGain()
   const [latitudeStart, longitudeStart] = points[0]
   localStorage.setItem('arventra_track', JSON.stringify({ trackPoints: points, distanceKm, estimatedTime, elevationM, latitudeStart, longitudeStart }))
-  navigate('/routes/create')
+  navigate('/routes/finalize')
 }
 
   const center = points.length > 0 ? points[points.length - 1] : [40.4168, -3.7038]

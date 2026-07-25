@@ -38,7 +38,8 @@ function AnimatedRoutes() {
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
         <Route path="/register" element={<PageTransition><Register /></PageTransition>} />
         <Route path="/routes" element={<PageTransition><RoutesList /></PageTransition>} />
-        <Route path="/routes/create" element={<PageTransition><ProtectedRoute><CreateRoute /></ProtectedRoute></PageTransition>} />
+        <Route path="/routes/create" element={<PageTransition><ProtectedRoute><RecordRoute /></ProtectedRoute></PageTransition>} />
+        <Route path="/routes/finalize" element={<PageTransition><ProtectedRoute><CreateRoute /></ProtectedRoute></PageTransition>} />
         <Route path="/routes/:id" element={<PageTransition><RouteDetail /></PageTransition>} />
         <Route path="/profile/:username" element={<PageTransition><Profile /></PageTransition>} />
         <Route path="/ranking" element={<PageTransition><Ranking /></PageTransition>} />
