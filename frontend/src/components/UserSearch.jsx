@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { searchUsers } from '../services/users.service.js'
 
 function UserSearch() {
@@ -38,7 +39,7 @@ function UserSearch() {
             <p style={{color: '#2A4A6A', fontSize: '13px', textAlign: 'center', padding: '16px'}}>Sin resultados</p>
           )}
           {results.map((u) => (
-            <a key={u.id} href={'/profile/' + u.username} onClick={() => setOpen(false)} style={{display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', textDecoration: 'none', borderBottom: '1px solid #1A3050'}}>
+            <Link key={u.id} to={'/profile/' + u.username} onClick={() => setOpen(false)} style={{display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', textDecoration: 'none', borderBottom: '1px solid #1A3050'}}>
               <div style={{width: '28px', height: '28px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0}}>
                 {u.avatarUrl ? (
                   <img src={u.avatarUrl} alt={u.username} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
@@ -49,7 +50,7 @@ function UserSearch() {
                 )}
               </div>
               <span style={{color: 'white', fontSize: '13px'}}>{u.username}</span>
-            </a>
+            </Link>
           ))}
         </div>
       )}

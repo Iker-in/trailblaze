@@ -19,9 +19,9 @@ function Login() {
     try {
       const data = await loginUser(formData.email, formData.password)
       login(data.user, data.token)
-      const pendingTrack = localStorage.getItem('arventra_track')
+     const pendingTrack = localStorage.getItem('arventra_track')
       if (pendingTrack) {
-        navigate('/routes/create')
+        navigate('/routes/finalize')
       } else {
         navigate('/')
       }

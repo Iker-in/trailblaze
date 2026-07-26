@@ -400,17 +400,13 @@ useEffect(() => {
           {tab === 'stats' && !statsLoading && stats && !stats.hidden && (
             <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
               {isOwnProfile && (
-                <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                  <span style={{color: '#6B8CAE', fontSize: '13px'}}>Estadisticas publicas</span>
-                  <button onClick={() => {
-                    setStats(s => ({...s, statsPublic: !s.statsPublic}))
-                    api.patch('/users/me/stats-visibility', { statsPublic: !stats.statsPublic })
-                      .catch(() => { setStats(s => ({...s, statsPublic: !s.statsPublic})); toast.error('No se pudo actualizar. Intenta de nuevo.') })
-                      .catch(() => {})
-                  }} style={{background: stats.statsPublic ? '#F2854D' : '#1A3050', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', fontWeight: '500'}}>
-                    {stats.statsPublic ? 'Publicas' : 'Privadas'}
-                  </button>
-                </div>
+                <button onClick={() => {
+                  setStats(s => ({...s, statsPublic: !s.statsPublic}))
+                  api.patch('/users/me/stats-visibility', { statsPublic: !stats.statsPublic })
+                    .catch(() => { setStats(s => ({...s, statsPublic: !s.statsPublic})); toast.error('No se pudo actualizar. Intenta de nuevo.') })
+                }} style={{alignSelf: 'flex-start', background: stats.statsPublic ? '#F2854D' : '#1A3050', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer'}}>
+                  {stats.statsPublic ? '🔓 Publicas' : '🔒 Privadas'}
+                </button>
               )}
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
                 {[
