@@ -14,6 +14,7 @@ import DeleteAccountModal from '../components/DeleteAccountModal.jsx'
 import Skeleton from '../components/Skeleton.jsx'
 import { toast } from 'sonner'
 import Coachmark from '../components/Coachmark.jsx'
+import SectionError from '../components/SectionError.jsx'
 
 
 const MOOD_EMOJIS = {
@@ -57,6 +58,9 @@ function Profile() {
   const followRequestRef = useRef(false)
   const [completionsHidden, setCompletionsHidden] = useState(false)
 const [activityHidden, setActivityHidden] = useState(false)
+const [routesError, setRoutesError] = useState(false)
+const [completionsError, setCompletionsError] = useState(false)
+const [favoritesError, setFavoritesError] = useState(false)
 
   const isOwnProfile = currentUser?.username === username
 
@@ -94,26 +98,48 @@ useEffect(() => {
   const loadProfile = async () => {
     setLoading(true)
     try {
-      const [profileData, routesData, completionsData] = await Promise.all([
-        getProfile(username),
-        getUserRoutes(username),
-        getUserCompletions(username)
-      ])
+      const profileData = await getProfile(username)
       setProfile(profileData.user)
       setBioValue(profileData.user.bio || '')
-      setRoutes(routesData.routes)
-      setCompletions(completionsData.hidden ? [] : completionsData.completions)
-      setCompletionsHidden(!completionsData.completionsPublic)
-      if (isOwnProfile) {
-        const favRes = await api.get('/users/' + username + '/favorites')
-        setFavorites(favRes.data.favorites || [])
-      } else {
-        setFavorites([])
-      }
     } catch (err) {
       setError('Usuario no encontrado')
     } finally {
       setLoading(false)
+    }
+    loadRoutes()
+    loadCompletions()
+    loadFavorites()
+  }
+
+  const loadRoutes = async () => {
+    setRoutesError(false)
+    try {
+      const data = await getUserRoutes(username)
+      setRoutes(data.routes)
+    } catch {
+      setRoutesError(true)
+    }
+  }
+
+  const loadCompletions = async () => {
+    setCompletionsError(false)
+    try {
+      const data = await getUserCompletions(username)
+      setCompletions(data.hidden ? [] : data.completions)
+      setCompletionsHidden(!data.completionsPublic)
+    } catch {
+      setCompletionsError(true)
+    }
+  }
+
+  const loadFavorites = async () => {
+    if (!isOwnProfile) { setFavorites([]); return }
+    setFavoritesError(false)
+    try {
+      const res = await api.get('/users/' + username + '/favorites')
+      setFavorites(res.data.favorites || [])
+    } catch {
+      setFavoritesError(true)
     }
   }
 
@@ -356,7 +382,8 @@ useEffect(() => {
         </div>
 
         <div className="flex flex-col gap-3">
-          {tab === 'routes' && routes.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha publicado rutas todavia.</div>}
+          {tab === 'routes' && routesError && <SectionError message="No se pudieron cargar las rutas publicadas." onRetry={loadRoutes} />}
+          {tab === 'routes' && !routesError && routes.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha publicado rutas todavia.</div>}
           {tab === 'routes' && routes.map((route) => (
             <div key={route.id} style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', padding: '16px 20px'}}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
@@ -370,8 +397,9 @@ useEffect(() => {
               <Link to={'/routes/' + route.id} style={{color: '#FFB88A', fontSize: '13px', fontWeight: '500', textDecoration: 'none'}}>Ver ruta</Link>
             </div>
           ))}
-         {tab === 'completions' && completionsHidden && !isOwnProfile && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>🔒 Este usuario mantiene sus completaciones privadas.</div>}
-          {tab === 'completions' && !completionsHidden && completions.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha completado rutas todavia.</div>}
+         {tab === 'completions' && completionsError && <SectionError message="No se pudieron cargar las completaciones." onRetry={loadCompletions} />}
+          {tab === 'completions' && !completionsError && completionsHidden && !isOwnProfile && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>🔒 Este usuario mantiene sus completaciones privadas.</div>}
+          {tab === 'completions' && !completionsError && !completionsHidden && completions.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No ha completado rutas todavia.</div>}
           {tab === 'completions' && completionsView === 'map' && completions.length > 0 && (
             <AdventureMap completions={completions} onSelect={setSelectedCompletion} />
           )}
@@ -473,7 +501,8 @@ useEffect(() => {
               )}
             </div>
           ))}
-          {tab === 'favorites' && favorites.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No hay rutas guardadas todavia.</div>}
+          {tab === 'favorites' && favoritesError && <SectionError message="No se pudieron cargar tus favoritos." onRetry={loadFavorites} />}
+          {tab === 'favorites' && !favoritesError && favorites.length === 0 && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#2A4A6A'}}>No hay rutas guardadas todavia.</div>}
           {tab === 'favorites' && favorites.map((route) => (
             <div key={route.id} style={{background: '#0D1F35', border: '1px solid #1A3050', borderLeft: '3px solid #FFB88A', borderRadius: '14px', padding: '16px 20px'}}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px'}}>
