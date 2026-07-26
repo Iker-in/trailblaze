@@ -83,8 +83,8 @@ useEffect(() => {
       setActivityLoading(true)
       api.get('/users/' + username + '/activity')
         .then(res => {
-          if (res.data.hidden) { setActivityHidden(true); return }
-          setActivity(res.data.activity)
+          setActivityHidden(!res.data.activityPublic)
+          if (!res.data.hidden) setActivity(res.data.activity)
         })
         .catch(() => {})
         .finally(() => setActivityLoading(false))
@@ -103,7 +103,7 @@ useEffect(() => {
       setBioValue(profileData.user.bio || '')
       setRoutes(routesData.routes)
       setCompletions(completionsData.hidden ? [] : completionsData.completions)
-      setCompletionsHidden(!!completionsData.hidden)
+      setCompletionsHidden(!completionsData.completionsPublic)
       if (isOwnProfile) {
         const favRes = await api.get('/users/' + username + '/favorites')
         setFavorites(favRes.data.favorites || [])
@@ -320,8 +320,10 @@ useEffect(() => {
               </Coachmark>
               {isOwnProfile && (
                 <button onClick={() => {
-                  api.patch('/users/me/completions-visibility', { completionsPublic: completionsHidden })
-                    .then(() => setCompletionsHidden(!completionsHidden))
+                  const newHidden = !completionsHidden
+                  setCompletionsHidden(newHidden)
+                  api.patch('/users/me/completions-visibility', { completionsPublic: !newHidden })
+                    .catch(() => { setCompletionsHidden(!newHidden); toast.error('No se pudo actualizar. Intenta de nuevo.') })
                 }} style={{background: completionsHidden ? '#1A3050' : '#F2854D', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer'}}>
                   {completionsHidden ? '🔒 Privadas' : '🔓 Publicas'}
                 </button>
@@ -330,8 +332,10 @@ useEffect(() => {
           )}
           {tab === 'activity' && isOwnProfile && (
             <button onClick={() => {
-              api.patch('/users/me/activity-visibility', { activityPublic: activityHidden })
-                .then(() => setActivityHidden(!activityHidden))
+              const newHidden = !activityHidden
+              setActivityHidden(newHidden)
+              api.patch('/users/me/activity-visibility', { activityPublic: !newHidden })
+                .catch(() => { setActivityHidden(!newHidden); toast.error('No se pudo actualizar. Intenta de nuevo.') })
             }} style={{marginLeft: 'auto', background: activityHidden ? '#1A3050' : '#F2854D', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer'}}>
               {activityHidden ? '🔒 Privada' : '🔓 Publica'}
             </button>
@@ -399,8 +403,9 @@ useEffect(() => {
                 <div style={{background: '#0D1F35', border: '1px solid #1A3050', borderRadius: '14px', padding: '14px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                   <span style={{color: '#6B8CAE', fontSize: '13px'}}>Estadisticas publicas</span>
                   <button onClick={() => {
+                    setStats(s => ({...s, statsPublic: !s.statsPublic}))
                     api.patch('/users/me/stats-visibility', { statsPublic: !stats.statsPublic })
-                      .then(() => setStats(s => ({...s, statsPublic: !s.statsPublic})))
+                      .catch(() => { setStats(s => ({...s, statsPublic: !s.statsPublic})); toast.error('No se pudo actualizar. Intenta de nuevo.') })
                       .catch(() => {})
                   }} style={{background: stats.statsPublic ? '#F2854D' : '#1A3050', color: 'white', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '12px', cursor: 'pointer', fontWeight: '500'}}>
                     {stats.statsPublic ? 'Publicas' : 'Privadas'}

@@ -82,7 +82,7 @@ export const getUserCompletions = async (req, res) => {
     }
 
     if (!user.completionsPublic && !isOwner) {
-      return res.json({ hidden: true, completions: [] })
+      return res.json({ hidden: true, completions: [], completionsPublic: user.completionsPublic })
     }
 
     const completions = await prisma.routeCompletion.findMany({
@@ -104,7 +104,7 @@ export const getUserCompletions = async (req, res) => {
   }
 })
 
-    res.json({ completions, hidden: false })
+    res.json({ completions, hidden: false, completionsPublic: user.completionsPublic })
 
   } catch (error) {
     console.error('Error al obtener completaciones:', error)

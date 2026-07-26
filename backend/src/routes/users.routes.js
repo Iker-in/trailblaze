@@ -97,7 +97,7 @@ router.get('/:username/activity', async (req, res) => {
     }
 
     if (!user.activityPublic && !isOwner) {
-      return res.json({ hidden: true, activity: [] })
+      return res.json({ hidden: true, activity: [], activityPublic: user.activityPublic })
     }
 
     const [completions, achievements, routes] = await Promise.all([
@@ -127,7 +127,7 @@ router.get('/:username/activity', async (req, res) => {
       ...routes.map(r => ({ type: 'route', date: r.createdAt, routeId: r.id, routeTitle: r.title }))
     ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 15)
 
-    res.json({ activity, hidden: false })
+    res.json({ activity, hidden: false, activityPublic: user.activityPublic })
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'Error interno del servidor' })
