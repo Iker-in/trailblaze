@@ -314,10 +314,14 @@ useEffect(() => {
           ))}
           {tab === 'completions' && (
             <div style={{display: 'flex', gap: '4px', marginLeft: 'auto', alignItems: 'center'}}>
-              <button onClick={() => setCompletionsView('list')} style={{background: completionsView === 'list' ? '#1A3050' : 'transparent', color: completionsView === 'list' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>📋 Lista</button>
-              <Coachmark id="mapa_recuerdos" text="Mira todas tus aventuras en un mapa interactivo">
-                <button onClick={() => setCompletionsView('map')} style={{background: completionsView === 'map' ? '#1A3050' : 'transparent', color: completionsView === 'map' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>🗺️ Mapa</button>
-              </Coachmark>
+              {!completionsHidden && (
+                <>
+                  <button onClick={() => setCompletionsView('list')} style={{background: completionsView === 'list' ? '#1A3050' : 'transparent', color: completionsView === 'list' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>📋 Lista</button>
+                  <Coachmark id="mapa_recuerdos" text="Mira todas tus aventuras en un mapa interactivo">
+                    <button onClick={() => setCompletionsView('map')} style={{background: completionsView === 'map' ? '#1A3050' : 'transparent', color: completionsView === 'map' ? 'white' : '#6B8CAE', border: '1px solid #1A3050', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>🗺️ Mapa</button>
+                  </Coachmark>
+                </>
+              )}
               {isOwnProfile && (
                 <button onClick={() => {
                   const newHidden = !completionsHidden
@@ -345,7 +349,7 @@ useEffect(() => {
               setStats(s => ({...s, statsPublic: !s.statsPublic}))
               api.patch('/users/me/stats-visibility', { statsPublic: !stats.statsPublic })
                 .catch(() => { setStats(s => ({...s, statsPublic: !s.statsPublic})); toast.error('No se pudo actualizar. Intenta de nuevo.') })
-            }} style={{marginLeft: 'auto', background: stats.statsPublic ? '#1A3050' : '#F2854D', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer'}}>
+            }} style={{marginLeft: 'auto', background: stats.statsPublic ? '#F2854D' : '#1A3050', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer'}}>
               {stats.statsPublic ? '🔓 Publicas' : '🔒 Privadas'}
             </button>
           )}
