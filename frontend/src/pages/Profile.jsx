@@ -340,6 +340,15 @@ useEffect(() => {
               {activityHidden ? '🔒 Privada' : '🔓 Publica'}
             </button>
           )}
+          {tab === 'stats' && isOwnProfile && stats && (
+            <button onClick={() => {
+              setStats(s => ({...s, statsPublic: !s.statsPublic}))
+              api.patch('/users/me/stats-visibility', { statsPublic: !stats.statsPublic })
+                .catch(() => { setStats(s => ({...s, statsPublic: !s.statsPublic})); toast.error('No se pudo actualizar. Intenta de nuevo.') })
+            }} style={{marginLeft: 'auto', background: stats.statsPublic ? '#1A3050' : '#F2854D', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer'}}>
+              {stats.statsPublic ? '🔓 Publicas' : '🔒 Privadas'}
+            </button>
+          )}
         </div>
 
         <div className="flex flex-col gap-3">
@@ -399,15 +408,7 @@ useEffect(() => {
           {tab === 'stats' && !statsLoading && stats && stats.hidden && <div style={{background: '#0D1F35', borderRadius: '14px', padding: '32px', textAlign: 'center', color: '#6B8CAE'}}>Este usuario tiene sus estadisticas privadas.</div>}
           {tab === 'stats' && !statsLoading && stats && !stats.hidden && (
             <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
-              {isOwnProfile && (
-                <button onClick={() => {
-                  setStats(s => ({...s, statsPublic: !s.statsPublic}))
-                  api.patch('/users/me/stats-visibility', { statsPublic: !stats.statsPublic })
-                    .catch(() => { setStats(s => ({...s, statsPublic: !s.statsPublic})); toast.error('No se pudo actualizar. Intenta de nuevo.') })
-                }} style={{alignSelf: 'flex-start', background: stats.statsPublic ? '#F2854D' : '#1A3050', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer'}}>
-                  {stats.statsPublic ? '🔓 Publicas' : '🔒 Privadas'}
-                </button>
-              )}
+              
               <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px'}}>
                 {[
                   { label: 'km totales', value: stats.totalKm, color: '#FFB88A' },
