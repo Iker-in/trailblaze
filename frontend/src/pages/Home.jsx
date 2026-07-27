@@ -7,6 +7,7 @@ import Skeleton from "../components/Skeleton.jsx"
 import Reveal from "../components/Reveal.jsx"
 import ActivationChecklist from "../components/ActivationChecklist.jsx"
 import { getProfile } from "../services/users.service.js"
+import SectionError from "../components/SectionError.jsx"
 
 const DIFFICULTY_STYLES = {
   facil: { background: "#14532d", color: "#86efac" },
@@ -66,18 +67,45 @@ function Home() {
   const [featured, setFeatured] = useState(null)
   const [myProfile, setMyProfile] = useState(null)
   const [checklistDismissed, setChecklistDismissed] = useState(localStorage.getItem("arventra_checklist_dismissed") === "true")
+  const [statsError, setStatsError] = useState(false)
+const [popularError, setPopularError] = useState(false)
+const [featuredError, setFeaturedError] = useState(false)
+const [topUsersError, setTopUsersError] = useState(false)
+const [feedError, setFeedError] = useState(false)
+
+  const loadStats = () => {
+    setStatsError(false)
+    api.get("/stats").then((res) => setStats(res.data)).catch(() => setStatsError(true))
+  }
+  const loadPopular = () => {
+    setPopularError(false)
+    api.get("/routes/popular").then((res) => setPopular(res.data.routes)).catch(() => setPopularError(true))
+  }
+  const loadFeatured = () => {
+    setFeaturedError(false)
+    api.get("/routes/featured").then((res) => setFeatured(res.data)).catch(() => setFeaturedError(true))
+  }
+  const loadTopUsers = () => {
+    setTopUsersError(false)
+    api.get("/ranking?limit=3").then((res) => setTopUsers(res.data.ranking)).catch(() => setTopUsersError(true))
+  }
 
   useEffect(() => {
-    api.get("/stats").then((res) => setStats(res.data)).catch(() => {})
-    api.get("/routes/popular").then((res) => setPopular(res.data.routes)).catch(() => {})
-    api.get("/routes/featured").then((res) => setFeatured(res.data)).catch(() => {})
-    api.get("/ranking?limit=3").then((res) => setTopUsers(res.data.ranking)).catch(() => {})
+    loadStats()
+    loadPopular()
+    loadFeatured()
+    loadTopUsers()
   }, [])
 
-  useEffect(() => {
+ const loadFeed = () => {
     if (!isAuthenticated) return
     setFeedLoading(true)
-    api.get("/routes/feed").then((res) => setFeed(res.data.routes)).catch(() => {}).finally(() => setFeedLoading(false))
+    setFeedError(false)
+    api.get("/routes/feed").then((res) => setFeed(res.data.routes)).catch(() => setFeedError(true)).finally(() => setFeedLoading(false))
+  }
+
+  useEffect(() => {
+    loadFeed()
   }, [isAuthenticated])
 
   useEffect(() => {
@@ -164,7 +192,12 @@ function Home() {
             )}
           </div>
 
-          {featured && featured.route && (
+          {featuredError && (
+            <div style={{marginTop: "20px"}}>
+              <SectionError message="No se pudo cargar la ruta destacada." onRetry={loadFeatured} />
+            </div>
+          )}
+          {!featuredError && featured && featured.route && (
             <div style={{marginTop: "24px", display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap"}}>
               <span style={{background: "#F2854D", color: "white", fontSize: "11px", padding: "3px 10px", borderRadius: "20px", fontWeight: "500"}}>⭐ DESTACADA</span>
               <Link to={"/routes/" + featured.route.id} style={{color: "white", fontSize: "14px", fontWeight: "500", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.3)"}}>
@@ -184,7 +217,9 @@ function Home() {
                 <h2 style={{color: "white", fontSize: "20px", fontWeight: "500", margin: 0}}>Tu feed</h2>
                 <Link to="/routes" style={{color: "#FFB88A", fontSize: "14px", textDecoration: "none"}}>Explorar todas</Link>
               </div>
-              {feedLoading ? (
+              {feedError ? (
+                <SectionError message="No se pudo cargar tu feed." onRetry={loadFeed} />
+              ) : feedLoading ? (
                 <div style={{display: "flex", gap: "16px", overflowX: "auto"}}>
                   {[0, 1, 2].map((index) => (
                     <div key={index} style={{minWidth: "260px"}}><RouteCardSkeleton /></div>
@@ -208,7 +243,14 @@ function Home() {
           </Reveal>
         )}
 
-        {popular.length > 0 && (
+        {popularError && (
+          <Reveal>
+            <div style={{marginBottom: "56px"}}>
+              <SectionError message="No se pudieron cargar las rutas populares." onRetry={loadPopular} />
+            </div>
+          </Reveal>
+        )}
+        {!popularError && popular.length > 0 && (
           <Reveal>
             <div style={{marginBottom: "56px"}}>
               <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px"}}>
@@ -229,6 +271,9 @@ function Home() {
                 <h2 style={{color: "white", fontSize: "16px", fontWeight: "500", margin: 0}}>Top senderistas</h2>
                 <Link to="/ranking" style={{color: "#FFB88A", fontSize: "13px", textDecoration: "none"}}>Ver ranking</Link>
               </div>
+              {topUsersError ? (
+                <SectionError message="No se pudo cargar el ranking." onRetry={loadTopUsers} />
+              ) : (
               <div style={{display: "flex", flexDirection: "column", gap: "10px"}}>
                 {topUsers.map((u) => (
                   <Link key={u.id} to={"/profile/" + u.username} style={{display: "flex", alignItems: "center", gap: "10px", textDecoration: "none"}}>
@@ -239,6 +284,7 @@ function Home() {
                   </Link>
                 ))}
               </div>
+              )}
             </div>
 
             {!isAuthenticated && (
@@ -264,7 +310,12 @@ function Home() {
           </div>
         </Reveal>
 
-        {stats && (
+        {statsError && (
+          <Reveal>
+            <SectionError message="No se pudieron cargar las estadisticas globales." onRetry={loadStats} />
+          </Reveal>
+        )}
+        {!statsError && stats && (
           <Reveal>
             <div style={{display: "flex", justifyContent: "center", gap: "32px", flexWrap: "wrap", padding: "16px", borderTop: "1px solid #1A3050"}}>
               {[
