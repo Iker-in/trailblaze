@@ -7,6 +7,9 @@ import { useState, useRef, useEffect } from 'react'
 import { MapContainer, TileLayer, Polyline, Marker, useMap } from 'react-leaflet'
 import { toast } from 'sonner'
 import { filterGpsPoint, splitTrackIntoSegments } from '../utils/gpsFilter.js'
+import { Capacitor, registerPlugin } from '@capacitor/core'
+
+const BackgroundGeolocation = registerPlugin('BackgroundGeolocation')
 
 function MapAutoCenter({ position }) {
   const map = useMap()
@@ -31,6 +34,8 @@ function RecordRoute() {
   const trackingIntervalRef = useRef(null)
   const [savedSession, setSavedSession] = useState(null)
   const lastAcceptedRef = useRef(null)
+  const nativeWatcherIdRef = useRef(null)
+  const [permissionDenied, setPermissionDenied] = useState(false)
 
 useEffect(() => {
   const handleBeforeUnload = (e) => {
@@ -84,72 +89,94 @@ const timerRef = useRef(null)
 
   
 
-  const startRecording = () => {
-    if (!navigator.geolocation) {
-      setError('Tu dispositivo no soporta GPS')
-      return
+ const handleLocationUpdate = (loc) => {
+    const result = filterGpsPoint({ coords: loc }, lastAcceptedRef.current)
+    if (!result.accept) return
+    lastAcceptedRef.current = result.lastAccepted
+    setPoints((prev) => result.gap && prev.length > 0 ? [...prev, null, result.point] : [...prev, result.point])
+    setAccuracy(loc.accuracy)
+    setSpeed(loc.speed)
+  }
+
+  const beginWatching = () => {
+    if (Capacitor.isNativePlatform()) {
+      BackgroundGeolocation.addWatcher(
+        {
+          backgroundMessage: 'ARVENTRA esta grabando tu ruta en segundo plano',
+          backgroundTitle: 'Grabando aventura',
+          requestPermissions: true,
+          stale: false,
+          distanceFilter: 3
+        },
+        (location, err) => {
+          if (err) {
+            if (err.code === 'NOT_AUTHORIZED') setPermissionDenied(true)
+            setError('No se pudo continuar la grabacion en segundo plano.')
+            return
+          }
+          handleLocationUpdate(location)
+        }
+      ).then((id) => { nativeWatcherIdRef.current = id })
+    } else {
+      if (!navigator.geolocation) {
+        setError('Tu dispositivo no soporta GPS')
+        return
+      }
+      watchIdRef.current = navigator.geolocation.watchPosition(
+        (pos) => handleLocationUpdate(pos.coords),
+        () => setError('No se pudo obtener tu ubicacion'),
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+      )
     }
+  }
+
+  const endWatching = () => {
+    if (Capacitor.isNativePlatform()) {
+      if (nativeWatcherIdRef.current) {
+        BackgroundGeolocation.removeWatcher({ id: nativeWatcherIdRef.current })
+        nativeWatcherIdRef.current = null
+      }
+    } else if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current)
+      watchIdRef.current = null
+    }
+  }
+
+  const startRecording = () => {
     setError('')
+    setPermissionDenied(false)
     setPoints([])
     lastAcceptedRef.current = null
     setRecording(true)
-    watchIdRef.current = navigator.geolocation.watchPosition(
-      (pos) => {
-  const result = filterGpsPoint(pos, lastAcceptedRef.current)
-  if (!result.accept) return
-  lastAcceptedRef.current = result.lastAccepted
-  setPoints((prev) => result.gap && prev.length > 0 ? [...prev, null, result.point] : [...prev, result.point])
-  setAccuracy(pos.coords.accuracy)
-  setSpeed(pos.coords.speed)
-},
-      () => setError('No se pudo obtener tu ubicacion'),
-      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
-    )
+    beginWatching()
     timerRef.current = setInterval(() => setElapsedSeconds((s) => s + 1), 1000)
   }
 
   const pauseRecording = () => {
-  if (watchIdRef.current !== null) {
-    navigator.geolocation.clearWatch(watchIdRef.current)
-    watchIdRef.current = null
+    endWatching()
     clearInterval(timerRef.current)
+    setPaused(true)
   }
-  setPaused(true)
-}
 
-const resumeRecording = () => {
-  setPaused(false)
-  watchIdRef.current = navigator.geolocation.watchPosition(
-    (pos) => {
-  const result = filterGpsPoint(pos, lastAcceptedRef.current)
-  if (!result.accept) return
-  lastAcceptedRef.current = result.lastAccepted
-  setPoints((prev) => result.gap && prev.length > 0 ? [...prev, null, result.point] : [...prev, result.point])
-  setAccuracy(pos.coords.accuracy)
-  setSpeed(pos.coords.speed)
-},
-    () => setError('No se pudo obtener tu ubicacion'),
-    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
-  )
-  timerRef.current = setInterval(() => setElapsedSeconds((s) => s + 1), 1000)
-}
+  const resumeRecording = () => {
+    setPaused(false)
+    beginWatching()
+    timerRef.current = setInterval(() => setElapsedSeconds((s) => s + 1), 1000)
+  }
 
   const stopRecording = () => {
-  if (watchIdRef.current !== null) {
-    navigator.geolocation.clearWatch(watchIdRef.current)
-    watchIdRef.current = null
+    endWatching()
+    setRecording(false)
+    setPaused(false)
+    clearInterval(timerRef.current)
+    localStorage.removeItem('arventra_recording_session')
+    if (trackingEnabled) {
+      stopTracking().catch(() => {})
+      clearInterval(trackingIntervalRef.current)
+      setTrackingSessionId(null)
+      setTrackingEnabled(false)
+    }
   }
-  setRecording(false)
-  setPaused(false)
-  clearInterval(timerRef.current)
-  localStorage.removeItem('arventra_recording_session')
-  if (trackingEnabled) {
-    stopTracking().catch(() => {})
-    clearInterval(trackingIntervalRef.current)
-    setTrackingSessionId(null)
-    setTrackingEnabled(false)
-  }
-}
 
   const calculateDistance = () => {
     if (points.length < 2) return 0
@@ -253,7 +280,16 @@ const resumeRecording = () => {
           </div>
         )}
 
-        {error && <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>{error}</div>}
+        {error && (
+          <div style={{background: '#450a0a', border: '1px solid #991b1b', color: '#fca5a5', borderRadius: '10px', padding: '12px', marginBottom: '16px', fontSize: '14px'}}>
+            {error}
+            {permissionDenied && (
+              <button onClick={() => BackgroundGeolocation.openSettings()} style={{display: 'block', marginTop: '10px', background: '#991b1b', color: 'white', border: 'none', borderRadius: '8px', padding: '8px 14px', fontSize: '13px', cursor: 'pointer'}}>
+                Abrir ajustes de ubicacion
+              </button>
+            )}
+          </div>
+        )}
 
         <div style={{borderRadius: '14px', overflow: 'hidden', marginBottom: '20px', border: '1px solid #1A3050', height: '350px'}}>
           <MapContainer center={center} zoom={16} style={{ height: '100%', width: '100%' }}>

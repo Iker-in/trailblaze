@@ -1,5 +1,8 @@
 {
   "appId": "com.arventra.app",
   "appName": "ARVENTRA",
-  "webDir": "dist"
+  "webDir": "dist",
+  "android": {
+    "useLegacyBridge": true
+  }
 }
