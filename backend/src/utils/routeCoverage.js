@@ -20,9 +20,14 @@ export function calculateRouteCoverage(recordedPoints, officialPoints, corridorM
   if (!recordedPoints || recordedPoints.length < 2) return 0
 
   let covered = 0
-  for (const [oLat, oLng] of officialPoints) {
+  let totalValid = 0
+  for (const officialPoint of officialPoints) {
+    if (!officialPoint) continue
+    totalValid++
+    const [oLat, oLng] = officialPoint
     let minDist = Infinity
     for (let i = 0; i < recordedPoints.length - 1; i++) {
+      if (recordedPoints[i] === null || recordedPoints[i + 1] === null) continue
       const [aLat, aLng] = recordedPoints[i]
       const [bLat, bLng] = recordedPoints[i + 1]
       const d = pointToSegmentDistanceMeters(oLat, oLng, aLat, aLng, bLat, bLng)
@@ -31,12 +36,13 @@ export function calculateRouteCoverage(recordedPoints, officialPoints, corridorM
     }
     if (minDist <= corridorMeters) covered++
   }
-  return (covered / officialPoints.length) * 100
+  return totalValid > 0 ? (covered / totalValid) * 100 : 100
 }
 
 export function calculateTrackDistance(points) {
   let total = 0
   for (let i = 1; i < points.length; i++) {
+    if (points[i] === null || points[i - 1] === null) continue
     const [lat1, lon1] = points[i - 1]
     const [lat2, lon2] = points[i]
     const R = 6371
@@ -51,6 +57,7 @@ export function calculateTrackDistance(points) {
 export function calculateTrackElevationGain(points) {
   let gain = 0
   for (let i = 1; i < points.length; i++) {
+    if (points[i] === null || points[i - 1] === null) continue
     const alt1 = points[i - 1][2]
     const alt2 = points[i][2]
     if (alt1 != null && alt2 != null && alt2 > alt1) {

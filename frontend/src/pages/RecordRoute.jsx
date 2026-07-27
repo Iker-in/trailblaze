@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar.jsx'
 import { useState, useRef, useEffect } from 'react'
 import { MapContainer, TileLayer, Polyline, Marker, useMap } from 'react-leaflet'
 import { toast } from 'sonner'
+import { filterGpsPoint, splitTrackIntoSegments } from '../utils/gpsFilter.js'
 
 function MapAutoCenter({ position }) {
   const map = useMap()
@@ -29,6 +30,7 @@ function RecordRoute() {
   const [trackingEnabled, setTrackingEnabled] = useState(false)
   const trackingIntervalRef = useRef(null)
   const [savedSession, setSavedSession] = useState(null)
+  const lastAcceptedRef = useRef(null)
 
 useEffect(() => {
   const handleBeforeUnload = (e) => {
@@ -89,13 +91,16 @@ const timerRef = useRef(null)
     }
     setError('')
     setPoints([])
+    lastAcceptedRef.current = null
     setRecording(true)
     watchIdRef.current = navigator.geolocation.watchPosition(
       (pos) => {
-  const { latitude, longitude, altitude, accuracy, speed } = pos.coords
-  setPoints((prev) => [...prev, [latitude, longitude, altitude]])
-  setAccuracy(accuracy)
-  setSpeed(speed)
+  const result = filterGpsPoint(pos, lastAcceptedRef.current)
+  if (!result.accept) return
+  lastAcceptedRef.current = result.lastAccepted
+  setPoints((prev) => result.gap && prev.length > 0 ? [...prev, null, result.point] : [...prev, result.point])
+  setAccuracy(pos.coords.accuracy)
+  setSpeed(pos.coords.speed)
 },
       () => setError('No se pudo obtener tu ubicacion'),
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
@@ -116,10 +121,12 @@ const resumeRecording = () => {
   setPaused(false)
   watchIdRef.current = navigator.geolocation.watchPosition(
     (pos) => {
-  const { latitude, longitude, altitude, accuracy, speed } = pos.coords
-  setPoints((prev) => [...prev, [latitude, longitude, altitude]])
-  setAccuracy(accuracy)
-  setSpeed(speed)
+  const result = filterGpsPoint(pos, lastAcceptedRef.current)
+  if (!result.accept) return
+  lastAcceptedRef.current = result.lastAccepted
+  setPoints((prev) => result.gap && prev.length > 0 ? [...prev, null, result.point] : [...prev, result.point])
+  setAccuracy(pos.coords.accuracy)
+  setSpeed(pos.coords.speed)
 },
     () => setError('No se pudo obtener tu ubicacion'),
     { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
@@ -148,6 +155,7 @@ const resumeRecording = () => {
     if (points.length < 2) return 0
     let total = 0
     for (let i = 1; i < points.length; i++) {
+      if (points[i] === null || points[i - 1] === null) continue
       const [lat1, lon1] = points[i - 1]
       const [lat2, lon2] = points[i]
       const R = 6371
@@ -162,6 +170,7 @@ const resumeRecording = () => {
   const calculateElevationGain = () => {
   let gain = 0
   for (let i = 1; i < points.length; i++) {
+    if (points[i] === null || points[i - 1] === null) continue
     const alt1 = points[i - 1][2]
     const alt2 = points[i][2]
     if (alt1 != null && alt2 != null && alt2 > alt1) {
@@ -253,7 +262,9 @@ const resumeRecording = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {points.length > 0 && <MapAutoCenter position={points[points.length - 1]} />}
-            {points.length > 1 && <Polyline positions={points} color="#F2854D" weight={4} />}
+            {splitTrackIntoSegments(points).map((segment, i) => (
+              <Polyline key={i} positions={segment} color="#F2854D" weight={4} />
+            ))}
             {points.length > 0 && <Marker position={points[points.length - 1]} />}
           </MapContainer>
         </div>

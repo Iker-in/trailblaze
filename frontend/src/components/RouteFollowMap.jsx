@@ -2,6 +2,7 @@
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
+import { filterGpsPoint, splitTrackIntoSegments } from "../utils/gpsFilter.js"
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -22,6 +23,7 @@ function RouteFollowMap({ route, onClose, onComplete }) {
   const [error, setError] = useState("")
   const watchRef = useRef(null)
   const recordedPointsRef = useRef([])
+  const lastAcceptedRef = useRef(null)
   const trackPoints = route.trackPoints || []
   const startPos = [route.latitudeStart, route.longitudeStart]
   const endPos = trackPoints.length > 0 ? trackPoints[trackPoints.length - 1] : null
@@ -36,12 +38,15 @@ function RouteFollowMap({ route, onClose, onComplete }) {
 
   useEffect(() => {
     if (!navigator.geolocation) { setError("GPS no disponible"); return }
-    watchRef.current = navigator.geolocation.watchPosition(
+   watchRef.current = navigator.geolocation.watchPosition(
       (pos) => {
-  const point = [pos.coords.latitude, pos.coords.longitude]
-  setUserPos(point)
+  setUserPos([pos.coords.latitude, pos.coords.longitude])
   setAccuracy(pos.coords.accuracy)
-  recordedPointsRef.current.push(point)
+  const result = filterGpsPoint(pos, lastAcceptedRef.current)
+  if (!result.accept) return
+  lastAcceptedRef.current = result.lastAccepted
+  if (result.gap && recordedPointsRef.current.length > 0) recordedPointsRef.current.push(null)
+  recordedPointsRef.current.push(result.point)
 },
       () => setError("No se pudo obtener tu ubicacion"),
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
@@ -73,7 +78,9 @@ function RouteFollowMap({ route, onClose, onComplete }) {
       <div style={{flex: 1}}>
         <MapContainer center={startPos} zoom={14} style={{height: "100%", width: "100%"}}>
           <TileLayer attribution='&copy; Thunderforest, &copy; OpenStreetMap' url={`https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${import.meta.env.VITE_THUNDERFOREST_API_KEY}`} />
-          {trackPoints.length > 1 && <Polyline positions={trackPoints} color="#F2854D" weight={4} />}
+          {splitTrackIntoSegments(trackPoints).map((segment, i) => (
+            <Polyline key={i} positions={segment} color="#F2854D" weight={4} />
+          ))}
           <Marker position={startPos} />
           {userPos && (
             <>

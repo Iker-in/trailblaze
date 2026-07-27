@@ -2,6 +2,7 @@
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
+import { splitTrackIntoSegments } from '../utils/gpsFilter.js'
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -24,7 +25,9 @@ function RouteMap({ latitude, longitude, title, trackPoints }) {
   attribution='&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   url={`https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${import.meta.env.VITE_THUNDERFOREST_API_KEY}`}
 />
-        {trackPoints && trackPoints.length > 1 && <Polyline positions={trackPoints} color="#F2854D" weight={4} />}
+        {trackPoints && splitTrackIntoSegments(trackPoints).map((segment, i) => (
+          <Polyline key={i} positions={segment} color="#F2854D" weight={4} />
+        ))}
         <Marker position={[latitude, longitude]}>
           <Popup>{title}</Popup>
         </Marker>
