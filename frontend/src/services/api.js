@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api',
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json', 'X-Arventra-Client': 'web' },
   withCredentials: true
 })
 
@@ -48,7 +48,7 @@ api.interceptors.response.use(
         const response = await axios.post(
   (import.meta.env.VITE_API_URL || 'http://localhost:3000/api') + '/auth/refresh',
           {},
-          { withCredentials: true }
+          { withCredentials: true, headers: { 'X-Arventra-Client': 'web' } }
         )
         const { token, user } = response.data
         localStorage.setItem('token', token)
