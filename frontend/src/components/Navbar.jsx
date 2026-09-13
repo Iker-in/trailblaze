@@ -1,10 +1,12 @@
 ﻿import { useNavigate, Link } from "react-router-dom"
+import { Capacitor } from "@capacitor/core"
 import useAuthStore from "../store/authStore.js"
 import NotificationBell from "./NotificationBell.jsx"
 import UserSearch from "./UserSearch.jsx"
 
 function Navbar() {
   const navigate = useNavigate()
+  const isNative = Capacitor.isNativePlatform()
   const { isAuthenticated, user, logout } = useAuthStore()
 
   const handleLogout = () => {
@@ -19,15 +21,21 @@ function Navbar() {
         <span style={{color: "#FFB88A", fontSize: "20px", fontWeight: "bold", letterSpacing: "1px"}}>ARVENTRA</span>
       </Link>
       <div style={{display: "flex", alignItems: "center", gap: "24px"}}>
-        <UserSearch />
-        <Link to="/routes" style={{color: "#FFB88A", fontSize: "14px", textDecoration: "none", fontWeight: "500"}}>Rutas</Link>
-        <Link to="/ranking" style={{color: "#FFB88A", fontSize: "14px", textDecoration: "none", fontWeight: "500"}}>Ranking</Link>
+                <UserSearch />
+        {!isNative && (
+          <>
+            <Link to="/routes" style={{color: "#FFB88A", fontSize: "14px", textDecoration: "none", fontWeight: "500"}}>Rutas</Link>
+            <Link to="/ranking" style={{color: "#FFB88A", fontSize: "14px", textDecoration: "none", fontWeight: "500"}}>Ranking</Link>
+          </>
+        )}
         <Link to="/achievements" style={{color: "#FFB88A", fontSize: "14px", textDecoration: "none", fontWeight: "500"}}>Logros</Link>
         {isAuthenticated ? (
           <>
-            <Link to="/routes/create" style={{background: "#F2854D", color: "white", padding: "7px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", textDecoration: "none", border: "none"}}>
-              Publicar ruta
-            </Link>
+            {!isNative && (
+              <Link to="/routes/create" style={{background: "#F2854D", color: "white", padding: "7px 16px", borderRadius: "8px", fontSize: "13px", fontWeight: "500", textDecoration: "none", border: "none"}}>
+                Publicar ruta
+              </Link>
+            )}
             <NotificationBell />
             <Link to={"/profile/" + user.username} style={{color: "#7BC47F", fontSize: "14px", textDecoration: "none", fontWeight: "500"}}>
               {user.username}

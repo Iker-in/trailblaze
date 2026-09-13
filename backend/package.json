@@ -24,11 +24,11 @@
     "morgan": "^1.10.0",
     "multer": "^2.1.1",
     "multer-storage-cloudinary": "^2.2.1",
-    "prisma": "^6.19.3",
     "resend": "^6.12.4",
     "xss": "^1.0.15"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "nodemon": "^3.0.0",
+    "prisma": "^7.10.0"
   }
 }

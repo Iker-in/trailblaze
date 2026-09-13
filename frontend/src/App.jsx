@@ -1,6 +1,8 @@
 ﻿import { HashRouter, Routes, Route, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { AnimatePresence } from "framer-motion"
+import { Capacitor } from "@capacitor/core"
+import BottomNav from "./components/BottomNav.jsx"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
@@ -59,6 +61,12 @@ function AnimatedRoutes() {
 
 function App() {
   const [showOnboarding, setShowOnboarding] = useState(!localStorage.getItem("arventra_onboarding_done"))
+  const isNative = Capacitor.isNativePlatform()
+
+  useEffect(() => {
+    if (isNative) document.body.classList.add("arventra-native")
+  }, [isNative])
+
   return (
     <HashRouter>
       <Toaster
@@ -69,6 +77,7 @@ function App() {
       <OfflineBanner />
       {showOnboarding && <Onboarding onFinish={() => setShowOnboarding(false)} />}
       <AnimatedRoutes />
+      {isNative && <BottomNav />}
     </HashRouter>
   )
 }
